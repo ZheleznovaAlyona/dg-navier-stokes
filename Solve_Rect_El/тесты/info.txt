@@ -1,0 +1,51 @@
+
+test_2
+
+BCG
+norm 2:|u*-u|=4.7580e-011
+norm L2:|u*-u|=3.2954e-015
+eps=1.00e-012
+
+GMRES
+norm 2:|u*-u|=4.7085e-008
+norm L2:|u*-u|=3.2677e-012
+eps=1.00e-012
+
+BCG+GMRES
+norm 2:|u*-u|=2.1870e-010
+norm L2:|u*-u|=1.5160e-014
+eps=1.00e-012
+
+test_4
+
+BCG
+norm 2:|u*-u|=5.2276e+000
+norm L2:|u*-u|=2.9736e-004
+eps=1.00e-012
+
+GMRES
+norm 2:|u*-u|=1.1058e-008
+norm L2:|u*-u|=7.6744e-013
+eps=1.00e-012
+
+BCG+GMRES
+norm 2:|u*-u|=1.6053e-011
+norm L2:|u*-u|=1.0902e-015
+eps=1.00e-012
+
+test_5
+
+BCG
+norm 2:|u*-u|=2.4009e+001
+norm L2:|u*-u|=4.4243e-005
+eps=1.00e-012
+
+GMRES
+norm 2:|u*-u|=2.4009e+001
+norm L2:|u*-u|=4.4243e-005
+eps=1.00e-012
+
+BCG+GMRES
+norm 2:|u*-u|=2.4009e+001
+norm L2:|u*-u|=4.4243e-005
+eps=1.00e-012
