@@ -1991,65 +1991,7 @@ void SLAE::calculate_SP_out_up(int element_number)
 #pragma endregion
 
 #pragma region  краевые условия
-void SLAE::input_boundaries1(FILE* f_in)
-{
-	int count;
-	BoundaryCondition1 tmp;
 
-	fscanf(f_in, "%d", &count);	
-	boundaries1.reserve(count);
-
-	for(int i = 1; i <= count; i++)		
-	{
-		fscanf(f_in, "%d", &tmp.elem);
-		fscanf(f_in, "%d", &tmp.formula_number);
-		fscanf(f_in, "%d", &tmp.edges[0]);
-		fscanf(f_in, "%d", &tmp.edges[1]);
-		fscanf(f_in, "%d", &tmp.edges[2]);
-		fscanf(f_in, "%d", &tmp.edges[3]);
-		boundaries1.push_back(tmp);
-	}
-}
-
-void SLAE::input_boundaries2(FILE* f_in)
-{
-	int count;
-	BoundaryCondition2 tmp;
-
-	fscanf(f_in, "%d", &count);	
-	boundaries2.reserve(count);
-
-	for(int i = 1; i <= count; i++)		
-	{
-		fscanf(f_in, "%d", &tmp.elem);
-		fscanf(f_in, "%d", &tmp.formula_number);
-		fscanf(f_in, "%d", &tmp.edges[0]);
-		fscanf(f_in, "%d", &tmp.edges[1]);
-		fscanf(f_in, "%d", &tmp.edges[2]);
-		fscanf(f_in, "%d", &tmp.edges[3]);
-		boundaries2.push_back(tmp);
-	}
-}
-
-void SLAE::input_boundaries3(FILE* f_in)
-{
-	int count;
-	BoundaryCondition3 tmp;
-
-	fscanf(f_in, "%d", &count);	
-	boundaries3.reserve(count);
-
-	for(int i = 1; i <= count; i++)		
-	{
-		fscanf(f_in, "%d", &tmp.elem);
-		fscanf(f_in, "%d", &tmp.formula_number);
-		fscanf(f_in, "%d", &tmp.edges[0]);
-		fscanf(f_in, "%d", &tmp.edges[1]);
-		fscanf(f_in, "%d", &tmp.edges[2]);
-		fscanf(f_in, "%d", &tmp.edges[3]);
-		boundaries3.push_back(tmp);
-	}
-}
 
 void SLAE::calculate_all_boundaries1()
 {

@@ -10,6 +10,9 @@
 #include <string>
 using namespace std;
 
+#include "boundary_conditions.h"
+using namespace boundary_conditions;
+
 bool use_LU;
 int test = 3;
 int solver = 2;
@@ -64,9 +67,8 @@ struct MyVector
 
 	MyVector(int size)
 	{
-		ar.reserve(size);
-		for(int i = 0; i < size; i++)
-			ar.push_back(0.0);
+		ar.resize(size);
+		memset(&ar[0], 0, size * sizeof(double)); //обнуляем
 	}
 
 	~MyVector(){};
@@ -80,9 +82,9 @@ struct MyVector
 	MyVector operator+(MyVector a) 
 	{
 		MyVector new_vector = MyVector(ar.size());
-		if(a.ar.size() == ar.size())
+		assert(a.ar.size() == ar.size());
 		for(int i = 0; i < ar.size(); i++)
-			 new_vector.ar[i] = ar[i] + a.ar[i];
+			 new_vector.ar[i] = ar[i] + a[i];
 		return new_vector;
 	}
 
@@ -91,15 +93,8 @@ struct MyVector
 		MyVector new_vector = MyVector(ar.size());
 		assert(a.ar.size() == ar.size());
 		for(int i = 0; i < ar.size(); i++)
-			 new_vector.ar[i] = ar[i] - a.ar[i];
+			 new_vector.ar[i] = ar[i] - a[i];
 		return new_vector;
-	}
-
-	MyVector& operator=(MyVector vec)
-	{
-		assert(ar.size() == vec.ar.size());
-		ar = vec.ar;
-		return *this;
 	}
 
 	MyVector operator*(double a) 
@@ -120,21 +115,20 @@ struct MyVector
 
 	void initialize(int size)
 	{
-		ar.reserve(size);
-		for(int i = 0; i < size; i++)
-			ar.push_back(0.0);
+		ar.resize(size);
+		memset(&ar[0], 0, size * sizeof(double)); //обнуляем
 	}
 
 	void make_zero()
 	{
-		for(int i = 0; i < ar.size(); i++)
-			ar[i] = 0.0;
+		memset(&ar[0], 0, ar.size() * sizeof(double)); //обнуляем
 	}
 
 	double norm()
 	{
 		double sum = 0;
-		for(int i = 0; i < ar.size(); i++)
+		int size = ar.size();
+		for(int i = 0; i < size; i++)
 			sum += ar[i] * ar[i];
 
 		return sqrt(sum);
@@ -142,7 +136,8 @@ struct MyVector
 
 	void output(FILE *f_out)
 	{
-		for(int i = 0; i < ar.size(); i++)
+		int size = ar.size();
+		for(int i = 0; i < size; i++)
 			fprintf(f_out, "%.20lf\n", ar[i]);
 	}
 
@@ -181,19 +176,6 @@ struct Matrix
 	void initialize(int size1, int size2);
 	void reinitialize();
 
-	Matrix& operator=(Matrix matrix)
-	{
-		n = matrix.n;
-		size = matrix.size;
-		ggl = matrix.ggl;
-		ggu = matrix.ggu;
-		di = matrix.di;
-		b = matrix.b;
-		ig = matrix.ig;
-		jg = matrix.jg;
-		return *this;
-	}
-
 	//умножение на вектор
 	MyVector operator*(MyVector a) 
 	{
@@ -204,9 +186,9 @@ struct Matrix
 		assert(a.ar.size() == n);
 		for(i = 0; i < n; i++)
 		{
-			kol = ig[i+1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
+			kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
 								  //ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i+1];
+			iend = ig[i + 1];
 			k = ig[i]; // адрес первого занятого элемента строки (столбца) 
 
 			new_vector[i] = di[i] * a[i];//от главной диагонали
@@ -230,9 +212,9 @@ struct Matrix
 		assert(a.ar.size() == n);
 		for(i = 0; i < n; i++)
 		{
-			kol = ig[i+1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
+			kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
 								  //ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i+1];
+			iend = ig[i + 1];
 			k = ig[i]; // адрес первого занятого элемента строки (столбца) 
 
 			new_vector[i] = di[i] * a[i];//от главной диагонали
@@ -268,15 +250,6 @@ struct DenseMatrix
 		ar.reserve(n_columns);
 		for(int i = 0; i < n_columns; i++)
 			ar.push_back(MyVector (n_lines));
-	}
-
-	DenseMatrix& operator=(DenseMatrix matrix)
-	{
-		n_lines = matrix.n_lines, n_columns = matrix.n_columns;
-		for(int i = 0; i < n_columns; i++)
-			ar[i] = matrix.ar[i];
-		
-		return *this;
 	}
 
 	MyVector& operator[](int j) 
@@ -318,26 +291,7 @@ struct Logger
 	};
 };
 
-struct BoundaryCondition1
-{
-	int elem;
-	int edges[4]; //левое,правое,нижнее, верхнее: 1 - есть, 0 - нет
-	int formula_number;
-};
 
-struct BoundaryCondition2
-{
-	int elem;
-	int edges[4]; //левое,правое,нижнее, верхнее: 1 - есть, 0 - нет
-	int formula_number;
-};
-
-struct BoundaryCondition3
-{
-	int elem;
-	int edges[4]; //левое,правое,нижнее, верхнее: 1 - есть, 0 - нет
-	int formula_number;
-};
 
 struct SLAE
 {
@@ -350,9 +304,9 @@ struct SLAE
 	Matrix A; //матрица
 	Partition P; //разбиение области
 	Logger logger; //логгер для вывода информации о процессе решения СЛАУ
-	vector <BoundaryCondition1> boundaries1; //первые краевые условия
-	vector <BoundaryCondition2> boundaries2; //вторые -//-
-	vector <BoundaryCondition3> boundaries3; //третьи -//-
+	vector <BoundaryCondition> boundaries1; //первые краевые условия
+	vector <BoundaryCondition> boundaries2; //вторые -//-
+	vector <BoundaryCondition> boundaries3; //третьи -//-
 
 	//S для скорости
 	//E для скорости

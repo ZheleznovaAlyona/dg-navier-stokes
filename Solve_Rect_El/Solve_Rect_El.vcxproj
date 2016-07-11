@@ -62,6 +62,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="boundary_conditions.h" />
     <ClInclude Include="solver.h" />
   </ItemGroup>
   <ItemGroup>
