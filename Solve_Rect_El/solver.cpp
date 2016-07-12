@@ -8,37 +8,10 @@ double pow_i(int i, double a)
 	return res;
 }
 
-void Partition::input(FILE *grid_f_in, FILE *elements_f_in)
+void Partition::input(ifstream& grid_f_in, ifstream& elements_f_in)
 {
-	int tmp;
-	Point point_tmp;
-	Element element_tmp;
-
-	//считываем узлы
-	fscanf(grid_f_in, "%d", &tmp);
-	nodes.reserve(tmp);
-	for(int i = 0; i < tmp; i++)
-	{
-		fscanf(grid_f_in, "%lf", &point_tmp.x);
-		fscanf(grid_f_in, "%lf", &point_tmp.y);
-		nodes.push_back(point_tmp);
-	}
-
-	//считываем элементы
-	tmp = tmp / 4; //количество элементов
-	elements.reserve(tmp);
-	for(int i = 0; i < tmp; i++)
-	{
-		fscanf(elements_f_in, "%d", &element_tmp.number_of_area);
-		for(int j = 0; j < 4; j++)
-			fscanf(elements_f_in, "%d", &element_tmp.nodes[j]);
-		for(int j = 0; j < 4; j++)
-			fscanf(elements_f_in, "%d", &element_tmp.neighbors[j]);
-		for(int j = 0; j < 4; j++)
-			fscanf(elements_f_in, "%d", &element_tmp.edges[j]);
-
-		elements.push_back(element_tmp);
-	}
+	grid_f_in >> nodes;
+	elements_f_in >> elements;
 }
 
 void initialize_vector(vector <double> &v, int size)
@@ -113,11 +86,20 @@ void Matrix::reinitialize()
 	b.make_zero();
 }
 
-void SLAE::initialize(int max_number_of_iterations, int max_number_of_iterations_non_lin, double epsilon, int gmres_m, FILE *grid_f_in, FILE *elements_f_in, FILE *log_f, FILE *boundary1)
+void SLAE::initialize(int max_number_of_iterations,
+					  int max_number_of_iterations_non_lin,
+					  double epsilon,
+					  int gmres_m,
+					  ifstream& grid_f_in,
+					  ifstream& elements_f_in,
+					  ofstream& log_f,
+					  ifstream& boundary1)
 {
+	boundary1 >> boundaries1;
+
 	int tmp;
 
-	P.input(grid_f_in,elements_f_in);
+	P.input(grid_f_in, elements_f_in);
 
 	n = P.nodes.size() + P.elements.size() * 4; //узлы и рёбра
 	max_iter = max_number_of_iterations;
@@ -148,9 +130,7 @@ void SLAE::initialize(int max_number_of_iterations, int max_number_of_iterations
 		LU_di.push_back(0.0);
 
 	yl.initialize(n); yu.initialize(n);
-	logger.log_f = log_f;
-
-	input_boundaries1(boundary1);
+	logger.*log_f = log_f;
 
 	phix[0] = [](double ksi, double etta) { return 0.5 * (1 - ksi); };
 	phix[1] = [](double ksi, double etta) { return 0.5 * (1 + ksi); };
@@ -3537,12 +3517,12 @@ void SLAE::Solve(MyVector U_begin, double &normL2u, double &normL2p)
 
 #pragma region нелинейная
 
-void SLAE::si_print(FILE *log_f, int iteration_number, double &normL2u, double &normL2p)
+void SLAE::si_print(ofstream& log_f, int iteration_number, double &normL2u, double &normL2p)
 {
 	FILE *solution_f_out, *info_f_out;
 	string f_name_s, f_name_i;
 
-	fprintf(log_f, "---%d---\n", iteration_number);
+	log_f << "---" << iteration_number << "---" << endl;
 	f_name_s = string("s_") + to_string(iteration_number) + ".txt";
 	f_name_i = string("i_") + to_string(iteration_number) + ".txt";
 	solution_f_out = fopen(f_name_s.c_str(), "w");
@@ -3750,24 +3730,19 @@ void SLAE::run(FILE *solution_f_out, FILE *info_f_out)
 
 void main()
 {
-	FILE *grid_f_in, *elements_f_in, *l1_f_in;
-	FILE *solution_f_out, *info_f_out, *log_f;
+	ifstream l1_in("l1.txt"), grid_in("grid.txt"), elements_in("elements.txt");
+	ofstream solution_out("solution.txt"), info_out("info.txt"), log_out("log.txt");
 
-	grid_f_in = fopen("grid.txt", "r");
-	elements_f_in = fopen("elements.txt", "r");
-	l1_f_in = fopen("l1.txt", "r");
-	solution_f_out = fopen("solution.txt", "w");
-	info_f_out = fopen("info.txt", "w");
-	log_f = fopen("log.txt", "w");
-
-	SLAE my_SLAE = SLAE(1000, 100, 1e-12, 30, grid_f_in, elements_f_in, log_f, l1_f_in);
+	SLAE my_SLAE = SLAE(1000, 100, 1e-12, 30, grid_in, elements_in, log_out, l1_in);
 	//my_SLAE.run(solution_f_out, info_f_out);
 	my_SLAE.simple_iterations();
 
-	fclose(grid_f_in);
-	fclose(elements_f_in);
-	fclose(solution_f_out);
-	fclose(info_f_out);
-	fclose(log_f);
+	l1_in.close();
+	grid_in.close();
+	elements_in.close();
+	solution_out.close();
+	info_out.close();
+	log_out.close();
+
 	_getch();
 }

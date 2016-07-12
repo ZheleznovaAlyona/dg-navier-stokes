@@ -12,7 +12,7 @@ namespace boundary_conditions
 		int formula_number;
 	};
 
-	std::istream & operator>>(std::istream is, vector <BoundaryCondition>& boundaries)
+	std::ifstream& operator>>(std::ifstream& is, vector <BoundaryCondition>& boundaries)
 	{
 		int count;
 		BoundaryCondition tmp;
@@ -30,5 +30,7 @@ namespace boundary_conditions
 			is >> tmp.edges[3];
 			boundaries.push_back(tmp);
 		}
+
+		return is;
 	}
 }

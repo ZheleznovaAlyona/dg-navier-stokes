@@ -63,6 +63,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="boundary_conditions.h" />
+    <ClInclude Include="element.h" />
+    <ClInclude Include="partition.h" />
+    <ClInclude Include="point.h" />
     <ClInclude Include="solver.h" />
   </ItemGroup>
   <ItemGroup>

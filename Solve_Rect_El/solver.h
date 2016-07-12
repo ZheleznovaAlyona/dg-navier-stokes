@@ -6,58 +6,31 @@
 #include <assert.h>
 #include <algorithm>
 #include <functional>
-#include <string.h>
 #include <string>
+#include <fstream>
+#include <iomanip>
 using namespace std;
 
 #include "boundary_conditions.h"
+#include "element.h"
+#include "partition.h"
+#include "point.h"
 using namespace boundary_conditions;
+using namespace element;
+using namespace partition;
+using namespace point;
+
+
 
 bool use_LU;
 int test = 3;
 int solver = 2;
 
-struct Point
-{
-	double x;
-	double y;
-	bool operator==(Point point)
-	{
-		if(point.x == x && point.y == y)
-			return true;
-		else
-			return false;
-	}
 
-};
 
-struct Element
-{
-	int nodes[4];
-	int edges[4];
-	int number_of_area;
-	int neighbors[4]; //левый, правый, нижний, верхний
 
-	Element& operator=(Element element)
-	{
-		for(int i = 0; i < 4; i++)
-			nodes[i] = element.nodes[i];
-		for(int i = 0; i < 4; i++)
-			edges[i] = element.edges[i];
-		number_of_area = element.number_of_area;
-		for(int i = 0; i < 4; i++)
-		neighbors[i] = element.neighbors[i];
 
-		return *this;
-	}
-};
 
-struct Partition
-{
-	vector <Element> elements;
-	vector <Point> nodes;
-	void input(FILE *grid_f_in, FILE *elements_f_in);
-};
 
 struct MyVector
 {
@@ -284,10 +257,10 @@ struct DenseMatrix
 
 struct Logger
 {
-	FILE *log_f;
+	ofstream log_f;
 	void send_current_information(double r_norm, int iteration_number)
 	{
-		fprintf(log_f, "%d     %.20lf\n", iteration_number, r_norm);
+		log_f << iteration_number << "     " << setprecision(20) << r_norm << endl;
 	};
 };
 
@@ -358,10 +331,10 @@ struct SLAE
 		 int max_number_of_iterations_non_lin,
 		 double epsilon, 
 		 int gmres_m, 
-		 FILE *grid_f_in, 
-		 FILE *elements_f_in, 
-		 FILE *log_f, 
-		 FILE *boundary1)
+		 ifstream& grid_f_in, 
+		 ifstream& elements_f_in, 
+		 ofstream& log_f, 
+		 ifstream& boundary1)
 	{
 		initialize(max_number_of_iterations, 
 				   max_number_of_iterations_non_lin,
@@ -379,10 +352,10 @@ struct SLAE
 					int max_number_of_iterations_non_lin, 
 					double epsilon,
 					int gmres_m,
-					FILE *grid_f_in,
-					FILE *elements_f_in,
-					FILE *log_f,
-					FILE *boundary1);
+					ifstream& grid_f_in,
+					ifstream& elements_f_in,
+					ofstream& log_f,
+					ifstream& boundary1);
 
 	void reinitialize();
 
@@ -525,7 +498,7 @@ struct SLAE
 
 	void Solve(MyVector U_begin, double &normL2u, double &normL2p);
 
-	void si_print(FILE *log_f, int iteration_number, double &normL2u, double &normL2p);
+	void si_print(ofstream& log_f, int iteration_number, double &normL2u, double &normL2p);
 	double find_relaxation_parameter(MyVector q_current, MyVector q_previous, double &residual_previous);
 	void simple_iterations();
 
