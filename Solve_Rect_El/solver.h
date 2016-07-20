@@ -15,245 +15,21 @@ using namespace std;
 #include "element.h"
 #include "partition.h"
 #include "point.h"
+#include "myvector.h"
+#include "matrix.h"
+#include "densematrix.h"
 using namespace boundary_conditions;
 using namespace element;
 using namespace partition;
 using namespace point;
-
-
+using namespace myvector;
+using namespace matrix;
+using namespace densematrix;
 
 bool use_LU;
 int test = 3;
 int solver = 2;
 
-
-
-
-
-
-
-struct MyVector
-{
-	vector <double> ar;
-
-	MyVector(){};
-
-	MyVector(int size)
-	{
-		ar.resize(size);
-		memset(&ar[0], 0, size * sizeof(double)); //обнуляем
-	}
-
-	~MyVector(){};
-
-	double& operator[](int j) 
-    {
-        return ar[j];
-    }
-
-	
-	MyVector operator+(MyVector a) 
-	{
-		MyVector new_vector = MyVector(ar.size());
-		assert(a.ar.size() == ar.size());
-		for(int i = 0; i < ar.size(); i++)
-			 new_vector.ar[i] = ar[i] + a[i];
-		return new_vector;
-	}
-
-	MyVector operator-(MyVector a) 
-	{
-		MyVector new_vector = MyVector(ar.size());
-		assert(a.ar.size() == ar.size());
-		for(int i = 0; i < ar.size(); i++)
-			 new_vector.ar[i] = ar[i] - a[i];
-		return new_vector;
-	}
-
-	MyVector operator*(double a) 
-	{
-		MyVector new_vector = MyVector(ar.size());
-		for(int i = 0; i < ar.size(); i++)
-			 new_vector.ar[i] = ar[i] * a;
-		return new_vector;
-	}
-
-	MyVector operator/(double a) 
-	{
-		MyVector new_vector = MyVector(ar.size());
-		for(int i = 0; i < ar.size(); i++)
-			 new_vector.ar[i] = ar[i] / a;
-		return new_vector;
-	}
-
-	void initialize(int size)
-	{
-		ar.resize(size);
-		memset(&ar[0], 0, size * sizeof(double)); //обнуляем
-	}
-
-	void make_zero()
-	{
-		memset(&ar[0], 0, ar.size() * sizeof(double)); //обнуляем
-	}
-
-	double norm()
-	{
-		double sum = 0;
-		int size = ar.size();
-		for(int i = 0; i < size; i++)
-			sum += ar[i] * ar[i];
-
-		return sqrt(sum);
-	}
-
-	void output(FILE *f_out)
-	{
-		int size = ar.size();
-		for(int i = 0; i < size; i++)
-			fprintf(f_out, "%.20lf\n", ar[i]);
-	}
-
-};
-
-double scal(MyVector v1, MyVector v2)
-{
-	double sum = 0;
-	if(v1.ar.size() == v2.ar.size())
-	for(int i = 0; i < v1.ar.size(); i++)
-		sum += v1[i] * v2[i];
-	return sum;
-}
-
-struct Matrix
-{
-	//разреженный строчный формат
-	int n;//размерность матрицы
-	int size;//размерность массивов,где хранятся недиагональные элементы 
-
-	vector <double> ggl;//массив с нижнетреугольными недиагональными элементами
-	vector <double> ggu;//массив с верхнетреугольными недиагональными элементами
-	vector <double> di;//диагональ
-	MyVector b;//вектор правой части
-	vector <int> ig;//указатели начала строк(столбцов)
-	vector <int> jg;//номера столбцов(строк) внедиагональных элементов
-
-	
-	Matrix(){};
-
-	Matrix(int size1, int size2)
-	{
-		initialize(size1, size2);
-	}
-
-	void initialize(int size1, int size2);
-	void reinitialize();
-
-	//умножение на вектор
-	MyVector operator*(MyVector a) 
-	{
-		int i, j, k, kol;
-		int iend;
-		MyVector new_vector = MyVector(a.ar.size());
-
-		assert(a.ar.size() == n);
-		for(i = 0; i < n; i++)
-		{
-			kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
-								  //ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i + 1];
-			k = ig[i]; // адрес первого занятого элемента строки (столбца) 
-
-			new_vector[i] = di[i] * a[i];//от главной диагонали
-
-			for(; k < iend; k++)//проходим по всем элементам i строки (столбца)
-			{
-				j = jg[k];
-				new_vector[i] += ggl[k] * a[j];//от нижнего треугольника
-				new_vector[j] += ggu[k] * a[i];//от верхнего треугольника
-			}
-		}
-
-		return new_vector;
-	}
-	MyVector operator/(MyVector a) 
-	{
-		int i, j, k, kol;
-		int iend;
-		MyVector new_vector = MyVector(a.ar.size());
-
-		assert(a.ar.size() == n);
-		for(i = 0; i < n; i++)
-		{
-			kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
-								  //ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i + 1];
-			k = ig[i]; // адрес первого занятого элемента строки (столбца) 
-
-			new_vector[i] = di[i] * a[i];//от главной диагонали
-
-			for(; k < iend; k++)//проходим по всем элементам i строки (столбца)
-			{
-				j = jg[k];
-				new_vector[i] += ggu[k] * a[j];//от нижнего треугольника
-				new_vector[j] += ggl[k] * a[i];//от верхнего треугольника
-			}
-		}
-
-		return new_vector;
-	}
-
-	~Matrix(){};
-
-	MyVector Uv(MyVector v);
-
-};
-
-struct DenseMatrix
-{
-	int n_lines, n_columns;
-	vector <MyVector> ar;
-	
-	DenseMatrix(){};
-
-	DenseMatrix(int size1, int size2)
-	{
-		n_lines = size1; n_columns = size2;
-
-		ar.reserve(n_columns);
-		for(int i = 0; i < n_columns; i++)
-			ar.push_back(MyVector (n_lines));
-	}
-
-	MyVector& operator[](int j) 
-    {
-        return ar[j];
-    }
-
-	//умножение на вектор
-	MyVector operator*(MyVector a) 
-	{
-		MyVector new_vector = n_lines;
-
-		assert(a.ar.size() == n_columns);
-		for(int j = 0; j < n_columns; j++)
-			for(int i = 0; i < n_lines; i++)
-				new_vector[i] += ar[j][i] * a[j];
-
-		return new_vector;
-	}
-
-	~DenseMatrix(){};
-
-	void initialize(int size1, int size2)
-	{
-		n_lines = size1; n_columns = size2;
-
-		ar.reserve(n_columns);
-		for(int i = 0; i < n_columns; i++)
-			ar.push_back(MyVector (n_lines));
-	}
-};
 
 struct Logger
 {
@@ -515,32 +291,29 @@ struct SLAE
 	MyVector Uv(MyVector v);
 
 	//запуск решения
-	void run(FILE *solution_f_out, FILE *info_f_out);
+	void run(ofstream& solution_f_out, ofstream& info_f_out);
 
-	void output(FILE *solution_f_out, FILE *info_f_out, double normL2u, double normL2p)
+	void output(ofstream& solution_f_out, ofstream& info_f_out, double normL2u, double normL2p)
 	{		
-		FILE *res = fopen("result.txt", "w");
+		ofstream res("result.txt");
+
 		int n_nodes = P.nodes.size();
 		for(int i = 0; i < n_nodes; i++)
 		{
 			if(abs(P.nodes[i].x - 0.5) < 1e-10)
-			fprintf(res, "%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n", 
-					P.nodes[i].x, 
-					P.nodes[i].y, 
-					Ux_numerical[i], 
-					Uy_numerical[i], 
-					P_numerical[i],
-					calculate_p_analytic(0,P.nodes[i].x,P.nodes[i].y));
+				res << P.nodes[i].x << "\t" << P.nodes[i].y << "\t" << Ux_numerical[i]
+				<< "\t" << Uy_numerical[i] << "\t" << P_numerical[i] << "\t"
+				<< calculate_p_analytic(0,P.nodes[i].x,P.nodes[i].y) << endl;
 		}
-		fclose(res);
-		Ux_numerical.output(solution_f_out);
-		fprintf(solution_f_out, "\n\n\n");
-		Uy_numerical.output(solution_f_out);
-		fprintf(solution_f_out, "\n\n\n");
-		P_numerical.output(solution_f_out);
-		fprintf(solution_f_out, "\n\n\n");
-		fprintf(info_f_out, "norm L2 u:|u*-u|=%.4e\nnorm L2 p:|p*-p|=%.4e\neps=%.2e\n", 
-				normL2u, normL2p, eps);
+
+		res.close();
+
+		solution_f_out << Ux_numerical << endl << endl << endl;
+		solution_f_out << Uy_numerical << endl << endl << endl;
+		solution_f_out << P_numerical << endl << endl << endl;
+		info_f_out << "norm L2 u:|u*-u|=" << scientific << setprecision(4) << normL2u 
+			<< endl << "norm L2 p:|p*-p|=" << scientific << setprecision(4) << normL2p
+			<< endl << "eps=" << scientific << setprecision(2) << eps << endl;
 	};
 };
 

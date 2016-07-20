@@ -16,7 +16,11 @@ namespace partition
 
 		vector <Element> elements;
 		vector <Point> nodes;
-		void input(ifstream& grid_f_in, ifstream& elements_f_in);
+		void input(ifstream& grid_f_in, ifstream& elements_f_in)
+		{
+			grid_f_in >> nodes;
+			elements_f_in >> elements;
+		};
 	};
 
 }

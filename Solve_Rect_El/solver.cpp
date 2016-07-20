@@ -1,90 +1,24 @@
 #include "solver.h"
 
-double pow_i(int i, double a)
-{
-	double res = 1;
-	for(int j = 1; j <= i; j++)
-		res *= a;
-	return res;
-}
-
-void Partition::input(ifstream& grid_f_in, ifstream& elements_f_in)
-{
-	grid_f_in >> nodes;
-	elements_f_in >> elements;
-}
-
-void initialize_vector(vector <double> &v, int size)
-{
-	v.reserve(size);
-	for(int i = 0; i < size; i++)
-		v.push_back(0.0);
-}
-
-MyVector Matrix::Uv(MyVector v)
-{
-	int i, j, k, kol;
-	int iend;
-	MyVector new_vector = MyVector(v.ar.size());
-
-	assert(v.ar.size() == n);
-	for(i = 0; i < n; i++)
-	{
-		kol = ig[i+1] - ig[i];//количество ненулевых элементов столбца от первого
-								//ненулевого элемента до диагонального элемента (не включая его)
-		iend = ig[i+1];
-		k = ig[i]; // адрес первого занятого элемента столбца
-
-		new_vector[i] = v[i];//от главной диагонали (у U на диагонали 1)
-
-		for(; k < iend; k++)//проходим по всем элементам i столбца
-		{
-			j = jg[k];
-			new_vector[j] += ggu[k] * v[i];//от верхнего треугольника
-		}
-	}
-
-	return new_vector;
-}
-
-void Matrix::initialize(int size1, int size2)
-{
-	n = size1; size = size2;
-
-	ggl.reserve(size); ggu.reserve(size);
-	for(int i = 0; i < size; i++)
-	{
-		ggl.push_back(0.0);
-		ggu.push_back(0.0);
-	}
-
-	di.reserve(n); b.ar.reserve(n);
-	for(int i = 0; i < n; i++)
-	{
-		di.push_back(0.0);
-		b.ar.push_back(0.0);
-	}
-
-	ig.reserve(n + 1); jg.reserve(size);
-	for(int i = 0; i < n + 1; i++)
-		ig.push_back(0.0);
-	for(int i = 0; i < size; i++)
-		jg.push_back(0.0);
-}
-
-void Matrix::reinitialize()
-{
-	for(int i = 0; i < size; i++)
-	{
-		ggl[i] = 0.0;
-		ggu[i] = 0.0;
-	}
-
-	for(int i = 0; i < n; i++)
-		di[i] = 0.0;
-
-	b.make_zero();
-}
+//double pow_i(int i, double a)
+//{
+//	double res = 1;
+//	for(int j = 1; j <= i; j++)
+//		res *= a;
+//	return res;
+//}
+//
+//void initialize_vector(vector <double> &v, int size)
+//{
+//	v.resize(size);
+//	memset(&v[0], 0, size * sizeof(double)); //обнуляем
+//}
+//
+//void initialize_vector(vector <int> &v, int size)
+//{
+//	v.resize(size);
+//	memset(&v[0], 0, size * sizeof(int)); //обнуляем
+//}
 
 void SLAE::initialize(int max_number_of_iterations,
 					  int max_number_of_iterations_non_lin,
@@ -130,7 +64,7 @@ void SLAE::initialize(int max_number_of_iterations,
 		LU_di.push_back(0.0);
 
 	yl.initialize(n); yu.initialize(n);
-	logger.*log_f = log_f;
+	logger.log_f = log_f;
 
 	phix[0] = [](double ksi, double etta) { return 0.5 * (1 - ksi); };
 	phix[1] = [](double ksi, double etta) { return 0.5 * (1 + ksi); };
@@ -3519,17 +3453,16 @@ void SLAE::Solve(MyVector U_begin, double &normL2u, double &normL2p)
 
 void SLAE::si_print(ofstream& log_f, int iteration_number, double &normL2u, double &normL2p)
 {
-	FILE *solution_f_out, *info_f_out;
 	string f_name_s, f_name_i;
 
 	log_f << "---" << iteration_number << "---" << endl;
 	f_name_s = string("s_") + to_string(iteration_number) + ".txt";
 	f_name_i = string("i_") + to_string(iteration_number) + ".txt";
-	solution_f_out = fopen(f_name_s.c_str(), "w");
-	info_f_out = fopen(f_name_i.c_str(), "w");
+	ofstream solution_f_out(f_name_s), info_f_out(f_name_i);
+
 	output(solution_f_out, info_f_out, normL2u, normL2p);
-	fclose(solution_f_out);
-	fclose(info_f_out);
+	solution_f_out.close();
+	info_f_out.close();
 }
 
 double SLAE::find_relaxation_parameter(MyVector q_current, MyVector q_previous, double &residual_previous)
@@ -3714,7 +3647,7 @@ double SLAE::diff_normL2_u(MyVector q_solution)
 	return sqrt(diff / P.nodes.size());
 }
 
-void SLAE::run(FILE *solution_f_out, FILE *info_f_out)
+void SLAE::run(ofstream& solution_f_out, ofstream& info_f_out)
 {
 	bool one_research = true;
 	double normL2u, normL2p;

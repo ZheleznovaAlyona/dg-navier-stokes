@@ -63,12 +63,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="boundary_conditions.h" />
+    <ClInclude Include="densematrix.h" />
     <ClInclude Include="element.h" />
+    <ClInclude Include="matrix.h" />
+    <ClInclude Include="myvector.h" />
     <ClInclude Include="partition.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="solver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="functions.cpp" />
     <ClCompile Include="solver.cpp" />
   </ItemGroup>
   <ItemGroup>
