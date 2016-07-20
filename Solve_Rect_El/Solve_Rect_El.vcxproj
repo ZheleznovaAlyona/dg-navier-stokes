@@ -65,6 +65,7 @@
     <ClInclude Include="boundary_conditions.h" />
     <ClInclude Include="densematrix.h" />
     <ClInclude Include="element.h" />
+    <ClInclude Include="myfunctions.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="myvector.h" />
     <ClInclude Include="partition.h" />
@@ -72,7 +73,8 @@
     <ClInclude Include="solver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="functions.cpp" />
+    <ClCompile Include="myfunctions.cpp" />
+    <ClCompile Include="myvector.cpp" />
     <ClCompile Include="solver.cpp" />
   </ItemGroup>
   <ItemGroup>

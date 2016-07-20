@@ -1,25 +1,5 @@
 #include "solver.h"
 
-//double pow_i(int i, double a)
-//{
-//	double res = 1;
-//	for(int j = 1; j <= i; j++)
-//		res *= a;
-//	return res;
-//}
-//
-//void initialize_vector(vector <double> &v, int size)
-//{
-//	v.resize(size);
-//	memset(&v[0], 0, size * sizeof(double)); //обнуляем
-//}
-//
-//void initialize_vector(vector <int> &v, int size)
-//{
-//	v.resize(size);
-//	memset(&v[0], 0, size * sizeof(int)); //обнуляем
-//}
-
 void SLAE::initialize(int max_number_of_iterations,
 					  int max_number_of_iterations_non_lin,
 					  double epsilon,
@@ -52,19 +32,19 @@ void SLAE::initialize(int max_number_of_iterations,
 	P_numerical.initialize(P.nodes.size());
 	q_prev.initialize(n);
 
-	LU_ggl.reserve(tmp); LU_ggu.reserve(tmp);
+	A.LU_ggl.reserve(tmp); A.LU_ggu.reserve(tmp);
 	for(int i = 0; i < tmp; i++)
 	{
-		LU_ggl.push_back(0.0);
-		LU_ggu.push_back(0.0);
+		A.LU_ggl.push_back(0.0);
+		A.LU_ggu.push_back(0.0);
 	}
 
-	LU_di.reserve(n);
+	A.LU_di.reserve(n);
 	for(int i = 0; i < n; i++)
-		LU_di.push_back(0.0);
+		A.LU_di.push_back(0.0);
 
-	yl.initialize(n); yu.initialize(n);
-	logger.log_f = log_f;
+	A.yl.initialize(n); A.yu.initialize(n);
+//////////////	logger.log_f = log_f;
 
 	phix[0] = [](double ksi, double etta) { return 0.5 * (1 - ksi); };
 	phix[1] = [](double ksi, double etta) { return 0.5 * (1 + ksi); };
@@ -136,16 +116,16 @@ void SLAE::reinitialize()
 	P_numerical.make_zero();
 	A.reinitialize();
 
-	int gg_size = LU_ggl.size();
+	int gg_size = A.LU_ggl.size();
 
 	for(int i = 0; i < gg_size; i++)
 	{
-		LU_ggl[i] = 0.0;
-		LU_ggu[i] = 0.0;
+		A.LU_ggl[i] = 0.0;
+		A.LU_ggu[i] = 0.0;
 	}
 
 	for(int i = 0; i < n; i++)
-		LU_di[i] = 0.0;
+		A.LU_di[i] = 0.0;
 
 	if(solver == 0) 
 	{
@@ -176,7 +156,7 @@ double SLAE::get_hy(int element_number)
 int SLAE::count_unzero_matrix_elements()
 {
 	int count_uu = 0;
-	for(int i = 0; i < P.elements.size(); i++)
+	for(unsigned int i = 0; i < P.elements.size(); i++)
 	{
 		//с собой
 		count_uu += 4;
@@ -192,7 +172,7 @@ int SLAE::count_unzero_matrix_elements()
 	count_uu /= 2;
 
 	int count_pp = 0;
-	for(int i = 0; i < P.elements.size(); i++)
+	for(unsigned int i = 0; i < P.elements.size(); i++)
 	{
 		//с собой
 		count_pp += 4;
@@ -208,7 +188,7 @@ int SLAE::count_unzero_matrix_elements()
 	count_pp /= 2;
 
 	int count_up = 0;
-	for(int i = 0; i < P.elements.size(); i++)
+	for(unsigned int i = 0; i < P.elements.size(); i++)
 	{
 		//с собой
 		count_up += 4;
@@ -2112,14 +2092,16 @@ double SLAE::gx(int formula_number, double x, double y)
 	if(test == 1)
 		switch(formula_number)
 		{
-			case 0: return y; break;
-			case 1:	return y; break;
+			case 0: return y;
+			case 1:	return y;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(formula_number)
 		{
-			case 0: return 20 * x * y * y * y; break;
-			case 1:	return 20 * x * y * y * y; break;
+			case 0: return 20 * x * y * y * y;
+			case 1:	return 20 * x * y * y * y;
+			default: return 1.0;
 		}
 }
 
@@ -2128,14 +2110,16 @@ double SLAE::gy(int formula_number, double x, double y)
 	if(test == 1)
 		switch(formula_number)
 		{
-			case 0: return x; break;
-			case 1:	return x; break;
+			case 0: return x;
+			case 1:	return x;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(formula_number)
 		{
-			case 0: return 5 * x * x * x * x - 5 * y * y * y * y; break;
-			case 1:	return 5 * x * x * x * x - 5 * y * y * y * y; break;
+			case 0: return 5 * x * x * x * x - 5 * y * y * y * y;
+			case 1:	return 5 * x * x * x * x - 5 * y * y * y * y;
+			default: return 1.0;
 		}
 }
 
@@ -2149,8 +2133,9 @@ double SLAE::calculate_fx(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return 1.0 / calculate_rho(area_number); break;
-			case 1:	return 1.0 / calculate_rho(area_number); break;
+			case 0: return 1.0 / calculate_rho(area_number);
+			case 1:	return 1.0 / calculate_rho(area_number);
+			default: return 1.0;
 		}
 	//if(test == 3)
 	//	switch(area_number)
@@ -2164,11 +2149,12 @@ double SLAE::calculate_fx(int area_number, double x, double y)
 		case 0: return -calculate_lambda(area_number) * 120 * x * y + 
 						1.0 / calculate_rho(area_number) * 120 * x * y + 
 						400 * x * pow_i(6, y) + 300 * (pow_i(5, x) * y * y
-						- x * pow_i(6, y)); break;
+						- x * pow_i(6, y));
 		case 1:	return -calculate_lambda(area_number) * 120 * x * y + 
 						1.0 / calculate_rho(area_number) * 120 * x * y + 
 						400 * x * pow_i(6, y) + 300 * (pow_i(5, x) * y * y
-						- x * pow_i(6, y)); break;
+						- x * pow_i(6, y));
+		default: return 1.0;
 		}
 }
 
@@ -2177,8 +2163,9 @@ double SLAE::calculate_fy(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return 1.0 / calculate_rho(area_number); break;
-			case 1:	return 1.0 / calculate_rho(area_number); break;
+			case 0: return 1.0 / calculate_rho(area_number);
+			case 1:	return 1.0 / calculate_rho(area_number);
+			default: return 1.0;
 		}
 	//if(test == 3)
 	//	switch(area_number)
@@ -2192,11 +2179,12 @@ double SLAE::calculate_fy(int area_number, double x, double y)
 		case 0: return -calculate_lambda(area_number) * (60 * x * x - 60 * y * y) + 
 						1.0 / calculate_rho(area_number) * (60 * x * x - 60 * y * y) + 
 						400 * pow_i(4, x)  * pow_i(3, y) + 100 * (pow_i(7, y) 
-						- pow_i(4, x)  * pow_i(3, y)); break;
+						- pow_i(4, x)  * pow_i(3, y));
 		case 1:	return -calculate_lambda(area_number) * (60 * x * x - 60 * y * y) + 
 						1.0 / calculate_rho(area_number) * (60 * x * x - 60 * y * y) + 
 						400 * pow_i(4, x)  * pow_i(3, y) + 100 * (pow_i(7, y)
-						- pow_i(4, x)  * pow_i(3, y)); break;
+						- pow_i(4, x)  * pow_i(3, y));
+		default: return 1.0;
 		}
 }
 
@@ -2205,14 +2193,16 @@ double SLAE::calculate_ux_analytic(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return y; break;
-			case 1:	return y; break;
+			case 0: return y;
+			case 1:	return y;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-			case 0: return 20 * x * y * y * y; break;
-			case 1:	return 20 * x * y * y * y; break;
+			case 0: return 20 * x * y * y * y;
+			case 1:	return 20 * x * y * y * y;
+			default: return 1.0;
 		}
 }
 
@@ -2221,14 +2211,16 @@ double SLAE::calculate_uy_analytic(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return x; break;
-			case 1:	return x; break;
+			case 0: return x;
+			case 1:	return x;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-			case 0: return 5 * x * x * x * x - 5 * y * y * y * y; break;
-			case 1:	return 5 * x * x * x * x - 5 * y * y * y * y; break;
+			case 0: return 5 * x * x * x * x - 5 * y * y * y * y;
+			case 1:	return 5 * x * x * x * x - 5 * y * y * y * y;
+			default: return 1.0;
 		}
 }
 
@@ -2237,14 +2229,16 @@ double SLAE::calculate_uxdx_analytic(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return 0; break;
-			case 1:	return 0; break;
+			case 0: return 0;
+			case 1:	return 0;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-		case 0: return 20.0 * y * y * y; break;
-		case 1:	return 20.0 * y * y * y; break;
+			case 0: return 20.0 * y * y * y;
+			case 1:	return 20.0 * y * y * y;
+			default: return 1.0;
 		}
 }
 
@@ -2253,14 +2247,16 @@ double SLAE::calculate_uydy_analytic(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return 0; break;
-			case 1:	return 0; break;
+			case 0: return 0;
+			case 1:	return 0;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-		case 0: return -20.0 * y * y * y; break;
-		case 1:	return -20.0 * y * y * y; break;
+			case 0: return -20.0 * y * y * y;
+			case 1:	return -20.0 * y * y * y;
+			default: return 1.0;
 		}
 }
 
@@ -2269,14 +2265,16 @@ double SLAE::calculate_p_analytic(int area_number, double x, double y)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return x + y - 1; break;
-			case 1:	return x + y - 1; break;
+			case 0: return x + y - 1;
+			case 1:	return x + y - 1;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-			case 0: return 60 * x * x * y - 20 * y * y * y - 5; break;
-			case 1:	return 60 * x * x * y - 20 * y * y * y - 5; break;
+			case 0: return 60 * x * x * y - 20 * y * y * y - 5;
+			case 1:	return 60 * x * x * y - 20 * y * y * y - 5;
+			default: return 1.0;
 		}
 }
 
@@ -2285,14 +2283,16 @@ double SLAE::calculate_lambda(int area_number)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return 1.0; break;
-			case 1:	return 1.0; break;
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-			case 0: return 1.0; break;
-			case 1:	return 1.0; break;
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
 		}
 }
 
@@ -2301,14 +2301,16 @@ double SLAE::calculate_rho(int area_number)
 	if(test == 1)
 		switch(area_number)
 		{
-			case 0: return 1.0; break;
-			case 1:	return 1.0; break;
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
 		}
 	if(test == 3)
 		switch(area_number)
 		{
-			case 0: return 1.0; break;
-			case 1:	return 1.0; break;
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
 		}
 }
 
@@ -2429,7 +2431,7 @@ void SLAE::create_portret()
 	{
 		if(!lists[i].empty())
 		{
-			for(int j = 0; j < lists[i].size(); j++)
+			for(unsigned int j = 0; j < lists[i].size(); j++)
 			{
 				A.jg[k] = lists[i][j];
 				k++;
@@ -2494,7 +2496,6 @@ void SLAE::put_element_to_global_matrix(int i, int j, double element)
 void SLAE::calculate_global_matrix(MyVector q_calc)
 {
 	int size = P.elements.size();
-	int id_i, id_j;
 
 	//локаьные матрицы и вектор правой части
 	for(int el_i = 0; el_i < size; el_i++)
@@ -2821,145 +2822,6 @@ double SLAE::psi_i(int i, double x, double y, int element_number)
 
 #pragma region предобусловливание
 
-void SLAE::LU()
-{
-	int i;
-	int i0,j0;
-	int iend;
-	int num;
-	int ki,kj;
-	double suml,sumu,sumdg;
-	int size2 = A.size;
-
-	for(i = 0; i < size2; i++) 
-	{
-		LU_ggu[i] = A.ggu[i];
-		LU_ggl[i] = A.ggl[i];
-	}
-
-	for(i = 0; i < n; i++) 
-		LU_di[i] = A.di[i];
-
-	for(i = 0; i < n;i++)
-	{
-		i0 = A.ig[i];
-		iend = A.ig[i+1];
-		for(num = i0,sumdg = 0; num < iend; num++)
-		{
-		    j0 = A.ig[A.jg[num]]; //в зависимости от номера фиксируем столбец,какой столбец l,такого столбца  ищем начальный эл у u 
-			int jend=A.ig[A.jg[num]+1];
-			ki=i0;
-			kj=j0;
-			for(suml = 0, sumu = 0, ki = i0; ki < num; ki++) //для num учитываются все предыдущие элементы
-			{
-				for(int m = kj; m < jend; m++)
-				if(A.jg[ki]==A.jg[m]) //ищем соответствующие ненулевые элементы для умножения
-				{
-					suml += LU_ggl[ki] * LU_ggu[m];
-					sumu += LU_ggl[m] * LU_ggu[ki];//для симметричного элемента из U
-				}
-			}
-			LU_ggl[num] -= suml;	
-			LU_ggu[num] = (LU_ggu[num] - sumu) / LU_di[A.jg[num]];
-		sumdg += LU_ggl[num] * LU_ggu[num];//умножаются симметричные элементы	
-		}
-		LU_di[i]-=sumdg;
-	}
-}
-
-void SLAE::LYF(MyVector b)
-{
-	int i, k;
-	int i0;//адрес начала строки
-	int iend;//адрес конца строки
-	double sum;
-
-	yl.make_zero();
-
-	if(use_LU)
-	{
-		for(i = 0; i < n; i++)
-		{
-			i0 = A.ig[i]; iend = A.ig[i+1];
-
-			for(k = i0, sum = 0; k < iend; k++)
-				sum += yl[A.jg[k]] * LU_ggl[k];
-
-			yl[i] = (b[i] - sum) / LU_di[i];
-		}
-	}
-	else
-		yl = b;
-}
-
-void SLAE::LYFt(MyVector b)
-{
-	int i, k;
-	int i0;//адрес начала строки
-	int iend;//адрес конца строки
-	double sum;
-
-	yl.make_zero();
-	if(use_LU)
-	{
-		MyVector bb(n);
-		bb = b;
-		for(i = n - 1; i >= 0; i--)
-		{
-			i0 = A.ig[i]; iend = A.ig[i+1];
-			yl[i] = bb[i] /LU_di[i];
-			for(k = i0, sum = 0; k < iend; k++)
-				bb[A.jg[k]] -= yl[i] * LU_ggl[k];
-		}
-	}
-	else
-		yl = b;
-}
-
-void SLAE::UXY(MyVector b)
-{
-	int i, k;
-	int i0;
-	int iend;
-
-	yu.make_zero();
-	if(use_LU)
-	{
-		for(i = n - 1; i >= 0; i--)//проход по столбцам с конца
-		{
-			yu[i] += b[i];
-			i0 = A.ig[i]; iend = A.ig[i+1];
-
-			for(k = iend - 1; k >= i0; k--)//идём по столбцу с конца
-				yu[A.jg[k]] -= yu[i] * LU_ggu[k];
-		}
-	}
-	else
-		yu = b;
-}
-
-void SLAE::UXYt(MyVector b)
-{
-	int i, k;
-	int i0;
-	int iend;
-
-	yu.make_zero();
-	if(use_LU)
-	{
-		for(i = n - 1; i >= 0; i--)//проход по столбцам с конца
-		{
-			yu[i] += b[i];
-			i0 = A.ig[i]; iend = A.ig[i+1];
-
-			for(k = iend - 1; k >= i0; k--)//идём по столбцу с конца
-				yu[i] -= yu[A.jg[k]] * LU_ggu[k];
-		}
-	}
-	else
-		yu = b;
-}
-
 void SLAE::convert_to_prof()
 {
 	int i, j, k;
@@ -3062,7 +2924,7 @@ void SLAE::LYF2(MyVector b)
 	int beg;//номер столбца первого ненулевого элемента строки
 	double sum;
 
-	yl.make_zero();
+	A.yl.make_zero();
 
 	for(i = 0; i < n; i++)
 	{
@@ -3072,10 +2934,10 @@ void SLAE::LYF2(MyVector b)
 
 		for(k = i0, sum = 0, j = beg; j < i; j++, k++)
 		{
-			sum += yl[j] * LU_ggl2[k];
+			sum += A.yl[j] * LU_ggl2[k];
 		}
 
-		yl[i] = (b[i] - sum) / LU_di2[i];
+		A.yl[i] = (b[i] - sum) / LU_di2[i];
 	}
 }
 
@@ -3087,48 +2949,20 @@ void SLAE::UXY2(MyVector b)
 	int ikol;
 	int beg;
 
-	yu.make_zero();
+	A.yu.make_zero();
 
 	for(i = n - 1; i >= 0; i--)//проход по столбцам с конца
 	{
-		yu[i] += yl[i];
+		A.yu[i] += A.yl[i];
 		i0 = LU_ig2[i]; iend = LU_ig2[i+1];
 		ikol = iend - i0;
 		beg = i - ikol;
 
 		for(k = iend-1, j = i-1; j >= beg; j--, k--)//идём по столбцу с конца
 		{
-			yu[j] -= yu[i] * LU_ggu2[k];
+			A.yu[j] -= A.yu[i] * LU_ggu2[k];
 		}
 	}
-}
-
-
-MyVector SLAE::Uv(MyVector v)
-{
-	int i, j, k, kol;
-	int iend;
-	MyVector new_vector = MyVector(v.ar.size());
-
-	assert(v.ar.size() == n);
-	return v;
-	for(i = 0; i < n; i++)
-	{
-		kol = A.ig[i+1] - A.ig[i];//количество ненулевых элементов столбца от первого
-								//ненулевого элемента до диагонального элемента (не включая его)
-		iend = A.ig[i+1];
-		k = A.ig[i]; // адрес первого занятого элемента столбца
-
-		new_vector[i] = v[i];//от главной диагонали (у U на диагонали 1)
-
-		for(; k < iend; k++)//проходим по всем элементам i столбца
-		{
-			j = A.jg[k];
-			new_vector[j] += LU_ggu[k] * v[i];//от верхнего треугольника
-		}
-	}
-
-	return new_vector;
 }
 
 #pragma endregion
@@ -3215,16 +3049,15 @@ void SLAE::GMRES(MyVector U_begin, MyVector &solution)
 
 	double norm_r, norm_f;
 	bool continue_;
-	int k_iter;
 
 	x = U_begin;
 	f = A.b;
-	LU();
+	A.LU();
 	r = f - A * x;
-	LYF(r); r = yl;
+	A.LYF(r); r = A.yl;
 	norm_r = r.norm();
-	LYF(f); norm_f = yl.norm();
-	x = Uv(U_begin);
+	A.LYF(f); norm_f = A.yl.norm();
+	x = A.Uv(U_begin);
 
 	for(int k_iter = 1; k_iter <= max_iter && norm_r / norm_f > eps; k_iter++)
 	{
@@ -3234,9 +3067,9 @@ void SLAE::GMRES(MyVector U_begin, MyVector &solution)
 		continue_ = true;
 		for(int j = 1; j <= m && continue_; j++)
 		{
-			UXY(V[j - 1]);
-			tmp = A * yu;
-			LYF(tmp); w = yl;
+			A.UXY(V[j - 1]);
+			tmp = A * A.yu;
+			A.LYF(tmp); w = A.yl;
 
 			for(int l = 1; l <= j; l++)
 			{
@@ -3260,34 +3093,33 @@ void SLAE::GMRES(MyVector U_begin, MyVector &solution)
 		d[0] = norm_r;
 		solve_min_sqr_problem(d, H, z);
 		x = x + V * z;
-		UXY(x);
-		tmp = f - A * yu;
-		LYF(tmp); r = yl;
+		A.UXY(x);
+		tmp = f - A * A.yu;
+		A.LYF(tmp); r = A.yl;
 		norm_r = r.norm();
 		logger.send_current_information(norm_r / norm_f, k_iter);
 		printf("%d\tr=%.10e\n", k_iter, norm_r / norm_f);
 	}
-	UXY(x); x = yu;
+	A.UXY(x); x = A.yu;
 	solution = x;
 }
 
 void SLAE::BCGStab(MyVector U_begin, MyVector &solution)
 {
-	int k_it;
 	double  rkr0, ak, gk, bk;
 	MyVector r(n), f(n), x(n), r0(n), z(n), p(n), v(n), v1(n), rr2(n);
 	double r_norm, f_norm;
 
-	LU();
+	A.LU();
 
 	x = U_begin;
 	f = A.b;
 	f_norm = f.norm();
 	r0 = f - A * x;
-	LYF(r0); r0 = yl;
+	A.LYF(r0); r0 = A.yl;
 	r_norm = r0.norm() / f_norm;
 
-	UXY(r0); z = yu;
+	A.UXY(r0); z = A.yu;
 	r = r0;
 
 	logger.send_current_information(r_norm, 0);
@@ -3295,10 +3127,10 @@ void SLAE::BCGStab(MyVector U_begin, MyVector &solution)
 	for(int k_it = 1; k_it <= max_iter && r_norm > eps; k_it++)
 	{
 		//найдем L^(-1)AU^(-1)zk
-		UXY(z); v = yu;// v = U(-1)zk
+		A.UXY(z); v = A.yu;// v = U(-1)zk
 		v1 = A * v; // v1 = AU^(-1)zk
 
-		LYF(v1); v = yl;// v = L^(-1)AU^(-1)zk
+		A.LYF(v1); v = A.yl;// v = L^(-1)AU^(-1)zk
 
 		rkr0 = scal(r, r0);
 		ak = rkr0 / scal(v, r0); // ak = (r,r0)/ ( L^(-1)AU^(-1)zk,r0)
@@ -3306,8 +3138,8 @@ void SLAE::BCGStab(MyVector U_begin, MyVector &solution)
 		p = r - v * ak; // pk = r - ak*L^(-1)AU^(-1)zk
 
 		//найдем L^(-1)AU^(-1)pk
-		UXY(p); v1 = yu; // v1 = U^(-1)pk
-		LYF(A * v1); v1 = yl; // v1 = L^(-1)AU^(-1)pk
+		A.UXY(p); v1 = A.yu; // v1 = U^(-1)pk
+		A.LYF(A * v1); v1 = A.yl; // v1 = L^(-1)AU^(-1)pk
 
 		gk = scal(v1, p) / scal(v1, v1); // gk = (L^(-1)AU^(-1)pk,pk)/ ( L^(-1)AU^(-1)pk,L^(-1)AU^(-1)pk)
 
@@ -3325,7 +3157,7 @@ void SLAE::BCGStab(MyVector U_begin, MyVector &solution)
 		printf("%d\tr=%.10e\n", k_it, r_norm);
 		logger.send_current_information(r_norm, k_it);
 	}
-	UXY(x); x = yu;
+	A.UXY(x); x = A.yu;
 	solution = x;
 }
 
@@ -3337,7 +3169,7 @@ void SLAE::BCG(MyVector U_begin, MyVector &solution)
 	double r_norm, r_norm_;
 	int k_it;
 
-	LU();
+	A.LU();
 
 	f = A.b;
 
@@ -3349,7 +3181,7 @@ void SLAE::BCG(MyVector U_begin, MyVector &solution)
 	v1 = A * x;
 	v1 = f - v1;
     
-	LYF(v1); r = yl;
+	A.LYF(v1); r = A.yl;
 	r_ = r;
 	p = r;
 	p_ = r_;
@@ -3358,9 +3190,9 @@ void SLAE::BCG(MyVector U_begin, MyVector &solution)
     while(flag == 0 && k_it < max_iter)
     {
         sc1 = scal(r, r_);
-		UXY(p); v1 = yu;
+		A.UXY(p); v1 = A.yu;
 		v2 = A * v1;
-		LYF(v2); v3 = yl;
+		A.LYF(v2); v3 = A.yl;
 
         sc2 = scal(p_, v3);
 
@@ -3368,11 +3200,11 @@ void SLAE::BCG(MyVector U_begin, MyVector &solution)
 		x = x +  v1 * alpha;
 		r = r - v3 * alpha;
 
-		LYFt(p_); v1 = yl;
+		A.LYFt(p_); v1 = A.yl;
 
 		v2 = A  /  v1;
 
-		UXYt(v2); v3 = yu;
+		A.UXYt(v2); v3 = A.yu;
 
 		r_ = r_ - v3 * alpha;
         sc2 = scal(r, r_);
@@ -3415,8 +3247,8 @@ void SLAE::Solve(MyVector U_begin, double &normL2u, double &normL2p)
 			convert_to_prof();
 			LU2();
 			LYF2(A.b);
-			UXY2(yl);
-			q = yu;
+			UXY2(A.yl);
+			q = A.yu;
 		}
 		break;
 	case 1:
@@ -3491,7 +3323,7 @@ void SLAE::simple_iterations()
 	//FILE *in_f;
 	//in_f = fopen("tmp.txt", "w");
 	int k_it = 0;
-	double w, residual, residual_previous;
+	double w, residual_previous;
 	MyVector q0(n), q1(n);
 	double normL2u, normL2p;
 	MyVector sol_0;

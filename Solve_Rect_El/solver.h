@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <conio.h>
 #define _USE_MATH_DEFINES
@@ -16,6 +17,7 @@ using namespace std;
 #include "partition.h"
 #include "point.h"
 #include "myvector.h"
+#include "myfunctions.h"
 #include "matrix.h"
 #include "densematrix.h"
 using namespace boundary_conditions;
@@ -26,9 +28,9 @@ using namespace myvector;
 using namespace matrix;
 using namespace densematrix;
 
-bool use_LU;
-int test = 3;
-int solver = 2;
+//bool use_LU;
+//int test = 3;
+//int solver = 2;
 
 
 struct Logger
@@ -85,16 +87,16 @@ struct SLAE
 	function<double(double, double)> dphiyksi[4]; //указатели на функции вычисления d/dksi базисных функций uy в точке
 	function<double(double, double)> dphiyetta[4]; //указатели на функции вычисления d/detta базисных функций uy в точке
 
-	vector <double> LU_ggu; //верхнетреугольные недиагональные элементы U
-	vector <double> LU_ggl; //нижнетреугольные недиагональные элементы L
-	vector <double> LU_di; //диагональные элементы L
+	//vector <double> LU_ggu; //верхнетреугольные недиагональные элементы U
+	//vector <double> LU_ggl; //нижнетреугольные недиагональные элементы L
+	//vector <double> LU_di; //диагональные элементы L
 	vector <double> LU_ggu2; //верхнетреугольные недиагональные элементы U для LU-решателя
 	vector <double> LU_ggl2; //нижнетреугольные недиагональные элементы L для LU-решателя
 	vector <double> LU_di2; //диагональные элементы L для LU-решателя
 	vector <int> LU_ig2; //индексы портрета для LU-решателя
 	int size_prof; //размер массивов элементов для профильного формата LU-решателя
-	MyVector yl; //решение системы Lyl=F
-	MyVector yu; //решение системы Uyu=F
+	//MyVector yl; //решение системы Lyl=F
+	//MyVector yu; //решение системы Uyu=F
 	
 	double gauss_points[2][9];//точки гаусса
 	double gauss_weights[9];// веса гаусса
@@ -283,12 +285,12 @@ struct SLAE
 
 
 	//предобусловливатель
-	void LU();
-	void LYF(MyVector b);
-	void UXY(MyVector b);
-	void LYFt(MyVector b);
-	void UXYt(MyVector b);
-	MyVector Uv(MyVector v);
+	//void LU();
+	//void LYF(MyVector b);
+	//void UXY(MyVector b);
+	//void LYFt(MyVector b);
+	//void UXYt(MyVector b);
+	//MyVector Uv(MyVector v);
 
 	//запуск решения
 	void run(ofstream& solution_f_out, ofstream& info_f_out);

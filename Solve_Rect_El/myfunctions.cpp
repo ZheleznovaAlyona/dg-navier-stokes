@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
 #include "myvector.h"
+#include "myfunctions.h"
+
 using namespace std;
-using namespace myvector;
 
 double pow_i(int i, double a)
 {
@@ -28,7 +29,7 @@ double scal(MyVector v1, MyVector v2)
 {
 	double sum = 0;
 	if(v1.ar.size() == v2.ar.size())
-	for(int i = 0; i < v1.ar.size(); i++)
+	for(unsigned int i = 0; i < v1.ar.size(); i++)
 		sum += v1[i] * v2[i];
 	return sum;
 }
