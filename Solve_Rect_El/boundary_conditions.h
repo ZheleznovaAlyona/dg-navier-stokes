@@ -1,5 +1,9 @@
 #pragma once
 #include <fstream>
+#include <vector>
+#include "partition.h"
+
+using namespace std;
 
 namespace boundary_conditions
 {
@@ -12,25 +16,26 @@ namespace boundary_conditions
 		int formula_number;
 	};
 
-	std::ifstream& operator>>(std::ifstream& is, vector <BoundaryCondition>& boundaries)
+	class BoundaryConditionsSupport : public partition::Partition
 	{
-		int count;
-		BoundaryCondition tmp;
+	public:
 
-		is >> count;
-		boundaries.reserve(count);
+		vector <BoundaryCondition> boundaries1; //первые краевые условия
+		vector <BoundaryCondition> boundaries2; //вторые -//-
+		vector <BoundaryCondition> boundaries3; //третьи -//-
 
-		for(int i = 1; i <= count; i++)
-		{
-			is >> tmp.elem;
-			is >> tmp.formula_number;
-			is >> tmp.edges[0];
-			is >> tmp.edges[1];
-			is >> tmp.edges[2];
-			is >> tmp.edges[3];
-			boundaries.push_back(tmp);
-		}
+		void input_boundaries1(FILE* f_in);
+		void input_boundaries2(FILE* f_in);
+		void input_boundaries3(FILE* f_in);
 
-		return is;
-	}
+		void calculate_all_boundaries1();
+		void calculate_boundaries1(int number);
+
+		void calculate_boundaries1_left(int number);
+		void calculate_boundaries1_right(int number);
+		void calculate_boundaries1_low(int number);
+		void calculate_boundaries1_up(int number);
+	};
+
+	std::ifstream& operator>>(std::ifstream& is, vector <BoundaryCondition>& boundaries);
 }

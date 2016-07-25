@@ -71,11 +71,19 @@
     <ClInclude Include="partition.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="solver.h" />
+    <ClInclude Include="testing_parameters.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="boundary_conditions.cpp" />
+    <ClCompile Include="densematrix.cpp" />
+    <ClCompile Include="element.cpp" />
+    <ClCompile Include="matrix.cpp" />
     <ClCompile Include="myfunctions.cpp" />
     <ClCompile Include="myvector.cpp" />
+    <ClCompile Include="partition.cpp" />
+    <ClCompile Include="point.cpp" />
     <ClCompile Include="solver.cpp" />
+    <ClCompile Include="testing_parameters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="elements.txt" />

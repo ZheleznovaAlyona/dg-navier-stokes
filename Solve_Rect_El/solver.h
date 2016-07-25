@@ -20,6 +20,7 @@ using namespace std;
 #include "myfunctions.h"
 #include "matrix.h"
 #include "densematrix.h"
+//#include "testing_parameters.h"
 using namespace boundary_conditions;
 using namespace element;
 using namespace partition;
@@ -27,6 +28,7 @@ using namespace point;
 using namespace myvector;
 using namespace matrix;
 using namespace densematrix;
+//using namespace testingparameters;
 
 //bool use_LU;
 //int test = 3;
@@ -42,9 +44,7 @@ struct Logger
 	};
 };
 
-
-
-struct SLAE
+struct SLAE : public BoundaryConditionsSupport
 {
 	int n; //размерность СЛАУ
 	int m; //глубина метода gmres
@@ -53,11 +53,8 @@ struct SLAE
 	double eps; //точность решения СЛАУ
 	double sigma, mu1, mu2; //коэффициенты стабилизации
 	Matrix A; //матрица
-	Partition P; //разбиение области
 	Logger logger; //логгер для вывода информации о процессе решения СЛАУ
-	vector <BoundaryCondition> boundaries1; //первые краевые условия
-	vector <BoundaryCondition> boundaries2; //вторые -//-
-	vector <BoundaryCondition> boundaries3; //третьи -//-
+
 
 	//S для скорости
 	//E для скорости
@@ -87,16 +84,11 @@ struct SLAE
 	function<double(double, double)> dphiyksi[4]; //указатели на функции вычисления d/dksi базисных функций uy в точке
 	function<double(double, double)> dphiyetta[4]; //указатели на функции вычисления d/detta базисных функций uy в точке
 
-	//vector <double> LU_ggu; //верхнетреугольные недиагональные элементы U
-	//vector <double> LU_ggl; //нижнетреугольные недиагональные элементы L
-	//vector <double> LU_di; //диагональные элементы L
 	vector <double> LU_ggu2; //верхнетреугольные недиагональные элементы U для LU-решателя
 	vector <double> LU_ggl2; //нижнетреугольные недиагональные элементы L для LU-решателя
 	vector <double> LU_di2; //диагональные элементы L для LU-решателя
 	vector <int> LU_ig2; //индексы портрета для LU-решателя
 	int size_prof; //размер массивов элементов для профильного формата LU-решателя
-	//MyVector yl; //решение системы Lyl=F
-	//MyVector yu; //решение системы Uyu=F
 	
 	double gauss_points[2][9];//точки гаусса
 	double gauss_weights[9];// веса гаусса
@@ -136,9 +128,6 @@ struct SLAE
 					ifstream& boundary1);
 
 	void reinitialize();
-
-	double get_hx(int element_number);
-	double get_hy(int element_number);
 
 	int count_unzero_matrix_elements();
 	int create_unzero_elements_list(int element_number, 
@@ -284,14 +273,6 @@ struct SLAE
 	double SLAE::diff_normL2_u(MyVector q_solution);//погрешность решения в норме L2
 
 
-	//предобусловливатель
-	//void LU();
-	//void LYF(MyVector b);
-	//void UXY(MyVector b);
-	//void LYFt(MyVector b);
-	//void UXYt(MyVector b);
-	//MyVector Uv(MyVector v);
-
 	//запуск решения
 	void run(ofstream& solution_f_out, ofstream& info_f_out);
 
@@ -299,13 +280,13 @@ struct SLAE
 	{		
 		ofstream res("result.txt");
 
-		int n_nodes = P.nodes.size();
+		int n_nodes = nodes.size();
 		for(int i = 0; i < n_nodes; i++)
 		{
-			if(abs(P.nodes[i].x - 0.5) < 1e-10)
-				res << P.nodes[i].x << "\t" << P.nodes[i].y << "\t" << Ux_numerical[i]
+			if(abs(nodes[i].x - 0.5) < 1e-10)
+				res << nodes[i].x << "\t" << nodes[i].y << "\t" << Ux_numerical[i]
 				<< "\t" << Uy_numerical[i] << "\t" << P_numerical[i] << "\t"
-				<< calculate_p_analytic(0,P.nodes[i].x,P.nodes[i].y) << endl;
+				<< calculate_p_analytic(0, nodes[i].x, nodes[i].y) << endl;
 		}
 
 		res.close();
