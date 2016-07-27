@@ -2,8 +2,6 @@
 #include <fstream>
 #include <vector>
 
-using namespace std;
-
 namespace element
 {
 	class Element
@@ -17,5 +15,5 @@ namespace element
 		Element& operator=(Element element);
 	};
 
-	std::ifstream& operator>>(std::ifstream& is, vector <Element>& elements);
+	std::ifstream& operator>>(std::ifstream& is, std::vector <Element>& elements);
 }

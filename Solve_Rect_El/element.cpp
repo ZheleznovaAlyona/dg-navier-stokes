@@ -1,5 +1,7 @@
 #include "element.h"
 
+using namespace std;
+
 namespace element
 {
 	Element& Element::operator=(Element element)
@@ -15,7 +17,7 @@ namespace element
 		return *this;
 	}
 
-	std::ifstream& operator>>(std::ifstream& is, vector <Element>& elements)
+	ifstream& operator>>(ifstream& is, vector <Element>& elements)
 	{
 		int tmp;
 		Element element_tmp;

@@ -3,8 +3,6 @@
 #include <vector>
 #include "partition.h"
 
-using namespace std;
-
 namespace boundary_conditions
 {
 	class BoundaryCondition
@@ -20,13 +18,9 @@ namespace boundary_conditions
 	{
 	public:
 
-		vector <BoundaryCondition> boundaries1; //первые краевые условия
-		vector <BoundaryCondition> boundaries2; //вторые -//-
-		vector <BoundaryCondition> boundaries3; //третьи -//-
-
-		void input_boundaries1(FILE* f_in);
-		void input_boundaries2(FILE* f_in);
-		void input_boundaries3(FILE* f_in);
+		std::vector <BoundaryCondition> boundaries1; //первые краевые условия
+		std::vector <BoundaryCondition> boundaries2; //вторые -//-
+		std::vector <BoundaryCondition> boundaries3; //третьи -//-
 
 		void calculate_all_boundaries1();
 		void calculate_boundaries1(int number);
@@ -37,5 +31,5 @@ namespace boundary_conditions
 		void calculate_boundaries1_up(int number);
 	};
 
-	std::ifstream& operator>>(std::ifstream& is, vector <BoundaryCondition>& boundaries);
+	std::ifstream& operator>>(std::ifstream& is, std::vector <BoundaryCondition>& boundaries);
 }

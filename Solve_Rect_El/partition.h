@@ -1,12 +1,9 @@
 #pragma once
 #include <fstream>
+#include <vector>
 #include "element.h"
 #include "point.h"
 
-
-using namespace std;
-using namespace element;
-using namespace point;
 
 namespace partition
 {
@@ -14,9 +11,9 @@ namespace partition
 	{
 	public:
 
-		vector <Element> elements;
-		vector <Point> nodes;
-		void input(ifstream& grid_f_in, ifstream& elements_f_in);
+		std::vector <element::Element> elements;
+		std::vector <point::Point> nodes;
+		void input(std::ifstream& grid_f_in, std::ifstream& elements_f_in);
 		double get_hx(int element_number);
 		double get_hy(int element_number);
 	};

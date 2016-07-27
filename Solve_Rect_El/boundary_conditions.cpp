@@ -1,14 +1,14 @@
-#pragma once
 #include "boundary_conditions.h"
 #include "element.h"
 #include "partition.h"
 
+using namespace std;
 using namespace element;
 using namespace partition;
 
 namespace boundary_conditions
 {
-	std::ifstream& operator>>(std::ifstream& is, vector <BoundaryCondition>& boundaries)
+	ifstream& operator>>(ifstream& is, vector <BoundaryCondition>& boundaries)
 	{
 		int count;
 		BoundaryCondition tmp;

@@ -1,5 +1,14 @@
 #include "solver.h"
 
+using namespace boundary_conditions;
+using namespace element;
+using namespace partition;
+using namespace point;
+using namespace myvector;
+using namespace matrix;
+using namespace densematrix;
+using namespace testingparameters;
+
 void SLAE::initialize(int max_number_of_iterations,
 					  int max_number_of_iterations_non_lin,
 					  double epsilon,
@@ -44,7 +53,7 @@ void SLAE::initialize(int max_number_of_iterations,
 		A.LU_di.push_back(0.0);
 
 	A.yl.initialize(n); A.yu.initialize(n);
-//////////////	logger.log_f = log_f;
+	//logger.log_f = log_f;
 
 	phix[0] = [](double ksi, double etta) { return 0.5 * (1 - ksi); };
 	phix[1] = [](double ksi, double etta) { return 0.5 * (1 + ksi); };

@@ -1,14 +1,6 @@
 #pragma once
-#include <fstream>
 #include <vector>
-#include <assert.h>
 #include "myvector.h"
-#include "myfunctions.h"
-#include "testing_parameters.h"
-
-using namespace myvector;
-using namespace std;
-using namespace testingparameters;
 
 namespace matrix
 {
@@ -19,17 +11,17 @@ namespace matrix
 		int n;//размерность матрицы
 		int size;//размерность массивов,где хранятся недиагональные элементы 
 
-		vector <double> ggl;//массив с нижнетреугольными недиагональными элементами
-		vector <double> ggu;//массив с верхнетреугольными недиагональными элементами
-		vector <double> di;//диагональ
-		vector <double> LU_ggu; //верхнетреугольные недиагональные элементы U
-		vector <double> LU_ggl; //нижнетреугольные недиагональные элементы L
-		vector <double> LU_di; //диагональные элементы L
-		MyVector b;//вектор правой части
-		vector <int> ig;//указатели начала строк(столбцов)
-		vector <int> jg;//номера столбцов(строк) внедиагональных элементов
-		MyVector yl; //решение системы Lyl=F
-		MyVector yu; //решение системы Uyu=F
+		std::vector <double> ggl;//массив с нижнетреугольными недиагональными элементами
+		std::vector <double> ggu;//массив с верхнетреугольными недиагональными элементами
+		std::vector <double> di;//диагональ
+		std::vector <double> LU_ggu; //верхнетреугольные недиагональные элементы U
+		std::vector <double> LU_ggl; //нижнетреугольные недиагональные элементы L
+		std::vector <double> LU_di; //диагональные элементы L
+		myvector::MyVector b;//вектор правой части
+		std::vector <int> ig;//указатели начала строк(столбцов)
+		std::vector <int> jg;//номера столбцов(строк) внедиагональных элементов
+		myvector::MyVector yl; //решение системы Lyl=F
+		myvector::MyVector yu; //решение системы Uyu=F
 	
 		Matrix();
 
@@ -39,18 +31,18 @@ namespace matrix
 		void reinitialize();
 
 		//умножение на вектор
-		MyVector operator*(MyVector a);
-		MyVector operator/(MyVector a);
+		myvector::MyVector operator*(myvector::MyVector a);
+		myvector::MyVector operator/(myvector::MyVector a);
 
 		~Matrix();
 
-		MyVector Uv(MyVector v);
+		myvector::MyVector Uv(myvector::MyVector v);
 
 		void LU();
-		void LYF(MyVector b);
-		void LYFt(MyVector b);
-		void UXY(MyVector b);
-		void UXYt(MyVector b);
-		MyVector Uv_(MyVector v);
+		void LYF(myvector::MyVector b);
+		void LYFt(myvector::MyVector b);
+		void UXY(myvector::MyVector b);
+		void UXYt(myvector::MyVector b);
+		myvector::MyVector Uv_(myvector::MyVector v);
 	};
 }
