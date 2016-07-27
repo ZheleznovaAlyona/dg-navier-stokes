@@ -1,4 +1,11 @@
 #include "matrix.h"
+#include <assert.h>
+#include "myfunctions.h"
+#include "testing_parameters.h"
+
+using namespace myvector;
+using namespace std;
+using namespace testingparameters;
 
 namespace matrix
 {	

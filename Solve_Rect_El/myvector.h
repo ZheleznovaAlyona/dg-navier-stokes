@@ -1,10 +1,6 @@
 #pragma once
-
 #include <fstream>
 #include <vector>
-#include <assert.h>
-#include <iomanip>
-using namespace std;
 
 namespace myvector
 {
@@ -13,7 +9,7 @@ namespace myvector
 	{
 	public:
 
-		vector <double> ar;
+		std::vector <double> ar;
 
 		MyVector();
 		MyVector(int size);

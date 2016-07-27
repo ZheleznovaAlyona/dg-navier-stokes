@@ -1,5 +1,8 @@
 #include "myvector.h"
+#include <assert.h>
+#include <iomanip>
 
+using namespace std;
 
 namespace myvector
 {

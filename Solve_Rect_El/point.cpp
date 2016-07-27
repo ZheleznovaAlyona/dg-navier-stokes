@@ -12,7 +12,7 @@ namespace point
 			return false;
 	}
 
-	std::ifstream& operator>>(std::ifstream& is, vector <Point>& points)
+	ifstream& operator>>(ifstream& is, vector <Point>& points)
 	{
 		int tmp;
 		Point point_tmp;

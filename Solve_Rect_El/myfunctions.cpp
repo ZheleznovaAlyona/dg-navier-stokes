@@ -1,9 +1,7 @@
-#pragma once
-#include <vector>
-#include "myvector.h"
 #include "myfunctions.h"
 
 using namespace std;
+using namespace myvector;
 
 double pow_i(int i, double a)
 {

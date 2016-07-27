@@ -1,5 +1,6 @@
 namespace testingparameters
 {
+
 	class Testing_parameters
 	{
 	public:
@@ -8,7 +9,6 @@ namespace testingparameters
 		static int test;
 		static int solver;
 
-		//static void initialize_parameters();
 		static const Testing_parameters& instance();
 		
 	private:
@@ -17,6 +17,6 @@ namespace testingparameters
 		~Testing_parameters();
 		Testing_parameters(Testing_parameters& parameters);
 		Testing_parameters& operator=(Testing_parameters&);
-
 	};
+
 }

@@ -1,5 +1,9 @@
 #include "partition.h"
 
+using namespace std;
+using namespace element;
+using namespace point;
+
 namespace partition
 {
 	void Partition::input(ifstream& grid_f_in, ifstream& elements_f_in)

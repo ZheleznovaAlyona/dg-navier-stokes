@@ -19,8 +19,9 @@ using namespace std;
 #include "myvector.h"
 #include "myfunctions.h"
 #include "matrix.h"
+#include "testing_parameters.h"
 #include "densematrix.h"
-//#include "testing_parameters.h"
+
 using namespace boundary_conditions;
 using namespace element;
 using namespace partition;
@@ -28,11 +29,6 @@ using namespace point;
 using namespace myvector;
 using namespace matrix;
 using namespace densematrix;
-//using namespace testingparameters;
-
-//bool use_LU;
-//int test = 3;
-//int solver = 2;
 
 
 struct Logger
@@ -217,20 +213,6 @@ struct SLAE : public BoundaryConditionsSupport
 	void calculate_SP_out_right(int element_number);
 	void calculate_SP_out_low(int element_number);
 	void calculate_SP_out_up(int element_number);
-
-
-	//краевые условия
-	void input_boundaries1(FILE* f_in);
-	void input_boundaries2(FILE* f_in);
-	void input_boundaries3(FILE* f_in);
-
-	void calculate_all_boundaries1();
-	void calculate_boundaries1(int number);
-
-	void calculate_boundaries1_left(int number);
-	void calculate_boundaries1_right(int number);
-	void calculate_boundaries1_low(int number);
-	void calculate_boundaries1_up(int number);
 
 	double gx(int formula_number, double x, double y);
 	double gy(int formula_number, double x, double y);
