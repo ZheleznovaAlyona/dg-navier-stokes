@@ -47,7 +47,7 @@ struct SLAE : public BoundaryConditionsSupport
 	int max_iter; //max количество итераций
 	int max_iter_nonlinear;
 	double eps; //точность решения СЛАУ
-	double sigma, mu1, mu2; //коэффициенты стабилизации
+	double sigma, mu2; //коэффициенты стабилизации
 	Matrix A; //матрица
 	Logger logger; //логгер для вывода информации о процессе решения СЛАУ
 
@@ -70,26 +70,11 @@ struct SLAE : public BoundaryConditionsSupport
 
 	MyVector q_prev; //вектор весов с предыдущей итерации по нелинейности
 
-	function<double(double, double)> psi[4]; //указатели на функции вычисления базисных функций p в точке
-	function<double(double, double)> dpsiksi[4]; //указатели на функции вычисления d/dksi базисных функций p в точке
-	function<double(double, double)> dpsietta[4]; //указатели на функции вычисления d/detta базисных функций p в точке
-	function<double(double, double)> phix[4]; //указатели на функции вычисления базисных функций ux в точке
-	function<double(double, double)> phiy[4]; //указатели на функции вычисления базисных функций uy в точке
-	function<double(double, double)> dphixksi[4]; //указатели на функции вычисления d/dksi базисных функций ux в точке
-	function<double(double, double)> dphixetta[4]; //указатели на функции вычисления d/detta базисных функций ux в точке
-	function<double(double, double)> dphiyksi[4]; //указатели на функции вычисления d/dksi базисных функций uy в точке
-	function<double(double, double)> dphiyetta[4]; //указатели на функции вычисления d/detta базисных функций uy в точке
-
 	vector <double> LU_ggu2; //верхнетреугольные недиагональные элементы U для LU-решателя
 	vector <double> LU_ggl2; //нижнетреугольные недиагональные элементы L для LU-решателя
 	vector <double> LU_di2; //диагональные элементы L для LU-решателя
 	vector <int> LU_ig2; //индексы портрета для LU-решателя
 	int size_prof; //размер массивов элементов для профильного формата LU-решателя
-	
-	double gauss_points[2][9];//точки гаусса
-	double gauss_weights[9];// веса гаусса
-	double gauss_points_1[3];//точки гаусса
-	double gauss_weights_1[3];// веса гаусса
     
 	SLAE(){};
 
@@ -213,25 +198,6 @@ struct SLAE : public BoundaryConditionsSupport
 	void calculate_SP_out_right(int element_number);
 	void calculate_SP_out_low(int element_number);
 	void calculate_SP_out_up(int element_number);
-
-	double gx(int formula_number, double x, double y);
-	double gy(int formula_number, double x, double y);
-
-
-	//функции и параметры для задачи
-	double calculate_fx(int area_number, double x, double y);
-	double calculate_fy(int area_number, double x, double y);
-
-	double calculate_ux_analytic(int area_number, double x, double y);
-	double calculate_uy_analytic(int area_number, double x, double y);
-	double calculate_uxdx_analytic(int area_number, double x, double y);
-	double calculate_uydy_analytic(int area_number, double x, double y);
-
-	double calculate_p_analytic(int area_number, double x, double y);
-
-	double calculate_lambda(int area_number);
-	double calculate_rho(int area_number);
-
 
 	//решатели
 	void solve_min_sqr_problem(MyVector d, DenseMatrix H, MyVector &result);

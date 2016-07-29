@@ -2,6 +2,10 @@
 #include <fstream>
 #include <vector>
 #include "partition.h"
+#include "parameters.h"
+#include "myvector.h"
+#include "integration.h"
+#include "basis.h"
 
 namespace boundary_conditions
 {
@@ -14,7 +18,10 @@ namespace boundary_conditions
 		int formula_number;
 	};
 
-	class BoundaryConditionsSupport : public partition::Partition
+	class BoundaryConditionsSupport : public partition::Partition,
+									  public parameters::Parameters,
+									  public integration::Gauss_integration,
+									  public basis::Basis
 	{
 	public:
 
@@ -22,13 +29,17 @@ namespace boundary_conditions
 		std::vector <BoundaryCondition> boundaries2; //געמנûו -//-
 		std::vector <BoundaryCondition> boundaries3; //ענועüט -//-
 
-		void calculate_all_boundaries1();
-		void calculate_boundaries1(int number);
+		double mu1;
 
-		void calculate_boundaries1_left(int number);
-		void calculate_boundaries1_right(int number);
-		void calculate_boundaries1_low(int number);
-		void calculate_boundaries1_up(int number);
+		void initialize_penalty_parameters();
+
+		void calculate_all_boundaries1(myvector::MyVector b);
+		void calculate_boundaries1(int number, myvector::MyVector b);
+
+		void calculate_boundaries1_left(int number, myvector::MyVector b);
+		void calculate_boundaries1_right(int number, myvector::MyVector b);
+		void calculate_boundaries1_low(int number, myvector::MyVector b);
+		void calculate_boundaries1_up(int number, myvector::MyVector b);
 	};
 
 	std::ifstream& operator>>(std::ifstream& is, std::vector <BoundaryCondition>& boundaries);

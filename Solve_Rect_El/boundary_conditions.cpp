@@ -5,6 +5,9 @@
 using namespace std;
 using namespace element;
 using namespace partition;
+using namespace parameters;
+using namespace myvector;
+using namespace basis;
 
 namespace boundary_conditions
 {
@@ -30,15 +33,19 @@ namespace boundary_conditions
 		return is;
 	}
 
-	void BoundaryConditionsSupport::calculate_all_boundaries1()
+	void BoundaryConditionsSupport::initialize_penalty_parameters()
+	{
+		mu1 = 1;
+	}
+
+	void BoundaryConditionsSupport::calculate_all_boundaries1(MyVector b)
 	{
 		int size_b = boundaries1.size();
 		for(int i = 0; i < size_b; i++)
-			calculate_boundaries1(i);
+			calculate_boundaries1(i, b);
 	}
 
-
-	void BoundaryConditionsSupport::calculate_boundaries1_left(int number)
+	void BoundaryConditionsSupport::calculate_boundaries1_left(int number, MyVector b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -79,12 +86,12 @@ namespace boundary_conditions
 			}
 			Ug_vector[i] *= jacobian;
 			Pg_vector[i] *= jacobian;
-			A.b[element.edges[i]] += Ug_vector[i];
-			A.b[element.nodes[i] + n_edges] += Pg_vector[i];
+			b[element.edges[i]] += Ug_vector[i];
+			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_right(int number)
+	void BoundaryConditionsSupport::calculate_boundaries1_right(int number, MyVector b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -124,12 +131,12 @@ namespace boundary_conditions
 			}
 			Ug_vector[i] *= jacobian;
 			Pg_vector[i] *= jacobian;
-			A.b[element.edges[i]] += Ug_vector[i];
-			A.b[element.nodes[i] + n_edges] += Pg_vector[i];
+			b[element.edges[i]] += Ug_vector[i];
+			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_low(int number)
+	void BoundaryConditionsSupport::calculate_boundaries1_low(int number, MyVector b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -169,12 +176,12 @@ namespace boundary_conditions
 			}
 			Ug_vector[i] *= jacobian;
 			Pg_vector[i] *= jacobian;
-			A.b[element.edges[i]] += Ug_vector[i];
-			A.b[element.nodes[i] + n_edges] += Pg_vector[i];
+			b[element.edges[i]] += Ug_vector[i];
+			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_up(int number)
+	void BoundaryConditionsSupport::calculate_boundaries1_up(int number, MyVector b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -214,18 +221,18 @@ namespace boundary_conditions
 			}
 			Ug_vector[i] *= jacobian;
 			Pg_vector[i] *= jacobian;
-			A.b[element.edges[i]] += Ug_vector[i];
-			A.b[element.nodes[i] + n_edges] += Pg_vector[i];
+			b[element.edges[i]] += Ug_vector[i];
+			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
 
 
-	void BoundaryConditionsSupport::calculate_boundaries1(int number)
+	void BoundaryConditionsSupport::calculate_boundaries1(int number, MyVector b)
 	{
-		if(boundaries1[number].edges[0] == 1) calculate_boundaries1_left(number);
-		if(boundaries1[number].edges[1] == 1) calculate_boundaries1_right(number);
-		if(boundaries1[number].edges[2] == 1) calculate_boundaries1_low(number);
-		if(boundaries1[number].edges[3] == 1) calculate_boundaries1_up(number);
+		if(boundaries1[number].edges[0] == 1) calculate_boundaries1_left(number, b);
+		if(boundaries1[number].edges[1] == 1) calculate_boundaries1_right(number, b);
+		if(boundaries1[number].edges[2] == 1) calculate_boundaries1_low(number, b);
+		if(boundaries1[number].edges[3] == 1) calculate_boundaries1_up(number, b);
 	}
 
 }
