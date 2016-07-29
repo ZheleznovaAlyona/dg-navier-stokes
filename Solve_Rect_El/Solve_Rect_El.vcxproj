@@ -62,24 +62,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="basis.h" />
     <ClInclude Include="boundary_conditions.h" />
     <ClInclude Include="densematrix.h" />
     <ClInclude Include="element.h" />
+    <ClInclude Include="integration.h" />
     <ClInclude Include="myfunctions.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="myvector.h" />
+    <ClInclude Include="parameters.h" />
     <ClInclude Include="partition.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="solver.h" />
     <ClInclude Include="testing_parameters.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="basis.cpp" />
     <ClCompile Include="boundary_conditions.cpp" />
     <ClCompile Include="densematrix.cpp" />
     <ClCompile Include="element.cpp" />
+    <ClCompile Include="integration.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="myfunctions.cpp" />
     <ClCompile Include="myvector.cpp" />
+    <ClCompile Include="parameters.cpp" />
     <ClCompile Include="partition.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="solver.cpp" />
