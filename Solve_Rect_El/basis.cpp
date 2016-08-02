@@ -1,6 +1,7 @@
 #include "basis.h"
 
 using namespace std;
+using namespace partition;
 
 namespace basis
 {
@@ -52,5 +53,65 @@ namespace basis
 		dpsietta[1] = [](double ksi, double etta) { return -0.25 * (1 + ksi); };
 		dpsietta[2] = [](double ksi, double etta) { return 0.25 * (1 - ksi); };
 		dpsietta[3] = [](double ksi, double etta) { return 0.25 * (1 + ksi); };
+	}
+
+	double Basis::phix_i(int i, double x, double y, int element_number, Partition& p)
+	{
+		double x_left = p.nodes[p.elements[element_number].nodes[0]].x;
+		double x_right = p.nodes[p.elements[element_number].nodes[1]].x;
+		double y_low = p.nodes[p.elements[element_number].nodes[0]].y;
+		double y_up = p.nodes[p.elements[element_number].nodes[3]].y;
+		double hx = x_right - x_left, hy = y_up - y_low;
+		double ksi = 2 * (x - (x_left + x_right) / 2) / hx, 
+			etta = 2 * (y - (y_low + y_up) / 2) / hy;
+		return phix[i](ksi, etta);
+	}
+
+	double Basis::phiy_i(int i, double x, double y, int element_number, Partition& p)
+	{
+		double x_left = p.nodes[p.elements[element_number].nodes[0]].x;
+		double x_right = p.nodes[p.elements[element_number].nodes[1]].x;
+		double y_low = p.nodes[p.elements[element_number].nodes[0]].y;
+		double y_up = p.nodes[p.elements[element_number].nodes[3]].y;
+		double hx = x_right - x_left, hy = y_up - y_low;
+		double ksi = 2 * (x - (x_left + x_right) / 2) / hx, 
+			etta = 2 * (y - (y_low + y_up) / 2) / hy;
+		return phiy[i](ksi, etta);
+	}
+
+	double Basis::phixdx_i(int i, double x, double y, int element_number, Partition& p)
+	{
+		double x_left = p.nodes[p.elements[element_number].nodes[0]].x;
+		double x_right = p.nodes[p.elements[element_number].nodes[1]].x;
+		double y_low = p.nodes[p.elements[element_number].nodes[0]].y;
+		double y_up = p.nodes[p.elements[element_number].nodes[3]].y;
+		double hx = x_right - x_left, hy = y_up - y_low;
+		double ksi = 2 * (x - (x_left + x_right) / 2) / hx, 
+			etta = 2 * (y - (y_low + y_up) / 2) / hy;
+		return dphixksi[i](ksi, etta) / hx;
+	}
+
+	double Basis::phiydy_i(int i, double x, double y, int element_number, Partition& p)
+	{
+		double x_left = p.nodes[p.elements[element_number].nodes[0]].x;
+		double x_right = p.nodes[p.elements[element_number].nodes[1]].x;
+		double y_low = p.nodes[p.elements[element_number].nodes[0]].y;
+		double y_up = p.nodes[p.elements[element_number].nodes[3]].y;
+		double hx = x_right - x_left, hy = y_up - y_low;
+		double ksi = 2 * (x - (x_left + x_right) / 2) / hx, 
+			etta = 2 * (y - (y_low + y_up) / 2) / hy;
+		return dphiyetta[i](ksi, etta) / hy;
+	}
+
+	double Basis::psi_i(int i, double x, double y, int element_number, Partition& p)
+	{
+		double x_left = p.nodes[p.elements[element_number].nodes[0]].x;
+		double x_right = p.nodes[p.elements[element_number].nodes[1]].x;
+		double y_low = p.nodes[p.elements[element_number].nodes[0]].y;
+		double y_up = p.nodes[p.elements[element_number].nodes[3]].y;
+		double hx = x_right - x_left, hy = y_up - y_low;
+		double ksi = 2 * (x - (x_left + x_right) / 2) / hx, 
+			etta = 2 * (y - (y_low + y_up) / 2) / hy;
+		return psi[i](ksi, etta);
 	}
 }

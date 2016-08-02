@@ -18,10 +18,10 @@ namespace boundary_conditions
 		int formula_number;
 	};
 
-	class BoundaryConditionsSupport : public partition::Partition,
-									  public parameters::Parameters,
-									  public integration::Gauss_integration,
-									  public basis::Basis
+	class BoundaryConditionsSupport : virtual public partition::Partition,
+									  virtual public parameters::Parameters,
+									  virtual public integration::Gauss_integration,
+									  virtual public basis::Basis
 	{
 	public:
 
@@ -33,13 +33,13 @@ namespace boundary_conditions
 
 		void initialize_penalty_parameters();
 
-		void calculate_all_boundaries1(myvector::MyVector b);
-		void calculate_boundaries1(int number, myvector::MyVector b);
+		void calculate_all_boundaries1(myvector::MyVector& b);
+		void calculate_boundaries1(int number, myvector::MyVector& b);
 
-		void calculate_boundaries1_left(int number, myvector::MyVector b);
-		void calculate_boundaries1_right(int number, myvector::MyVector b);
-		void calculate_boundaries1_low(int number, myvector::MyVector b);
-		void calculate_boundaries1_up(int number, myvector::MyVector b);
+		void calculate_boundaries1_left(int number, myvector::MyVector& b);
+		void calculate_boundaries1_right(int number, myvector::MyVector& b);
+		void calculate_boundaries1_low(int number, myvector::MyVector& b);
+		void calculate_boundaries1_up(int number, myvector::MyVector& b);
 	};
 
 	std::ifstream& operator>>(std::ifstream& is, std::vector <BoundaryCondition>& boundaries);

@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include "partition.h"
 
 namespace basis
 {
@@ -18,5 +19,11 @@ namespace basis
 		std::function<double(double, double)> dphiyetta[4]; //указатели на функции вычисления d/detta базисных функций uy в точке
 
 		void initialize();
+
+		double phix_i(int i, double x, double y, int element_number, partition::Partition& p);
+		double phiy_i(int i, double x, double y, int element_number, partition::Partition& p);
+		double phixdx_i(int i, double x, double y, int element_number, partition::Partition& p);
+		double phiydy_i(int i, double x, double y, int element_number, partition::Partition& p);
+		double psi_i(int i, double x, double y, int element_number, partition::Partition& p);
 	};
 }

@@ -252,6 +252,7 @@ namespace matrix
 		else
 			yu = b;
 	}
+
 	MyVector Matrix::Uv_(MyVector v)
 	{
 		int i, j, k, kol;
@@ -277,5 +278,57 @@ namespace matrix
 		}
 
 		return new_vector;
+	}
+
+	void Matrix::add_element(int i, int j, double element)
+	{
+		int id;
+		bool flag;
+
+		if(i == j)
+			di[i] += element;
+		else
+		{
+			if(i < j)
+			{	
+				flag = false;
+				for(id = ig[j]; !flag && id <= ig[j + 1] - 1; id++)
+					if(jg[id] == i) flag = true;
+				 if(flag) ggu[id - 1] += element;
+			}
+			else
+			{
+				flag = false;
+				for(id = ig[i]; !flag && id <= ig[i + 1] - 1; id++)
+					if(jg[id] == j) flag = true;
+				if(flag) ggl[id - 1] += element;
+			}
+		}
+	}
+
+	void Matrix::put_element(int i, int j, double element)
+	{
+		int id;
+		bool flag;
+
+		if(i == j)
+			di[i] = element;
+		else
+		{
+			if(i < j)
+			{	
+				flag = false;
+				for(id = ig[j]; !flag && id <= ig[j + 1] - 1; id++)
+					if(jg[id] == i) flag = true;
+				 if(flag) ggu[id - 1] = element;
+			}
+			else
+			{
+				flag = false;
+				for(id = ig[i]; !flag && id <= ig[i + 1] - 1; id++)
+					if(jg[id] == j) flag = true;
+				if(flag) ggl[id - 1] = element;
+			}
+		}
 	}
 }

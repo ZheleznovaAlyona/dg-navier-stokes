@@ -38,14 +38,14 @@ namespace boundary_conditions
 		mu1 = 1;
 	}
 
-	void BoundaryConditionsSupport::calculate_all_boundaries1(MyVector b)
+	void BoundaryConditionsSupport::calculate_all_boundaries1(MyVector& b)
 	{
 		int size_b = boundaries1.size();
 		for(int i = 0; i < size_b; i++)
 			calculate_boundaries1(i, b);
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_left(int number, MyVector b)
+	void BoundaryConditionsSupport::calculate_boundaries1_left(int number, MyVector& b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -91,7 +91,7 @@ namespace boundary_conditions
 		}
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_right(int number, MyVector b)
+	void BoundaryConditionsSupport::calculate_boundaries1_right(int number, MyVector& b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -136,7 +136,7 @@ namespace boundary_conditions
 		}
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_low(int number, MyVector b)
+	void BoundaryConditionsSupport::calculate_boundaries1_low(int number, MyVector& b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -181,7 +181,7 @@ namespace boundary_conditions
 		}
 	}
 
-	void BoundaryConditionsSupport::calculate_boundaries1_up(int number, MyVector b)
+	void BoundaryConditionsSupport::calculate_boundaries1_up(int number, MyVector& b)
 	{
 		Element element = elements[boundaries1[number].elem];
 		double hy = get_hy(boundaries1[number].elem);
@@ -227,7 +227,7 @@ namespace boundary_conditions
 	}
 
 
-	void BoundaryConditionsSupport::calculate_boundaries1(int number, MyVector b)
+	void BoundaryConditionsSupport::calculate_boundaries1(int number, MyVector& b)
 	{
 		if(boundaries1[number].edges[0] == 1) calculate_boundaries1_left(number, b);
 		if(boundaries1[number].edges[1] == 1) calculate_boundaries1_right(number, b);

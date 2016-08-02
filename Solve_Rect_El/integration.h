@@ -1,3 +1,4 @@
+#pragma once
 namespace integration
 {
 	class Gauss_integration

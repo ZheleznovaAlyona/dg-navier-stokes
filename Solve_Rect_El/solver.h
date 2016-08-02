@@ -20,7 +20,10 @@ using namespace std;
 #include "myfunctions.h"
 #include "matrix.h"
 #include "testing_parameters.h"
+#include "parameters.h"
 #include "densematrix.h"
+#include "boundaries.h"
+#include "logger.h"
 
 using namespace boundary_conditions;
 using namespace element;
@@ -29,25 +32,18 @@ using namespace point;
 using namespace myvector;
 using namespace matrix;
 using namespace densematrix;
+using namespace boundaries;
+using namespace logger;
+using namespace parameters;
 
 
-struct Logger
-{
-	ofstream log_f;
-	void send_current_information(double r_norm, int iteration_number)
-	{
-		log_f << iteration_number << "     " << setprecision(20) << r_norm << endl;
-	};
-};
-
-struct SLAE : public BoundaryConditionsSupport
+struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, public OuterBoundaries
 {
 	int n; //размерность СЛАУ
 	int m; //глубина метода gmres
 	int max_iter; //max количество итераций
 	int max_iter_nonlinear;
 	double eps; //точность решения СЛАУ
-	double sigma, mu2; //коэффициенты стабилизации
 	Matrix A; //матрица
 	Logger logger; //логгер для вывода информации о процессе решения СЛАУ
 
@@ -60,8 +56,6 @@ struct SLAE : public BoundaryConditionsSupport
 
 	//локальные матрицы
 	double G[4][4], P1[4][4], P2[4][4], C[4][4]; 
-	double E[8][8], P_1[8][8], P_2[8][8], SP[8][8]; //локальные матрицы
-	double E_out[4][4], P_1_out[4][4], P_2_out[4][4], SP_out[4][4]; //локальные матрицы
 	double F[4]; //локальный вектор правой части
 
 	MyVector Ux_numerical; //численное решение Ux
@@ -83,8 +77,8 @@ struct SLAE : public BoundaryConditionsSupport
 		 double epsilon, 
 		 int gmres_m, 
 		 ifstream& grid_f_in, 
-		 ifstream& elements_f_in, 
-		 ofstream& log_f, 
+		 ifstream& elements_f_in,
+		 string log_f,
 		 ifstream& boundary1)
 	{
 		initialize(max_number_of_iterations, 
@@ -105,7 +99,7 @@ struct SLAE : public BoundaryConditionsSupport
 					int gmres_m,
 					ifstream& grid_f_in,
 					ifstream& elements_f_in,
-					ofstream& log_f,
+					string log_f,
 					ifstream& boundary1);
 
 	void reinitialize();
@@ -119,9 +113,6 @@ struct SLAE : public BoundaryConditionsSupport
 									int *dof_j,
 									bool dof_j_edge);
 	void create_portret();
-
-	void add_element_to_global_matrix(int i, int j, double element);
-	void put_element_to_global_matrix(int i, int j, double element);
 
 	void calculate_global_matrix(MyVector q_calc);
 
@@ -141,12 +132,6 @@ struct SLAE : public BoundaryConditionsSupport
 	void get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution);
 	void get_vector_solution_in_nodes_p(MyVector qi, MyVector &solution);
 
-	double phix_i(int i, double x, double y, int element_number);
-	double phiy_i(int i, double x, double y, int element_number);
-	double phixdx_i(int i, double x, double y, int element_number);
-	double phiydy_i(int i, double x, double y, int element_number);
-	double psi_i(int i, double x, double y, int element_number);
-
 	//локальные матрицы и векторы
 	void calculate_locals(int element_number, MyVector q_calc);
 	void calculate_G(int element_number);
@@ -154,50 +139,6 @@ struct SLAE : public BoundaryConditionsSupport
 	void calculate_P1(int element_number);
 	void calculate_P2(int element_number);
 	void calculate_F(int element_number);
-
-	//численные потоки по внутренним границам
-	void calculate_internal_boundaries(int element_number);
-
-	void calculate_ES_horizontal(int element_number1, int element_number2);
-	void calculate_ES_vertical(int element_number1, int element_number2);
-
-	void calculate_P_1_horizontal(int element_number1, int element_number2);
-	void calculate_P_1_vertical(int element_number1, int element_number2);
-
-	void calculate_P_2_horizontal(int element_number1, int element_number2);
-	void calculate_P_2_vertical(int element_number1, int element_number2);
-
-	void calculate_SP_horizontal(int element_number1, int element_number2);
-	void calculate_SP_vertical(int element_number1, int element_number2);
-
-	void add_ES_to_global(int element_number, int neighbor_element_number);
-	void add_P_1_to_global(int element_number, int neighbor_element_number);
-	void add_P_2_to_global(int element_number, int neighbor_element_number);
-	void add_SP_to_global(int element_number, int neighbor_element_number);
-
-
-	//численные потоки по внешним границам
-	void calculate_outer_boundaries(int element_number);
-
-	void calculate_ES_out_left(int element_number);
-	void calculate_ES_out_right(int element_number);
-	void calculate_ES_out_low(int element_number);
-	void calculate_ES_out_up(int element_number);
-
-	void calculate_P_1_out_left(int element_number);
-	void calculate_P_1_out_right(int element_number);
-	void calculate_P_1_out_low(int element_number);
-	void calculate_P_1_out_up(int element_number);
-
-	void calculate_P_2_out_left(int element_number);
-	void calculate_P_2_out_right(int element_number);
-	void calculate_P_2_out_low(int element_number);
-	void calculate_P_2_out_up(int element_number);
-
-	void calculate_SP_out_left(int element_number);
-	void calculate_SP_out_right(int element_number);
-	void calculate_SP_out_low(int element_number);
-	void calculate_SP_out_up(int element_number);
 
 	//решатели
 	void solve_min_sqr_problem(MyVector d, DenseMatrix H, MyVector &result);

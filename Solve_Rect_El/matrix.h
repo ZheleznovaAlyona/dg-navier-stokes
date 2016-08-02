@@ -44,5 +44,8 @@ namespace matrix
 		void UXY(myvector::MyVector b);
 		void UXYt(myvector::MyVector b);
 		myvector::MyVector Uv_(myvector::MyVector v);
+
+		void add_element(int i, int j, double element);
+		void put_element(int i, int j, double element);
 	};
 }
