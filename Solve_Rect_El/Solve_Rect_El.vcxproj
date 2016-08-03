@@ -75,6 +75,7 @@
     <ClInclude Include="parameters.h" />
     <ClInclude Include="partition.h" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="SLAE.h" />
     <ClInclude Include="solver.h" />
     <ClInclude Include="testing_parameters.h" />
   </ItemGroup>
@@ -93,6 +94,7 @@
     <ClCompile Include="parameters.cpp" />
     <ClCompile Include="partition.cpp" />
     <ClCompile Include="point.cpp" />
+    <ClCompile Include="SLAE.cpp" />
     <ClCompile Include="solver.cpp" />
     <ClCompile Include="testing_parameters.cpp" />
   </ItemGroup>
