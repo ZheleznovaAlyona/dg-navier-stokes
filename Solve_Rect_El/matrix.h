@@ -1,9 +1,17 @@
 #pragma once
 #include <vector>
 #include "myvector.h"
+#include "partition.h"
+#include "boundaries.h"
+#include "boundary_conditions.h"
 
 namespace matrix
 {
+	class MatrixSupport
+	{
+		
+	};
+
 	class Matrix
 	{
 	public:
@@ -47,5 +55,26 @@ namespace matrix
 
 		void add_element(int i, int j, double element);
 		void put_element(int i, int j, double element);
+
+		int count_unzero_matrix_elements(partition::Partition& p);
+		int create_unzero_elements_list(int element_number, 
+										vector <int> &list, 
+										int dof_num_i, 
+										int dof_num_j, 
+										int *dof_i, 
+										int *dof_j,
+										bool dof_j_edge,
+										partition::Partition& p);
+		void create_portret(partition::Partition& p);
+
+		void calculate_global_matrix(MyVector q_calc, 
+									 partition::Partition& p,
+									 boundaries::InternalBoundaries& internal_bs,
+									 boundaries::OuterBoundaries& outer_bs,
+									 boundary_conditions::BoundaryConditionsSupport&
+										b_conditions);
+
 	};
+
+
 }

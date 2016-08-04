@@ -1,11 +1,15 @@
 #include "matrix.h"
 #include <assert.h>
+#include <algorithm>
 #include "myfunctions.h"
 #include "testing_parameters.h"
 
 using namespace myvector;
 using namespace std;
 using namespace testingparameters;
+using namespace boundary_conditions;
+using namespace partition;
+using namespace boundaries;
 
 namespace matrix
 {	
@@ -331,4 +335,242 @@ namespace matrix
 			}
 		}
 	}
+
+	int Matrix::count_unzero_matrix_elements(Partition& p)
+	{
+		int count_uu = 0;
+		for(unsigned int i = 0; i < p.elements.size(); i++)
+		{
+			//с собой
+			count_uu += 4;
+			//с соседями
+			for(int j = 0; j < 4; j++)
+				if(p.elements[i].neighbors[j] != -1)
+					count_uu += 4;
+		}
+		count_uu *= 4;
+		count_uu -= p.elements.size() * 4;
+		//так как нужно для одного треугольника ввиду симметричности портрета,
+		//то необходимо полученное количество поделить на 2
+		count_uu /= 2;
+
+		int count_pp = 0;
+		for(unsigned int i = 0; i < p.elements.size(); i++)
+		{
+			//с собой
+			count_pp += 4;
+			//с соседями
+			for(int j = 0; j < 4; j++)
+				if(p.elements[i].neighbors[j] != -1)
+					count_pp += 4;
+		}
+		count_pp *= 4;
+		count_pp -= p.nodes.size();
+		//так как нужно для одного треугольника ввиду симметричности портрета,
+		//то необходимо полученное количество поделить на 2
+		count_pp /= 2;
+
+		int count_up = 0;
+		for(unsigned int i = 0; i < p.elements.size(); i++)
+		{
+			//с собой
+			count_up += 4;
+			//с соседями
+			for(int j = 0; j < 4; j++)
+				if(p.elements[i].neighbors[j] != -1)
+					count_up += 4;
+		}
+		count_up *= 4;
+
+		return count_uu + count_pp + count_up;
+	}
+
+	int Matrix::create_unzero_elements_list(int element_number, 
+									vector <int> &list, 
+									int dof_num_i, 
+									int dof_num_j, 
+									int *dof_i, 
+									int *dof_j,
+									bool dof_j_edge,
+									Partition& p)
+	{
+		int neighbor;
+
+		//свои по строкам
+		for(int i = 0; i < dof_num_i; i++)
+			list.push_back(dof_i[i]);
+
+		//свои
+		for(int i = 0; i < dof_num_j; i++)
+			list.push_back(dof_j[i]);
+
+		//соседей
+		for(int j = 0; j < 4; j++)
+		{
+			neighbor = p.elements[element_number].neighbors[j];
+			if(neighbor != -1)
+			for(int i = 0; i < dof_num_j; i++)
+			{
+				if(dof_j_edge) list.push_back(p.elements[neighbor].edges[i]);
+				else list.push_back(p.elements[neighbor].nodes[i]);
+			}			
+		}
+
+		return list.size();
+	}
+
+	void Matrix::create_portret(Partition& p)
+	{
+		vector <int> unzero_elements_list;
+		vector <int> *lists;	
+		int unzero_elements_lists_size; 
+		int current_number;
+		int n_edges = p.elements.size() * 4;
+
+		lists = new vector <int>[n];
+		int count_elements = p.elements.size();
+
+		for(int i = 0; i < count_elements; i++)
+		{
+			//общий принцип сборки портрета для uu, pp, pu
+			//--------------------------------------------
+			//1. собираем в список:
+			//*для к.э. глобальные номера dof по i и затем
+			//*ненулевые для к.э. глобальные номера dof по j;
+			//2. идём по первым элементам списка (dof по i)
+			//и выбираем для каждого номера (для p номер=индекс цикла + число рёбер),
+			//меньшие его, т.е. те, которые будут располагаться левее соответствующей 
+			//диагонали, потому что портрет строим по строкам
+			//а затем кладём в соответствующий список
+			//2.a. сортируем список по возрастанию
+
+			//структура СЛАУ:
+			/*
+			 ---------
+			| UU | UP |
+			-----|----
+			| PU | PP |
+			 ---------
+			*/
+
+			//блок UU
+			//1
+			unzero_elements_lists_size = create_unzero_elements_list(i, 
+																	 unzero_elements_list, 
+																	 4, 
+																	 4, 
+																	 p.elements[i].edges, 
+																	 p.elements[i].edges, 
+																	 true,
+																	 p);
+			//2
+			for(int j = 0; j < 4; j++)
+			{
+				current_number = unzero_elements_list[j];
+				for(int k = 4; k < unzero_elements_lists_size; k++)
+					if(unzero_elements_list[k] < current_number)
+						lists[current_number].push_back(unzero_elements_list[k]);
+					// 2.a
+					sort(lists[current_number].begin(), lists[current_number].end());
+			}
+			unzero_elements_list.clear();
+
+			//блок PP
+			//1
+			unzero_elements_lists_size = create_unzero_elements_list(i, 
+																	 unzero_elements_list, 
+																	 4, 
+																	 4, 
+																	 p.elements[i].nodes, 
+																	 p.elements[i].nodes, 
+																	 false,
+																	 p);
+			//2
+			for(int j = 0; j < 4; j++)
+			{
+				current_number = unzero_elements_list[j];
+				for(int k = 4; k < unzero_elements_lists_size; k++)
+					if(unzero_elements_list[k] < current_number)
+						lists[current_number + n_edges].push_back(unzero_elements_list[k] + n_edges);	
+					//2.a 
+					//можно не сортировать, потому что потом всё равно добавятся ещё элементы из PU
+			}
+			unzero_elements_list.clear();
+
+			//блок PU
+			//1
+			unzero_elements_lists_size = create_unzero_elements_list(i,
+																	 unzero_elements_list, 
+																	 4, 
+																	 4, 
+																	 p.elements[i].nodes, 
+																	 p.elements[i].edges, 
+																	 true,
+																	 p);
+			//2
+			for(int j = 0; j < 4; j++)
+			{
+				current_number = unzero_elements_list[j];
+				for(int k = 4; k < unzero_elements_lists_size; k++)
+					if(unzero_elements_list[k] < current_number + n_edges)
+						lists[current_number + n_edges].push_back(unzero_elements_list[k]);	
+					// 2.a
+					sort(lists[current_number + n_edges].begin(), 
+						lists[current_number + n_edges].end());
+			}
+			unzero_elements_list.clear();
+		}
+
+		ig[0] = 0;
+
+		for(int i = 0; i < n; i++)
+		{
+			if(!lists[i].empty())
+				ig[i + 1] = ig[i] + lists[i].size();
+			else ig[i + 1] = ig[i];
+		}
+
+		int k = 0;
+		for(int i = 0; i < n; i++)
+		{
+			if(!lists[i].empty())
+			{
+				for(unsigned int j = 0; j < lists[i].size(); j++)
+				{
+					jg[k] = lists[i][j];
+					k++;
+				}
+				lists[i].clear();
+			}
+		}
+
+		delete[] lists;
+	}
+
+	void Matrix::calculate_global_matrix(MyVector q_calc, 
+										 partition::Partition& p,
+										 boundaries::InternalBoundaries& internal_bs,
+										 boundaries::OuterBoundaries& outer_bs,
+										 boundary_conditions::BoundaryConditionsSupport&
+											b_conditions)
+	{
+		int size = p.elements.size();
+
+		//локаьные матрицы и вектор правой части
+		for(int el_i = 0; el_i < size; el_i++);
+		////////////////////////////////////////
+			//calculate_locals(el_i, q_calc);
+
+		//матрицы межэлементных границ
+		for(int el_i = 0; el_i < size; el_i++)
+			internal_bs.calculate_internal_boundaries(el_i, *this);
+
+		//расчёт матриц границ области
+			for(int el_i = 0; el_i < size; el_i++)
+				outer_bs.calculate_outer_boundaries(el_i, *this);
+
+		//учёт первых краевых условий
+		b_conditions.calculate_all_boundaries1(this->b);
+	}
+
 }

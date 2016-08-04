@@ -24,6 +24,7 @@ using namespace std;
 #include "densematrix.h"
 #include "boundaries.h"
 #include "logger.h"
+#include "solver.h"
 
 using namespace boundary_conditions;
 using namespace element;
@@ -35,17 +36,18 @@ using namespace densematrix;
 using namespace boundaries;
 using namespace logger;
 using namespace parameters;
+using namespace solver;
 
 namespace slae
 {
-struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, public OuterBoundaries
+struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, public OuterBoundaries, public Solver
 {
 	int n; //размерность СЛАУ
 	int m; //глубина метода gmres
 	int max_iter; //max количество итераций
 	int max_iter_nonlinear;
 	double eps; //точность решения СЛАУ
-	Matrix A; //матрица
+	Matrix A;
 	Logger logger; //логгер для вывода информации о процессе решения СЛАУ
 
 
@@ -99,18 +101,6 @@ struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, publi
 
 	void reinitialize();
 
-	int count_unzero_matrix_elements();
-	int create_unzero_elements_list(int element_number, 
-									vector <int> &list, 
-									int dof_num_i, 
-									int dof_num_j, 
-									int *dof_i, 
-									int *dof_j,
-									bool dof_j_edge);
-	void create_portret();
-
-	void calculate_global_matrix(MyVector q_calc);
-
 	double get_solution_in_point_ux(double x, double y, int element_number, MyVector qi);
 	double get_solution_in_point_uy(double x, double y, int element_number, MyVector qi);
 	double get_solution_in_point_uxdx(double x, double y, int element_number, MyVector qi);
@@ -134,19 +124,6 @@ struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, publi
 	void calculate_P1(int element_number);
 	void calculate_P2(int element_number);
 	void calculate_F(int element_number);
-
-	//решатели
-	//void solve_min_sqr_problem(MyVector d, DenseMatrix H, MyVector &result);
-	//void GMRES(MyVector U_begin, MyVector &solution);
-
-	//void BCGStab(MyVector U_begin, MyVector &solution);
-	//void BCG(MyVector U_begin, MyVector &solution);
-
-	//void Solve(MyVector U_begin, double &normL2u, double &normL2p);
-
-	//void si_print(ofstream& log_f, int iteration_number, double &normL2u, double &normL2p);
-	//double find_relaxation_parameter(MyVector q_current, MyVector q_previous, double &residual_previous);
-	//void simple_iterations();
 
 	double SLAE::diff_normL2_p(MyVector q_solution);//погрешность решения в норме L2
 	double SLAE::diff_normL2_u(MyVector q_solution);//погрешность решения в норме L2
