@@ -48,6 +48,7 @@ struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, publi
 	int max_iter_nonlinear;
 	double eps; //точность решения СЛАУ
 	Matrix A;
+	myvector::MyVector b;//вектор правой части
 	Logger logger; //логгер для вывода информации о процессе решения СЛАУ
 
 
@@ -101,6 +102,13 @@ struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, publi
 
 	void reinitialize();
 
+	void calculate(MyVector q_calc, 
+				   partition::Partition& p,
+				   boundaries::InternalBoundaries& internal_bs,
+				   boundaries::OuterBoundaries& outer_bs,
+				   boundary_conditions::BoundaryConditionsSupport&
+				   b_conditions);
+							    
 	double get_solution_in_point_ux(double x, double y, int element_number, MyVector qi);
 	double get_solution_in_point_uy(double x, double y, int element_number, MyVector qi);
 	double get_solution_in_point_uxdx(double x, double y, int element_number, MyVector qi);
@@ -127,33 +135,6 @@ struct SLAE : public BoundaryConditionsSupport, public InternalBoundaries, publi
 
 	double SLAE::diff_normL2_p(MyVector q_solution);//погрешность решения в норме L2
 	double SLAE::diff_normL2_u(MyVector q_solution);//погрешность решения в норме L2
-
-
-	////запуск решения
-	//void run(ofstream& solution_f_out, ofstream& info_f_out);
-
-	void output(ofstream& solution_f_out, ofstream& info_f_out, double normL2u, double normL2p)
-	{		
-		ofstream res("result.txt");
-
-		int n_nodes = nodes.size();
-		for(int i = 0; i < n_nodes; i++)
-		{
-			if(abs(nodes[i].x - 0.5) < 1e-10)
-				res << nodes[i].x << "\t" << nodes[i].y << "\t" << Ux_numerical[i]
-				<< "\t" << Uy_numerical[i] << "\t" << P_numerical[i] << "\t"
-				<< calculate_p_analytic(0, nodes[i].x, nodes[i].y) << endl;
-		}
-
-		res.close();
-
-		solution_f_out << Ux_numerical << endl << endl << endl;
-		solution_f_out << Uy_numerical << endl << endl << endl;
-		solution_f_out << P_numerical << endl << endl << endl;
-		info_f_out << "norm L2 u:|u*-u|=" << scientific << setprecision(4) << normL2u 
-			<< endl << "norm L2 p:|p*-p|=" << scientific << setprecision(4) << normL2p
-			<< endl << "eps=" << scientific << setprecision(2) << eps << endl;
-	};
 };
 }
 

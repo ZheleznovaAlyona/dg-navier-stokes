@@ -10,31 +10,12 @@ namespace solver
 {
 	Solver::Solver(){}
 
-	Solver::Solver(ifstream& s_parameters_f)
+	Solver::Solver(string& s_parameters_f)
 	{
-		s_parameters_f >> s_parameters;
+		s_parameters.initialize(s_parameters_f);
 	}
 
 	Solver::~Solver(){}
-
-	void Solver::si_print(ofstream& log_f, 
-						  int iteration_number,
-						  double &normL2u,
-						  double &normL2p,
-						  SLAE& slae_in)
-	{
-		string f_name_s, f_name_i;
-
-		log_f << "---" << iteration_number << "---" << endl;
-		f_name_s = string("s_") + to_string(iteration_number) + ".txt";
-		f_name_i = string("i_") + to_string(iteration_number) + ".txt";
-		ofstream solution_f_out(f_name_s), info_f_out(f_name_i);
-
-		output(solution_f_out, info_f_out, normL2u, normL2p);
-		solution_f_out.close();
-		info_f_out.close();
-
-	}
 
 	double Solver::find_relaxation_parameter(MyVector q_current, 
 											 MyVector q_previous, 

@@ -11,6 +11,33 @@ using namespace testingparameters;
 
 namespace slae
 {
+
+	void SLAE::calculate(MyVector q_calc, 
+						 partition::Partition& p,
+						 boundaries::InternalBoundaries& internal_bs,
+						 boundaries::OuterBoundaries& outer_bs,
+						 boundary_conditions::BoundaryConditionsSupport&
+							b_conditions)
+	{
+		int size = p.elements.size();
+
+		//локаьные матрицы и вектор правой части
+		for(int el_i = 0; el_i < size; el_i++);
+		////////////////////////////////////////
+			//calculate_locals(el_i, q_calc);
+
+		//матрицы межэлементных границ
+		for(int el_i = 0; el_i < size; el_i++)
+			internal_bs.calculate_internal_boundaries(el_i, A);
+
+		//расчёт матриц границ области
+			for(int el_i = 0; el_i < size; el_i++)
+				outer_bs.calculate_outer_boundaries(el_i, A);
+
+		//учёт первых краевых условий
+		b_conditions.calculate_all_boundaries1(this->b);
+	}
+
 void SLAE::initialize(int max_number_of_iterations,
 					  int max_number_of_iterations_non_lin,
 					  double epsilon,
