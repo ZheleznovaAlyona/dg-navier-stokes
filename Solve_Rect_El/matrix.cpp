@@ -27,9 +27,10 @@ namespace matrix
 		initialize_vector(ggl, size);
 		initialize_vector(ggu, size);
 		initialize_vector(di, n);
-		b.initialize(n);
 		initialize_vector(ig, n + 1);
 		initialize_vector(jg, size);
+		yl.initialize(n);
+		yu.initialize(n);
 	};
 
 	void Matrix::reinitialize()
@@ -37,7 +38,6 @@ namespace matrix
 		memset(&ggl[0], 0, size * sizeof(double)); //обнуляем
 		memset(&ggu[0], 0, size * sizeof(double)); //обнуляем
 		memset(&di[0], 0, n * sizeof(double)); //обнуляем
-		b.make_zero();
 	};
 
 	MyVector Matrix::operator*(MyVector a) 
@@ -336,89 +336,6 @@ namespace matrix
 		}
 	}
 
-	int Matrix::count_unzero_matrix_elements(Partition& p)
-	{
-		int count_uu = 0;
-		for(unsigned int i = 0; i < p.elements.size(); i++)
-		{
-			//с собой
-			count_uu += 4;
-			//с соседями
-			for(int j = 0; j < 4; j++)
-				if(p.elements[i].neighbors[j] != -1)
-					count_uu += 4;
-		}
-		count_uu *= 4;
-		count_uu -= p.elements.size() * 4;
-		//так как нужно для одного треугольника ввиду симметричности портрета,
-		//то необходимо полученное количество поделить на 2
-		count_uu /= 2;
-
-		int count_pp = 0;
-		for(unsigned int i = 0; i < p.elements.size(); i++)
-		{
-			//с собой
-			count_pp += 4;
-			//с соседями
-			for(int j = 0; j < 4; j++)
-				if(p.elements[i].neighbors[j] != -1)
-					count_pp += 4;
-		}
-		count_pp *= 4;
-		count_pp -= p.nodes.size();
-		//так как нужно для одного треугольника ввиду симметричности портрета,
-		//то необходимо полученное количество поделить на 2
-		count_pp /= 2;
-
-		int count_up = 0;
-		for(unsigned int i = 0; i < p.elements.size(); i++)
-		{
-			//с собой
-			count_up += 4;
-			//с соседями
-			for(int j = 0; j < 4; j++)
-				if(p.elements[i].neighbors[j] != -1)
-					count_up += 4;
-		}
-		count_up *= 4;
-
-		return count_uu + count_pp + count_up;
-	}
-
-	int Matrix::create_unzero_elements_list(int element_number, 
-									vector <int> &list, 
-									int dof_num_i, 
-									int dof_num_j, 
-									int *dof_i, 
-									int *dof_j,
-									bool dof_j_edge,
-									Partition& p)
-	{
-		int neighbor;
-
-		//свои по строкам
-		for(int i = 0; i < dof_num_i; i++)
-			list.push_back(dof_i[i]);
-
-		//свои
-		for(int i = 0; i < dof_num_j; i++)
-			list.push_back(dof_j[i]);
-
-		//соседей
-		for(int j = 0; j < 4; j++)
-		{
-			neighbor = p.elements[element_number].neighbors[j];
-			if(neighbor != -1)
-			for(int i = 0; i < dof_num_j; i++)
-			{
-				if(dof_j_edge) list.push_back(p.elements[neighbor].edges[i]);
-				else list.push_back(p.elements[neighbor].nodes[i]);
-			}			
-		}
-
-		return list.size();
-	}
-
 	void Matrix::create_portret(Partition& p)
 	{
 		vector <int> unzero_elements_list;
@@ -455,14 +372,13 @@ namespace matrix
 
 			//блок UU
 			//1
-			unzero_elements_lists_size = create_unzero_elements_list(i, 
+			unzero_elements_lists_size = p.create_unzero_elements_list(i, 
 																	 unzero_elements_list, 
 																	 4, 
 																	 4, 
 																	 p.elements[i].edges, 
 																	 p.elements[i].edges, 
-																	 true,
-																	 p);
+																	 true);
 			//2
 			for(int j = 0; j < 4; j++)
 			{
@@ -477,14 +393,13 @@ namespace matrix
 
 			//блок PP
 			//1
-			unzero_elements_lists_size = create_unzero_elements_list(i, 
+			unzero_elements_lists_size = p.create_unzero_elements_list(i, 
 																	 unzero_elements_list, 
 																	 4, 
 																	 4, 
 																	 p.elements[i].nodes, 
 																	 p.elements[i].nodes, 
-																	 false,
-																	 p);
+																	 false);
 			//2
 			for(int j = 0; j < 4; j++)
 			{
@@ -499,14 +414,13 @@ namespace matrix
 
 			//блок PU
 			//1
-			unzero_elements_lists_size = create_unzero_elements_list(i,
+			unzero_elements_lists_size = p.create_unzero_elements_list(i,
 																	 unzero_elements_list, 
 																	 4, 
 																	 4, 
 																	 p.elements[i].nodes, 
 																	 p.elements[i].edges, 
-																	 true,
-																	 p);
+																	 true);
 			//2
 			for(int j = 0; j < 4; j++)
 			{

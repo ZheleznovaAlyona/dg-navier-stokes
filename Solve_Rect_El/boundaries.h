@@ -14,11 +14,15 @@ namespace boundaries
 							   virtual public basis::Basis
 	{
 	public:
+		//S для скорости
+		//E для скорости
+		//P_ //давление по j
+		//P__ //давление по i
+		//SP для давления
 		double sigma, mu2; //коэффициенты стабилизации
 		double E[8][8], P_1[8][8], P_2[8][8], SP[8][8]; //локальные матрицы
 
 		void initialize_penalty_parameters();
-
 		void calculate_internal_boundaries(int element_number, matrix::Matrix& A);
 
 		void calculate_ES_horizontal(int element_number1, int element_number2);

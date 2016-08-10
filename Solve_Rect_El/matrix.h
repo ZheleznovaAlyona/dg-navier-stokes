@@ -7,11 +7,6 @@
 
 namespace matrix
 {
-	class MatrixSupport
-	{
-		
-	};
-
 	class Matrix
 	{
 	public:
@@ -54,16 +49,6 @@ namespace matrix
 
 		void add_element(int i, int j, double element);
 		void put_element(int i, int j, double element);
-
-		int count_unzero_matrix_elements(partition::Partition& p);
-		int create_unzero_elements_list(int element_number, 
-										vector <int> &list, 
-										int dof_num_i, 
-										int dof_num_j, 
-										int *dof_i, 
-										int *dof_j,
-										bool dof_j_edge,
-										partition::Partition& p);
 		void create_portret(partition::Partition& p);
 	};
 

@@ -69,6 +69,7 @@
     <ClInclude Include="integration.h" />
     <ClInclude Include="boundaries.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="main_solver.h" />
     <ClInclude Include="myfunctions.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="myvector.h" />
@@ -82,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="basis.cpp" />
+    <ClCompile Include="BCGandGMRESSolver.cpp" />
     <ClCompile Include="BCG_solver.cpp" />
     <ClCompile Include="BiCGStab_solver.cpp" />
     <ClCompile Include="boundary_conditions.cpp" />
@@ -91,6 +93,8 @@
     <ClCompile Include="integration.cpp" />
     <ClCompile Include="internal_boundaries.cpp" />
     <ClCompile Include="logger.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_solver.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="myfunctions.cpp" />
     <ClCompile Include="myvector.cpp" />

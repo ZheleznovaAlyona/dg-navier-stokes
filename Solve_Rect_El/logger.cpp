@@ -83,8 +83,11 @@ namespace logger
 		solution_f_out << Ux_num << endl << endl << endl;
 		solution_f_out << Uy_num << endl << endl << endl;
 		solution_f_out << P_num << endl << endl << endl;
+		//info_f_out << "norm L2 u:|u*-u|=" << scientific << setprecision(4) << normL2u 
+		//	<< endl << "norm L2 p:|p*-p|=" << scientific << setprecision(4) << normL2p
+		//	<< endl << "eps=" << scientific << setprecision(2) << eps << endl;
 		info_f_out << "norm L2 u:|u*-u|=" << scientific << setprecision(4) << normL2u 
 			<< endl << "norm L2 p:|p*-p|=" << scientific << setprecision(4) << normL2p
-			<< endl << "eps=" << scientific << setprecision(2) << eps << endl;
+			<< endl;
 	}
 }

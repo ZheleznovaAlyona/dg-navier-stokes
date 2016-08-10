@@ -1,38 +1,40 @@
 #include "solver.h"
+#include "myfunctions.h"
 
 using namespace myvector;
 using namespace densematrix;
+using namespace logger;
 
 namespace solver
 {
-	MyVector GMRES::Solve(MyVector U_begin, double &normL2u, double &normL2p, MyVector& solution)
+	MyVector GMRES::solve(MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
 	{
-		MyVector r(n), x(n), d(m + 1), z(m), w(n), tmp(n), f(n), rr2(n);
-		DenseMatrix V(n, m), H(m + 1, m);
+		MyVector r(slae_in.n), x(slae_in.n), d(s_parameters.gmres_m + 1), z(s_parameters.gmres_m), w(slae_in.n), tmp(slae_in.n), f(slae_in.n), rr2(slae_in.n);
+		DenseMatrix V(slae_in.n, s_parameters.gmres_m), H(s_parameters.gmres_m + 1, s_parameters.gmres_m);
 
 		double norm_r, norm_f;
 		bool continue_;
 
 		x = U_begin;
-		f = A.b;
-		A.LU();
-		r = f - A * x;
-		A.LYF(r); r = A.yl;
+		f = slae_in.b;
+		slae_in.A.LU();
+		r = f - slae_in.A * x;
+		slae_in.A.LYF(r); r = slae_in.A.yl;
 		norm_r = r.norm();
-		A.LYF(f); norm_f = A.yl.norm();
-		x = A.Uv(U_begin);
+		slae_in.A.LYF(f); norm_f = slae_in.A.yl.norm();
+		x = slae_in.A.Uv(U_begin);
 
-		for(int k_iter = 1; k_iter <= max_iter && norm_r / norm_f > eps; k_iter++)
+		for(int k_iter = 1; k_iter <= s_parameters.max_number_of_iterations && norm_r / norm_f > s_parameters.epsilon; k_iter++)
 		{
 			d.make_zero();
 			V[0] = r / norm_r;
 
 			continue_ = true;
-			for(int j = 1; j <= m && continue_; j++)
+			for(int j = 1; j <= s_parameters.gmres_m && continue_; j++)
 			{
-				A.UXY(V[j - 1]);
-				tmp = A * A.yu;
-				A.LYF(tmp); w = A.yl;
+				slae_in.A.UXY(V[j - 1]);
+				tmp = slae_in.A * slae_in.A.yu;
+				slae_in.A.LYF(tmp); w = slae_in.A.yl;
 
 				for(int l = 1; l <= j; l++)
 				{
@@ -43,12 +45,12 @@ namespace solver
 				H[j - 1][j] = w.norm();
 				if(abs(H[j - 1][j]) < 1E-14)
 				{
-					m = j;
+					s_parameters.gmres_m = j;
 					continue_ = false;
 				}
 				else
 				{
-					if(m != j)
+					if(s_parameters.gmres_m != j)
 						V[j] = w / H[j - 1][j];
 				}
 			}
@@ -56,32 +58,32 @@ namespace solver
 			d[0] = norm_r;
 			solve_min_sqr_problem(d, H, z);
 			x = x + V * z;
-			A.UXY(x);
-			tmp = f - A * A.yu;
-			A.LYF(tmp); r = A.yl;
+			slae_in.A.UXY(x);
+			tmp = f - slae_in.A * slae_in.A.yu;
+			slae_in.A.LYF(tmp); r = slae_in.A.yl;
 			norm_r = r.norm();
-			logger.send_current_information(norm_r / norm_f, k_iter);
+			my_logger.send_current_information(norm_r / norm_f, k_iter);
 			printf("%d\tr=%.10e\n", k_iter, norm_r / norm_f);
 		}
-		A.UXY(x); x = A.yu;
-		solution = x;
+		slae_in.A.UXY(x); x = slae_in.A.yu;
+		return x;
 	}
 
 	void GMRES::solve_min_sqr_problem(MyVector d, DenseMatrix H, MyVector &result)
 	{
 		int m2 = H.n_columns;
-		DenseMatrix H_previous(m2 + 1, m2), H2(m, m);
-		MyVector d1(m2 + 1), d2(m);
+		DenseMatrix H_previous(m2 + 1, m2), H2(s_parameters.gmres_m, s_parameters.gmres_m);
+		MyVector d1(m2 + 1), d2(s_parameters.gmres_m);
 		double ci, si, tmp;
 
 		double *tmp1, *tmp2;
-		tmp1 = new double[m];
-		tmp2 = new double[m];
+		tmp1 = new double[s_parameters.gmres_m];
+		tmp2 = new double[s_parameters.gmres_m];
 		double tmp11, tmp22;
 
 		H_previous = H;
 		d1 = d;
-		for(int i = 0; i < m; i++)
+		for(int i = 0; i < s_parameters.gmres_m; i++)
 		{
 			tmp = sqrt(H_previous[i][i] * H_previous[i][i] +
 										H[i][i + 1] * H[i][i + 1]);
@@ -90,14 +92,14 @@ namespace solver
 
 			#pragma region H_prev=R*H_prev
 			//расчитываем заранее элементы строк, где блок синусов-косинусов
-			for(int l = 0; l < m; l++)
+			for(int l = 0; l < s_parameters.gmres_m; l++)
 			{
 				tmp1[l] = H_previous[l][i] * ci + H_previous[l][i + 1] * si;
 				tmp2[l] = -H_previous[l][i] * si + H_previous[l][i + 1] * ci;
 			}
 
 			//заполняем строки,где блок синусов-косинусов
-			for(int l = 0; l < m; l++)
+			for(int l = 0; l < s_parameters.gmres_m; l++)
 			{
 
 				H_previous[l][i] = tmp1[l];
@@ -120,18 +122,18 @@ namespace solver
 		}
 
 		//исключаем m+1-ю строку и m+1-й элемент
-		for(int j = 0; j < m; j++)
+		for(int j = 0; j < s_parameters.gmres_m; j++)
 		{
-			for(int i = 0; i < m; i++)
+			for(int i = 0; i < s_parameters.gmres_m; i++)
 				H2[j][i] = H_previous[j][i];
 			d2[j] = d1[j];
 		}
 
 		//находим неизвестный вектор из СЛАУ H2*result=d2
-		for(int i = m-1; i >= 0; i--)
+		for(int i = s_parameters.gmres_m - 1; i >= 0; i--)
 		{
 			result[i] = d2[i];
-			for(int j = i + 1; j < m; j++)
+			for(int j = i + 1; j < s_parameters.gmres_m; j++)
 			{		
 				result[i] -= result[j] * H2[j][i];
 			}

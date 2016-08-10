@@ -1,41 +1,43 @@
 #include "solver.h"
+#include "myfunctions.h"
 
 using namespace myvector;
+using namespace logger;
 
 namespace solver
 {
-	MyVector BCG::Solve(MyVector U_begin, double &normL2u, double &normL2p, MyVector& solution)
+	MyVector BCG::solve(MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
 	{
-		MyVector r(n), r_(n), p(n), p_(n), f(n);
-		MyVector v1(n), v2(n), v3(n), x(n);
+		MyVector r(slae_in.n), r_(slae_in.n), p(slae_in.n), p_(slae_in.n), f(slae_in.n);
+		MyVector v1(slae_in.n), v2(slae_in.n), v3(slae_in.n), x(slae_in.n);
 		double alpha, betta, old_r_norm = 1.e+20, sc1, sc2;
 		double r_norm, r_norm_;
 		int k_it;
 
-		A.LU();
+		slae_in.A.LU();
 
-		f = A.b;
+		f = slae_in.b;
 
 		k_it = 0;
 		r_norm = old_r_norm / 10;
 		r_norm_ = 0;
 
 		x = U_begin;
-		v1 = A * x;
+		v1 = slae_in.A * x;
 		v1 = f - v1;
     
-		A.LYF(v1); r = A.yl;
+		slae_in.A.LYF(v1); r = slae_in.A.yl;
 		r_ = r;
 		p = r;
 		p_ = r_;
 		int flag = 0;
 
-		while(flag == 0 && k_it < max_iter)
+		while(flag == 0 && k_it < s_parameters.max_number_of_iterations)
 		{
 			sc1 = scal(r, r_);
-			A.UXY(p); v1 = A.yu;
-			v2 = A * v1;
-			A.LYF(v2); v3 = A.yl;
+			slae_in.A.UXY(p); v1 = slae_in.A.yu;
+			v2 = slae_in.A * v1;
+			slae_in.A.LYF(v2); v3 = slae_in.A.yl;
 
 			sc2 = scal(p_, v3);
 
@@ -43,11 +45,11 @@ namespace solver
 			x = x +  v1 * alpha;
 			r = r - v3 * alpha;
 
-			A.LYFt(p_); v1 = A.yl;
+			slae_in.A.LYFt(p_); v1 = slae_in.A.yl;
 
-			v2 = A  /  v1;
+			v2 = slae_in.A  /  v1;
 
-			A.UXYt(v2); v3 = A.yu;
+			slae_in.A.UXYt(v2); v3 = slae_in.A.yu;
 
 			r_ = r_ - v3 * alpha;
 			sc2 = scal(r, r_);
@@ -58,8 +60,8 @@ namespace solver
 			r_norm = r.norm();
 			printf("%d\tr=%.10e\n", k_it, r_norm);
 
-			logger.send_current_information(r_norm, k_it);
-			if( r_norm < eps) flag = 1;
+			my_logger.send_current_information(r_norm, k_it);
+			if( r_norm < s_parameters.epsilon) flag = 1;
 
 			if(flag == 0)
 			{
@@ -75,6 +77,6 @@ namespace solver
 		if(flag == 1) printf ("\nsolution end\n");
 
 		if(flag == 2) printf ("\nsolution not end!\n- change vector R_\n");
-		solution = x;
+		return x;
 	}
 }
