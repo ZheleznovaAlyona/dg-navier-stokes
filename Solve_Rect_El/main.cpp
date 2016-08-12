@@ -3,15 +3,16 @@
 
 using namespace std;
 using namespace mainsolver;
+using namespace solver;
 
 void main()
 {
-	ifstream l1_in("l1.txt"), grid_in("grid.txt"), elements_in("elements.txt");
+	ifstream l1_in("l1.txt"), l2_in("l2.txt"), l3_in("l3txt"), grid_in("grid.txt"), elements_in("elements.txt");
 	ofstream solution_out("solution.txt"), info_out("info.txt");
 
-	SLAE my_SLAE(grid_in, elements_in, l1_in);
-	//my_SLAE.run(solution_f_out, info_f_out);
-	my_SLAE.simple_iterations();
+	MainSolver problem_solver(grid_in, elements_in, "log.txt", l1_in, l2_in, l3_in);	
+	Solver *s;
+	problem_solver.simple_iterations(*s);
 
 	l1_in.close();
 	grid_in.close();

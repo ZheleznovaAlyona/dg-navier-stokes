@@ -2,7 +2,11 @@
 
 using namespace std;
 
+// https://habrahabr.ru/company/abbyy/blog/136909/
+#pragma warning (push)
+#pragma warning (disable: 4290)
 #include <libconfig.h++>
+#pragma warning (pop)
 
 using namespace libconfig;
 

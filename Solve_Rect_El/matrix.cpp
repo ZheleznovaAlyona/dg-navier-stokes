@@ -3,6 +3,8 @@
 #include <algorithm>
 #include "myfunctions.h"
 #include "testing_parameters.h"
+#include "boundaries.h"
+#include "boundary_conditions.h"
 
 using namespace myvector;
 using namespace std;

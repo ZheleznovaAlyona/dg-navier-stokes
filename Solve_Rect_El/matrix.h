@@ -2,8 +2,6 @@
 #include <vector>
 #include "myvector.h"
 #include "partition.h"
-#include "boundaries.h"
-#include "boundary_conditions.h"
 
 namespace matrix
 {
