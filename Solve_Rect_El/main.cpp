@@ -11,8 +11,7 @@ void main()
 	ofstream solution_out("solution.txt"), info_out("info.txt");
 
 	MainSolver problem_solver(grid_in, elements_in, "log.txt", l1_in, l2_in, l3_in);	
-	Solver *s;
-	problem_solver.simple_iterations(*s);
+	problem_solver.solve();
 
 	l1_in.close();
 	grid_in.close();

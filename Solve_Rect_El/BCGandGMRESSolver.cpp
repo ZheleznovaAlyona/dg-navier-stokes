@@ -15,5 +15,6 @@ namespace solver
 		q = GMRES::solve(U_begin, normL2u, normL2p, slae_in, my_logger);
 		GMRES::s_parameters.epsilon = eps2;
 		q = BCG::solve(U_begin, normL2u, normL2p, slae_in, my_logger);
+		return q;
 	}
 }

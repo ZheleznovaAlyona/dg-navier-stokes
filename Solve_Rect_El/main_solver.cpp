@@ -648,7 +648,7 @@ void MainSolver::get_vector_solution_in_nodes_p(MyVector qi, MyVector &solution)
 
 
 
-void MainSolver::solve(MyVector U_begin, double &normL2u, double &normL2p)
+void MainSolver::solve()
 {
 	MyVector q(my_slae.n);
 	Solver *s;
@@ -671,6 +671,8 @@ void MainSolver::solve(MyVector U_begin, double &normL2u, double &normL2p)
 		}
 		break;
 	};
+
+	s->s_parameters.initialize("solver.conf");
 
 	simple_iterations(*s);
 

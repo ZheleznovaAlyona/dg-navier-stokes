@@ -120,6 +120,8 @@ namespace partition
 			if(x_left <= x && x <= x_right && y_low <= y && y <= y_up)
 				return i;
 		}
+
+		return -1;
 	}
 
 }

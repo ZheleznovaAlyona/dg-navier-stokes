@@ -2,6 +2,13 @@
 
 using namespace std;
 
+// по необъяснимым причинам библиотека сама не линкуется
+#if defined(_WIN32) && !defined(_WIN64)
+#pragma comment(lib, "C:/Users/прол/Documents/проекты/NS/NS/DG/Solve_Rect_El/packages/libconfig_vc120.1.4.9.4/build/native/bin/libconfig-x86-v120-mt-1_4_9_4.imp.lib")
+#else
+#pragma comment(lib, "C:/Users/прол/Documents/проекты/NS/NS/DG/Solve_Rect_El/packages/libconfig_vc120.1.4.9.4/build/native/bin/libconfig-x64-v120-mt-1_4_9_4.imp.lib")
+#endif
+
 // https://habrahabr.ru/company/abbyy/blog/136909/
 #pragma warning (push)
 #pragma warning (disable: 4290)

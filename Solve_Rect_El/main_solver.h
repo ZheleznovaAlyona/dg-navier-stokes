@@ -64,7 +64,7 @@ namespace mainsolver
 		void linear(std::ofstream& solution_f_out,
 					std::ofstream& info_f_out,
 					solver::Solver& s);
-		void solve(myvector::MyVector U_begin, double &normL2u, double &normL2p);
+		void solve();
 							    
 		double get_solution_in_point_ux(double x, double y, int element_number, myvector::MyVector qi);
 		double get_solution_in_point_uy(double x, double y, int element_number, myvector::MyVector qi);
