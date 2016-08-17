@@ -1,13 +1,7 @@
 #include "main_solver.h"
+#include <iostream>
+#include <iomanip>
 
-//using namespace boundary_conditions;
-//using namespace element;
-//using namespace partition;
-//using namespace point;
-//using namespace myvector;
-//using namespace matrix;
-//using namespace densematrix;
-//using namespace testingparameters;
 #include <math.h>
 using namespace std;
 
@@ -73,10 +67,9 @@ namespace mainsolver
 		my_slae.reinitialize();
 	}
 
-	//функция для солвера, там инициализировать параметры солвера
-
 	void MainSolver::build_slae(MyVector q_calc)
 	{
+		cout << "Building SLAE..." << endl;
 		int size = Partition::elements.size();
 
 		//локаьные матрицы и вектор правой части
@@ -108,7 +101,8 @@ namespace mainsolver
 			my_slae.reinitialize();
 			build_slae(qNonL);
 			residual = (my_slae.b - my_slae.A * qNonL).norm() / my_slae.b.norm();
-			printf("w = %.3lf -> residual = %.4le\n", w, residual);
+			cout << "w = " << setprecision(3) << w << " -> residual = " << 
+							  scientific << setprecision(4) << residual << endl;
 			if(w > 0.1) w -= 0.1;
 			else w -= 0.01;		
 		}
@@ -128,35 +122,40 @@ namespace mainsolver
 		MyVector sol_0;
 		sol_0.initialize(my_slae.n);
 
-		my_slae.A.create_portret(static_cast<Partition>(*this));
+		static auto& part = static_cast<Partition>(*this);
 
-		printf("\n%d iteration is in process\n", k_it);
+		my_slae.A.create_portret(part);
+
+		cout << endl << k_it << " iteration is in process" << endl;
 
 		build_slae(sol_0);
-	
-		s.solve(sol_0, normL2u, normL2p, my_slae, logger);
+
+		cout << "Getting solution..." << endl;
+		q_prev = s.solve(sol_0, normL2u, normL2p, my_slae, logger);
 		q0 = q_prev;
 
 		get_vector_solution_in_nodes_ux(q0, Ux_numerical);
 		get_vector_solution_in_nodes_uy(q0, Uy_numerical);
 		get_vector_solution_in_nodes_p(q0, P_numerical);
 
+		cout << "Calculating L2-norms..." << endl;
 		normL2u = diff_normL2_u(q0);
 		normL2p = diff_normL2_p(q0);
 
-		printf("%le\n", normL2u);
-		printf("%le\n", normL2p);
-		logger.si_print(k_it, normL2u, normL2p, Ux_numerical, Uy_numerical, P_numerical, static_cast<Partition>(*this));
+		cout << "|U|(L2) = " << scientific << setprecision(4) << normL2u << endl;
+		cout << "|P|(L2) = " << scientific << setprecision(4) << normL2p << endl;
+		logger.si_print(k_it, normL2u, normL2p, Ux_numerical, Uy_numerical, P_numerical, part);
 
 		do
 		{
 			k_it++;
 
-			printf("\n%d iteration is in process\n", k_it);
+			cout << endl << k_it << " iteration is in process" << endl;
 
 			reinitialize();
 			build_slae(q0);
-			s.solve(q0, normL2u, normL2p, my_slae, logger);
+			cout << "Getting solution..." << endl;
+			q_prev = s.solve(q0, normL2u, normL2p, my_slae, logger);
 			q1 = q_prev;
 
 			if(k_it != 1 && k_it != 2)
@@ -169,7 +168,7 @@ namespace mainsolver
 				reinitialize();
 				build_slae(q1);
 				residual_previous = (my_slae.b - my_slae.A * q1).norm() / my_slae.b.norm();
-				printf("\n%.20lf residual\n", residual_previous);
+				cout << endl << "residual = " << setprecision(20) << residual_previous  << endl;
 			}
 
 			q0 = q1;
@@ -179,13 +178,14 @@ namespace mainsolver
 			get_vector_solution_in_nodes_uy(q0, Uy_numerical);
 			get_vector_solution_in_nodes_p(q0, P_numerical);
 
+			cout << "Calculating L2-norms..." << endl;
 			normL2u = diff_normL2_u(q0);
 			normL2p = diff_normL2_p(q0);
 
-			printf("%le\n", normL2u);
-			printf("%le\n", normL2p);
+			cout << "|U|(L2) = " << scientific << setprecision(4) << normL2u << endl;
+			cout << "|P|(L2) = " << scientific << setprecision(4) << normL2p << endl;
 
-			logger.si_print(k_it, normL2u, normL2p, Ux_numerical, Uy_numerical, P_numerical, static_cast<Partition>(*this));
+			logger.si_print(k_it, normL2u, normL2p, Ux_numerical, Uy_numerical, P_numerical, part);
 		} while(k_it <= s.s_parameters.max_number_of_iterations_non_lin && residual_previous > 1e-6);
 	}
 
@@ -199,9 +199,20 @@ namespace mainsolver
 		sol_0.initialize(my_slae.n);
 
 		my_slae.A.create_portret(static_cast<Partition>(*this));
-
 		build_slae(sol_0);
-		s.solve(sol_0, normL2u, normL2p, my_slae, logger);
+		cout << "Getting solution..." << endl;
+		q_prev = s.solve(sol_0, normL2u, normL2p, my_slae, logger);
+
+		get_vector_solution_in_nodes_ux(q_prev, Ux_numerical);
+		get_vector_solution_in_nodes_uy(q_prev, Uy_numerical);
+		get_vector_solution_in_nodes_p(q_prev, P_numerical);
+
+		cout << "Calculating L2-norms..." << endl;
+		normL2u = diff_normL2_u(q_prev);
+		normL2p = diff_normL2_p(q_prev);
+
+		cout << "|U|(L2) = " << scientific << setprecision(4) << normL2u << endl;
+		cout << "|P|(L2) = " << scientific << setprecision(4) << normL2p << endl;
 		logger.output(solution_f_out, info_f_out, normL2u, normL2p, Ux_numerical, Uy_numerical, P_numerical, static_cast<Partition>(*this));
 	}
 
@@ -432,9 +443,10 @@ double MainSolver::get_solution_in_point_ux(double x, double y, int element_numb
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
+	static auto& part = static_cast<Partition>(*this);
 	u_in_point = 0;
 	for(int j = 0; j < 4; j++)
-		u_in_point += qi_local[j] * phix_i(j, x, y, element_number, static_cast<Partition>(*this));
+		u_in_point += qi_local[j] * phix_i(j, x, y, element_number, part);
 
 	return u_in_point;
 }
@@ -453,9 +465,10 @@ double MainSolver::get_solution_in_point_uy(double x, double y, int element_numb
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
+	static auto& part = static_cast<Partition>(*this);
 	u_in_point = 0;
 	for(int j = 0; j < 4; j++)
-		u_in_point += qi_local[j] * phiy_i(j, x, y, element_number, static_cast<Partition>(*this));
+		u_in_point += qi_local[j] * phiy_i(j, x, y, element_number, part);
 
 	return u_in_point;
 }
@@ -474,9 +487,10 @@ double MainSolver::get_solution_in_point_uxdx(double x, double y, int element_nu
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
+	static auto& part = static_cast<Partition>(*this);
 	du_in_point = 0;
 	for(int j = 0; j < 4; j++)
-		du_in_point += qi_local[j] * phixdx_i(j, x, y, element_number, static_cast<Partition>(*this));
+		du_in_point += qi_local[j] * phixdx_i(j, x, y, element_number, part);
 
 	return du_in_point;
 }
@@ -495,9 +509,10 @@ double MainSolver::get_solution_in_point_uydy(double x, double y, int element_nu
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
+	static auto& part = static_cast<Partition>(*this);
 	du_in_point = 0;
 	for(int j = 0; j < 4; j++)
-		du_in_point += qi_local[j] * phiydy_i(j, x, y, element_number, static_cast<Partition>(*this));
+		du_in_point += qi_local[j] * phiydy_i(j, x, y, element_number, part);
 	
 	return du_in_point;
 }
@@ -516,9 +531,10 @@ double MainSolver::get_solution_in_point_p(double x, double y, int element_numbe
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
+	static auto& part = static_cast<Partition>(*this);
 	p_in_point = 0;
 	for(int j = 0; j < 4; j++)
-		p_in_point += qi_local[j] * psi_i(j, x, y, element_number, static_cast<Partition>(*this));
+		p_in_point += qi_local[j] * psi_i(j, x, y, element_number, part);
 
 	return p_in_point;
 }
@@ -543,10 +559,13 @@ double MainSolver::get_solution_in_point2_p(double x, double y, MyVector qi)
 
 void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution)
 {
+	cout << "Getting Ux..." << endl;
 	int indexes[4], indexes_nodes[4];
 	int size = elements.size();
 	double u_local[4], qi_local[4];
 	double x, y;
+
+	static auto& part = static_cast<Partition>(*this);
 
 	for(int i = 0; i < size; i++)
 	{
@@ -568,7 +587,7 @@ void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution
 			x = nodes[indexes_nodes[j]].x;
 			y = nodes[indexes_nodes[j]].y;
 			for(int k = 0; k < 4; k++)
-				u_local[j] += qi_local[k] * phix_i(k, x, y, i, static_cast<Partition>(*this));
+				u_local[j] += qi_local[k] * phix_i(k, x, y, i, part);
 		}
 
 		//кладём в результирующий вектор
@@ -579,10 +598,13 @@ void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution
 
 void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution)
 {
+	cout << "Getting Uy..." << endl;
 	int indexes[4], indexes_nodes[4];
 	int size = elements.size();
 	double u_local[4], qi_local[4];
 	double x, y;
+
+	static auto& part = static_cast<Partition>(*this);
 
 	for(int i = 0; i < size; i++)
 	{
@@ -604,7 +626,7 @@ void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution
 			x = nodes[indexes_nodes[j]].x;
 			y = nodes[indexes_nodes[j]].y;
 			for(int k = 0; k < 4; k++)
-				u_local[j] += qi_local[k] * phiy_i(k, x, y, i, static_cast<Partition>(*this));
+				u_local[j] += qi_local[k] * phiy_i(k, x, y, i, part);
 		}
 
 		//кладём в результирующий вектор
@@ -615,10 +637,13 @@ void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution
 
 void MainSolver::get_vector_solution_in_nodes_p(MyVector qi, MyVector &solution)
 {
+	cout << "Getting P..." << endl;
 	int indexes[4], n_edges = elements.size() * 4;
 	int size = elements.size();
 	double p_local[4], qi_local[4];
 	double x, y;
+
+	static auto& part = static_cast<Partition>(*this);
 
 	for(int i = 0; i < size; i++)
 	{
@@ -637,7 +662,7 @@ void MainSolver::get_vector_solution_in_nodes_p(MyVector qi, MyVector &solution)
 			x = nodes[indexes[j]].x;
 			y = nodes[indexes[j]].y;
 			for(int k = 0; k < 4; k++)
-				p_local[j] += qi_local[k] * psi_i(k, x, y, i, static_cast<Partition>(*this));
+				p_local[j] += qi_local[k] * psi_i(k, x, y, i, part);
 		}
 
 		//кладём в результирующий вектор
@@ -672,14 +697,43 @@ void MainSolver::solve()
 		break;
 	};
 
-	s->s_parameters.initialize("solver.conf");
+	s->s_parameters.initialize("solver.json");
 
 	simple_iterations(*s);
 
 	q_prev = q;
 }
 
+void MainSolver::solve(std::ofstream & solution_f_out, std::ofstream & info_f_out)
+{
+	MyVector q(my_slae.n);
+	Solver *s;
 
+	switch (Testing_parameters::instance().solver)
+	{
+	case 1:
+	{
+		s = new BiCGStab();
+	}
+	break;
+	case 2:
+	{
+		s = new GMRES();
+	}
+	break;
+	case 3:
+	{
+		s = new BCGandGMRESSolver();
+	}
+	break;
+	};
+
+	if(Testing_parameters::instance().use_LU) my_slae.A.LU();
+
+	s->s_parameters.initialize("solver.json");
+
+	linear(solution_f_out, info_f_out, *s);
+}
 
 double MainSolver::diff_normL2_p(MyVector q_solution)
 {

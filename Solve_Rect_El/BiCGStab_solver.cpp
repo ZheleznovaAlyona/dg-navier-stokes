@@ -1,8 +1,11 @@
 #include "solver.h"
 #include "myfunctions.h"
+#include <iostream>
+#include <iomanip>
 
 using namespace myvector;
 using namespace logger;
+using namespace std;
 
 namespace solver
 {
@@ -11,8 +14,6 @@ namespace solver
 		double  rkr0, ak, gk, bk;
 		MyVector r(slae_in.n), f(slae_in.n), x(slae_in.n), r0(slae_in.n), z(slae_in.n), p(slae_in.n), v(slae_in.n), v1(slae_in.n), rr2(slae_in.n);
 		double r_norm, f_norm;
-
-		slae_in.A.LU();
 
 		x = U_begin;
 		f = slae_in.b;
@@ -56,7 +57,7 @@ namespace solver
 			z = r + z * bk - v * (gk * bk);
 
 			r_norm = r.norm() / f_norm;
-			printf("%d\tr=%.10e\n", k_it, r_norm);
+			cout << k_it << "\tr=" << scientific << setprecision(10) << r_norm << endl;
 			my_logger.send_current_information(r_norm, k_it);
 		}
 		slae_in.A.UXY(x); x = slae_in.A.yu;

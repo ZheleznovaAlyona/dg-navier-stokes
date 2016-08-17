@@ -5,6 +5,7 @@
 #include "testing_parameters.h"
 #include "boundaries.h"
 #include "boundary_conditions.h"
+#include <iostream>
 
 using namespace myvector;
 using namespace std;
@@ -33,6 +34,13 @@ namespace matrix
 		initialize_vector(jg, size);
 		yl.initialize(n);
 		yu.initialize(n);
+
+		if (Testing_parameters::instance().use_LU)
+		{
+			initialize_vector(LU_ggl, size);
+			initialize_vector(LU_ggu, size);
+			initialize_vector(LU_di, n);
+		}
 	};
 
 	void Matrix::reinitialize()
@@ -40,6 +48,13 @@ namespace matrix
 		memset(&ggl[0], 0, size * sizeof(double)); //обнуляем
 		memset(&ggu[0], 0, size * sizeof(double)); //обнуляем
 		memset(&di[0], 0, n * sizeof(double)); //обнуляем
+
+		if (Testing_parameters::instance().use_LU)
+		{
+			memset(&LU_ggl[0], 0, size * sizeof(double));
+			memset(&LU_ggu[0], 0, size * sizeof(double));
+			memset(&LU_di[0], 0, n * sizeof(double));
+		}
 	};
 
 	MyVector Matrix::operator*(MyVector a) 
@@ -340,6 +355,7 @@ namespace matrix
 
 	void Matrix::create_portret(Partition& p)
 	{
+		cout << "Creating matrix-portret..." << endl;
 		vector <int> unzero_elements_list;
 		vector <int> *lists;	
 		int unzero_elements_lists_size; 

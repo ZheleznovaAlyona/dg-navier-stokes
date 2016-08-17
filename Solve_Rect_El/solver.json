@@ -1,0 +1,9 @@
+{
+	"solver": 
+	{
+		"epsilon": 1E-10,
+		"gmres_m": 30,
+		"max_number_of_iterations": 2,
+		"max_number_of_iterations_non_linear": 2
+	}
+}

@@ -1,9 +1,12 @@
 #include "solver.h"
 #include "myfunctions.h"
+#include <iostream>
+#include <iomanip>
 
 using namespace myvector;
 using namespace densematrix;
 using namespace logger;
+using namespace std;
 
 namespace solver
 {
@@ -17,7 +20,6 @@ namespace solver
 
 		x = U_begin;
 		f = slae_in.b;
-		slae_in.A.LU();
 		r = f - slae_in.A * x;
 		slae_in.A.LYF(r); r = slae_in.A.yl;
 		norm_r = r.norm();
@@ -63,7 +65,7 @@ namespace solver
 			slae_in.A.LYF(tmp); r = slae_in.A.yl;
 			norm_r = r.norm();
 			my_logger.send_current_information(norm_r / norm_f, k_iter);
-			printf("%d\tr=%.10e\n", k_iter, norm_r / norm_f);
+			cout << k_iter << "\tr=" << scientific << setprecision(10) << norm_r << endl;
 		}
 		slae_in.A.UXY(x); x = slae_in.A.yu;
 		return x;

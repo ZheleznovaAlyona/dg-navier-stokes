@@ -1,8 +1,11 @@
 #include "solver.h"
 #include "myfunctions.h"
+#include <iostream>
+#include <iomanip>
 
 using namespace myvector;
 using namespace logger;
+using namespace std;
 
 namespace solver
 {
@@ -13,8 +16,6 @@ namespace solver
 		double alpha, betta, old_r_norm = 1.e+20, sc1, sc2;
 		double r_norm, r_norm_;
 		int k_it;
-
-		slae_in.A.LU();
 
 		f = slae_in.b;
 
@@ -58,7 +59,7 @@ namespace solver
 
 			old_r_norm = r_norm;
 			r_norm = r.norm();
-			printf("%d\tr=%.10e\n", k_it, r_norm);
+			cout << k_it << "\tr=" << scientific << setprecision(10) << r_norm << endl;
 
 			my_logger.send_current_information(r_norm, k_it);
 			if( r_norm < s_parameters.epsilon) flag = 1;
@@ -72,11 +73,6 @@ namespace solver
 			}
 		}
 
-		printf ("\nk_iterations: %ld	r:%.6e", k_it, r_norm);
-		if(flag == 0) printf ("\nexit r\n");
-		if(flag == 1) printf ("\nsolution end\n");
-
-		if(flag == 2) printf ("\nsolution not end!\n- change vector R_\n");
 		return x;
 	}
 }

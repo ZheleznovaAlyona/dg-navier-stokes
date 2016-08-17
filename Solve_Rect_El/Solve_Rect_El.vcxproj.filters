@@ -170,5 +170,8 @@
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="solver.json">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>

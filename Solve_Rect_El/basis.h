@@ -7,7 +7,8 @@ namespace basis
 	class Basis
 	{
 	public:
-		int n_func; //число базисных функций
+		int n_func_p; //число базисных функций p
+		int n_func_u; //число базисных функций u
 		std::function<double(double, double)> psi[4]; //указатели на функции вычисления базисных функций p в точке
 		std::function<double(double, double)> dpsiksi[4]; //указатели на функции вычисления d/dksi базисных функций p в точке
 		std::function<double(double, double)> dpsietta[4]; //указатели на функции вычисления d/detta базисных функций p в точке

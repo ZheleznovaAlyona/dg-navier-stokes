@@ -7,7 +7,8 @@ namespace basis
 {
 	void Basis::initialize()
 	{
-		n_func = 4;
+		n_func_p = 4;
+		n_func_u = 4;
 
 		phix[0] = [](double ksi, double etta) { return 0.5 * (1 - ksi); };
 		phix[1] = [](double ksi, double etta) { return 0.5 * (1 + ksi); };
