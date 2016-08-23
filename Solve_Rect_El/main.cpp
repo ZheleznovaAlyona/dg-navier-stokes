@@ -1,13 +1,16 @@
 #include <fstream>
 #include "main_solver.h"
+#include "testing_parameters.h"
 
 using namespace std;
 using namespace mainsolver;
 using namespace solver;
+using namespace testingparameters;
 
 void main()
 {
-	ifstream l1_in("l1.txt"), l2_in("l2.txt"), l3_in("l3.txt"), grid_in("grid.txt"), elements_in("elements.txt");
+	ifstream l1_in("l1.dt"), l2_in("l2.dt"), l3_in("l3.dt"), grid_in("grid.dt"), elements_in("elements.dt");
+	Testing_parameters::initialize("testing_parameters.json");
 
 	MainSolver problem_solver(grid_in, elements_in, "log.txt", l1_in, l2_in, l3_in);	
 	problem_solver.solve();

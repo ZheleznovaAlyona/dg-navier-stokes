@@ -1,12 +1,21 @@
 #include "testing_parameters.h"
 #include "rapidjson/document.h"
 #include <fstream>
+#include <map>
 
 using namespace std;
 using namespace rapidjson;
 
 namespace testingparameters
 {
+	bool Testing_parameters::use_LU = false;
+	int Testing_parameters::test = 0;
+	int Testing_parameters::solver = 0;
+
+	Testing_parameters::Testing_parameters() {}
+	Testing_parameters::~Testing_parameters() {}
+	Testing_parameters::Testing_parameters(Testing_parameters& parameters) {}
+
 	void Testing_parameters::initialize(std::string file_name)
 	{
 		ifstream file_in(file_name);
@@ -26,16 +35,20 @@ namespace testingparameters
 		d_in.Parse(json.c_str());
 
 		auto& j_testp = d_in["testp"];
-		this->use_LU = j_testp["useLU"].GetBool();
-		this->test = j_testp["test"].GetInt();
+		use_LU = j_testp["useLU"].GetBool();
+		test = j_testp["test"].GetInt();
 		solver_name = j_testp["solver"].GetString();
 
-		if (solver_name == "BiCGStab") this->solver = 1;
+		map<string, int> _map;
+
+		_map["BiCGStab"] = 1;
+		_map["GMRES"] = 2;
+		_map["BCGandGMRES"] = 3;
+
+		if (_map.find(solver_name) == _map.end())
+			solver = 2;
 		else
-			if (solver_name == "GMRES") this->solver = 2;
-			else
-				if(solver_name == "BCGandGMRES") this->solver = 3;
-				else this->solver = 2;
+			solver = _map[solver_name];
 	}
 
 }

@@ -35,7 +35,7 @@ namespace matrix
 		yl.initialize(n);
 		yu.initialize(n);
 
-		if (Testing_parameters::instance().use_LU)
+		if (Testing_parameters::use_LU)
 		{
 			initialize_vector(LU_ggl, size);
 			initialize_vector(LU_ggu, size);
@@ -49,7 +49,7 @@ namespace matrix
 		memset(&ggu[0], 0, size * sizeof(double)); //обнуляем
 		memset(&di[0], 0, n * sizeof(double)); //обнуляем
 
-		if (Testing_parameters::instance().use_LU)
+		if (Testing_parameters::use_LU)
 		{
 			memset(&LU_ggl[0], 0, size * sizeof(double));
 			memset(&LU_ggu[0], 0, size * sizeof(double));
@@ -193,7 +193,7 @@ namespace matrix
 
 		yl.make_zero();
 
-		if(Testing_parameters::instance().use_LU)
+		if(Testing_parameters::use_LU)
 		{
 			for(i = 0; i < n; i++)
 			{
@@ -216,7 +216,7 @@ namespace matrix
 		double sum;
 
 		yl.make_zero();
-		if(Testing_parameters::instance().use_LU)
+		if(Testing_parameters::use_LU)
 		{
 			MyVector bb(n);
 			bb = b;
@@ -238,7 +238,7 @@ namespace matrix
 		int iend;
 
 		yu.make_zero();
-		if(Testing_parameters::instance().use_LU)
+		if(Testing_parameters::use_LU)
 		{
 			for(i = n - 1; i >= 0; i--)//проход по столбцам с конца
 			{
@@ -259,7 +259,7 @@ namespace matrix
 		int iend;
 
 		yu.make_zero();
-		if(Testing_parameters::instance().use_LU)
+		if(Testing_parameters::use_LU)
 		{
 			for(i = n - 1; i >= 0; i--)//проход по столбцам с конца
 			{

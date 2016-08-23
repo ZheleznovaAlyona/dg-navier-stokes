@@ -6,10 +6,14 @@ namespace testingparameters
 	{
 	public:
 
-		bool use_LU;
-		int test;
-		int solver;
-		void Testing_parameters::initialize(std::string file_name);
+		static bool use_LU;
+		static int test;
+		static int solver;
+		static void Testing_parameters::initialize(std::string file_name);
+	private:
+		Testing_parameters();
+		~Testing_parameters();
+		Testing_parameters(Testing_parameters& parameters);
 	};
 
 }

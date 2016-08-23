@@ -678,7 +678,7 @@ void MainSolver::solve()
 	MyVector q(my_slae.n);
 	Solver *s;
 
-	switch(Testing_parameters::instance().solver)
+	switch(Testing_parameters::solver)
 	{
 	case 1:
 		{
@@ -709,7 +709,7 @@ void MainSolver::solve(std::ofstream & solution_f_out, std::ofstream & info_f_ou
 	MyVector q(my_slae.n);
 	Solver *s;
 
-	switch (Testing_parameters::instance().solver)
+	switch (Testing_parameters::solver)
 	{
 	case 1:
 	{
@@ -728,7 +728,7 @@ void MainSolver::solve(std::ofstream & solution_f_out, std::ofstream & info_f_ou
 	break;
 	};
 
-	if(Testing_parameters::instance().use_LU) my_slae.A.LU();
+	if(Testing_parameters::use_LU) my_slae.A.LU();
 
 	s->s_parameters.initialize("solver.json");
 
