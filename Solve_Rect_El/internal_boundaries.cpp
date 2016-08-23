@@ -373,12 +373,10 @@ namespace boundaries
 		double AK[4][4], AN[4][4], BK[4][4], BN[4][4];
 		Element element = elements[element_number1];
 		Element element_2 = elements[element_number2];
-		double rho = calculate_rho(element.number_of_area);
-		double rho_2 = calculate_rho(element_2.number_of_area);
 		double hy = get_hy(element_number1);
 
-		double a1 =  0.25 * hy * (1 / rho); //якобиан*0.5*lambda
-		double a2 = 0.25 * hy * (1 / rho_2);
+		double a1 =  0.25 * hy; //якобиан*0.5*lambda
+		double a2 = 0.25 * hy;
 
 		double n_vec[2] = {1, 0};
 
@@ -513,12 +511,10 @@ namespace boundaries
 		double AK[4][4], AN[4][4], BK[4][4], BN[4][4];
 		Element element = elements[element_number1];
 		Element element_2 = elements[element_number2];
-		double rho = calculate_rho(element.number_of_area);
-		double rho_2 = calculate_rho(element_2.number_of_area);
 		double hy = get_hy(element_number1);
 
-		double a1 =  0.25 * hy * (1 / rho); //якобиан*0.5*lambda
-		double a2 = 0.25 * hy * (1 / rho_2);
+		double a1 =  0.25 * hy; //якобиан*0.5
+		double a2 = 0.25 * hy;
 
 		double n_vec[2] = {1, 0};
 
