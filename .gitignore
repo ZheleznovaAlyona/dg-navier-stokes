@@ -288,3 +288,7 @@ paket-files/
 .idea/
 *.sln.iml
 
+
+**/*.txt
+*.txt
+
