@@ -1,29 +1,41 @@
 #include "testing_parameters.h"
+#include "rapidjson/document.h"
+#include <fstream>
+
+using namespace std;
+using namespace rapidjson;
 
 namespace testingparameters
 {
-
-	bool Testing_parameters::use_LU = false;
-	int Testing_parameters::test = 0;
-	int Testing_parameters::solver = 0;
-
-	Testing_parameters::Testing_parameters() {}
-
-	Testing_parameters::Testing_parameters(bool use_LU_in, int test_in, int solver_in)
+	void Testing_parameters::initialize(std::string file_name)
 	{
-		use_LU = use_LU_in;
-		test = test_in;
-		solver = solver_in;
+		ifstream file_in(file_name);
+		string json;
+		string solver_name;
+
+		while (!file_in.eof())
+		{
+			string line;
+			file_in >> line;
+			json += line;
+		}
+
+		file_in.close();
+
+		Document d_in;
+		d_in.Parse(json.c_str());
+
+		auto& j_testp = d_in["testp"];
+		this->use_LU = j_testp["useLU"].GetBool();
+		this->test = j_testp["test"].GetInt();
+		solver_name = j_testp["solver"].GetString();
+
+		if (solver_name == "BiCGStab") this->solver = 1;
+		else
+			if (solver_name == "GMRES") this->solver = 2;
+			else
+				if(solver_name == "BCGandGMRES") this->solver = 3;
+				else this->solver = 2;
 	}
-
-	Testing_parameters::~Testing_parameters(){}
-
-	const Testing_parameters& Testing_parameters::instance()
-    {  
-            static Testing_parameters the_single_instance(false, 3, 2);
-            return the_single_instance;
-    }
-
-	Testing_parameters::Testing_parameters(Testing_parameters& parameters){}
 
 }

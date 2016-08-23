@@ -173,5 +173,8 @@
     <None Include="solver.json">
       <Filter>Файлы ресурсов</Filter>
     </None>
+    <None Include="testing_parameters.json">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>

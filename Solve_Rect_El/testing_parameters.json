@@ -1,0 +1,8 @@
+{
+	"testp": 
+	{
+		"useLU": false,
+		"test": 3,
+		"solver": "GMRES"
+	}
+}
