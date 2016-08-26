@@ -59,9 +59,10 @@ namespace solver
 
 			old_r_norm = r_norm;
 			r_norm = r.norm();
-			cout << k_it << "\tr=" << scientific << setprecision(10) << r_norm << endl;
-
+			
+			my_logger.send_current_information_to_screen(r_norm, k_it);
 			my_logger.send_current_information(r_norm, k_it);
+
 			if( r_norm < s_parameters.epsilon) flag = 1;
 
 			if(flag == 0)

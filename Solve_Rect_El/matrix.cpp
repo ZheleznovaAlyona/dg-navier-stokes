@@ -13,6 +13,7 @@ using namespace testingparameters;
 using namespace boundary_conditions;
 using namespace partition;
 using namespace boundaries;
+using namespace logger;
 
 namespace matrix
 {	
@@ -353,9 +354,9 @@ namespace matrix
 		}
 	}
 
-	void Matrix::create_portret(Partition& p)
+	void Matrix::create_portret(Partition& p, Logger& log)
 	{
-		cout << "Creating matrix-portret..." << endl;
+		log.send_message_create_portret();
 		vector <int> unzero_elements_list;
 		vector <int> *lists;	
 		int unzero_elements_lists_size; 

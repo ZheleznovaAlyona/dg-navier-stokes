@@ -2,6 +2,7 @@
 #include <vector>
 #include "myvector.h"
 #include "partition.h"
+#include "logger.h"
 
 namespace matrix
 {
@@ -47,7 +48,7 @@ namespace matrix
 
 		void add_element(int i, int j, double element);
 		void put_element(int i, int j, double element);
-		void create_portret(partition::Partition& p);
+		void create_portret(partition::Partition& p, logger::Logger& log);
 	};
 
 

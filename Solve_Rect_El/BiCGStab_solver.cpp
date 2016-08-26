@@ -57,7 +57,8 @@ namespace solver
 			z = r + z * bk - v * (gk * bk);
 
 			r_norm = r.norm() / f_norm;
-			cout << k_it << "\tr=" << scientific << setprecision(10) << r_norm << endl;
+
+			my_logger.send_current_information_to_screen(r_norm, k_it);
 			my_logger.send_current_information(r_norm, k_it);
 		}
 		slae_in.A.UXY(x); x = slae_in.A.yu;

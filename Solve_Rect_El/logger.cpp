@@ -21,6 +21,51 @@ namespace logger
 		*os << iteration_number << "     " << setprecision(20) << r_norm << endl;
 	}
 
+	void Logger::send_current_information_to_screen_si(int si_iteration_number)
+	{
+		cout << endl << si_iteration_number << " iteration is in process" << endl;
+	}
+
+	void Logger::send_current_information_to_screen(double r_norm, int iteration_number)
+	{
+		cout << iteration_number << "\tr=" << scientific << setprecision(10) << r_norm << endl;
+	}
+
+	void Logger::send_message_build_slae()
+	{
+		cout << "Building SLAE..." << endl;
+	}
+
+	void Logger::send_message_create_portret()
+	{
+		cout << "Creating matrix-portret..." << endl;
+	}
+
+	void Logger::send_message_solution()
+	{
+		cout << "Getting solution..." << endl;
+	}
+
+	void Logger::send_message_Ux()
+	{
+		cout << "Getting Ux..." << endl;
+	}
+
+	void Logger::send_message_Uy()
+	{
+		cout << "Getting Uy..." << endl;
+	}
+
+	void Logger::send_message_P()
+	{
+		cout << "Getting P..." << endl;
+	}
+
+	void Logger::send_message_norms()
+	{
+		cout << "Calculating L2-norms..." << endl;
+	}
+
 	Logger::Logger()
 	{
 		p = TO_STDO;
@@ -36,6 +81,16 @@ namespace logger
 	{
 		if(p == TO_FILE)
 			log_f.close();
+	}
+
+	void Logger::send_inf_UL2_norm(double normL2u)
+	{
+		cout << "|U|(L2) = " << scientific << setprecision(4) << normL2u << endl;
+	}
+
+	void Logger::send_inf_PL2_norm(double normL2p)
+	{
+		cout << "|P|(L2) = " << scientific << setprecision(4) << normL2p << endl;
 	}
 
 	void Logger::si_print(int iteration_number,
@@ -83,9 +138,7 @@ namespace logger
 		solution_f_out << Ux_num << endl << endl << endl;
 		solution_f_out << Uy_num << endl << endl << endl;
 		solution_f_out << P_num << endl << endl << endl;
-		//info_f_out << "norm L2 u:|u*-u|=" << scientific << setprecision(4) << normL2u 
-		//	<< endl << "norm L2 p:|p*-p|=" << scientific << setprecision(4) << normL2p
-		//	<< endl << "eps=" << scientific << setprecision(2) << eps << endl;
+
 		info_f_out << "norm L2 u:|u*-u|=" << scientific << setprecision(4) << normL2u 
 			<< endl << "norm L2 p:|p*-p|=" << scientific << setprecision(4) << normL2p
 			<< endl;

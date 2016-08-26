@@ -65,7 +65,7 @@ namespace solver
 			slae_in.A.LYF(tmp); r = slae_in.A.yl;
 			norm_r = r.norm();
 			my_logger.send_current_information(norm_r / norm_f, k_iter);
-			cout << k_iter << "\tr=" << scientific << setprecision(10) << norm_r << endl;
+			my_logger.send_current_information_to_screen(norm_r, k_iter);
 		}
 		slae_in.A.UXY(x); x = slae_in.A.yu;
 		return x;
