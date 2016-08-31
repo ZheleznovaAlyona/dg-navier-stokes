@@ -4,7 +4,7 @@ namespace parameters
 
 	class Parameters
 	{
-	public:
+		public:
 		
 		//первые краевые условия
 		static double gx(int formula_number, double x, double y);

@@ -145,18 +145,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="elements.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="grid.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="info.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="l1.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
     <Text Include="log.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
@@ -166,14 +154,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="solver.conf">
-      <Filter>Файлы ресурсов</Filter>
-    </None>
     <None Include="packages.config" />
     <None Include="solver.json">
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="testing_parameters.json">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="elements.dt">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="grid.dt">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="l1.dt">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="l2.dt">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="l3.dt">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

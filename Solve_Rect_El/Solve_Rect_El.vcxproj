@@ -159,17 +159,17 @@
     <ClCompile Include="testing_parameters.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="elements.txt" />
-    <Text Include="grid.txt" />
-    <Text Include="info.txt" />
-    <Text Include="l1.txt" />
     <Text Include="log.txt" />
     <Text Include="solution.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="elements.dt" />
+    <None Include="grid.dt" />
+    <None Include="l1.dt" />
+    <None Include="l2.dt" />
+    <None Include="l3.dt" />
     <None Include="packages.config" />
-    <None Include="solver.conf" />
     <None Include="solver.json" />
     <None Include="testing_parameters.json" />
   </ItemGroup>

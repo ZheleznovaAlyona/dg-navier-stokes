@@ -18,7 +18,7 @@ namespace logger
 		else
 			os = &cout;
 
-		*os << iteration_number << "     " << setprecision(20) << r_norm << endl;
+		*os << iteration_number << "     " << scientific << setprecision(20) << r_norm << endl;
 	}
 
 	void Logger::send_current_information_to_screen_si(int si_iteration_number)

@@ -1,7 +1,6 @@
 #include "main_solver.h"
 #include <iostream>
 #include <iomanip>
-
 #include <math.h>
 using namespace std;
 
@@ -25,6 +24,24 @@ using namespace testingparameters;
 
 namespace mainsolver
 {
+	MainSolver::MainSolver() {}
+
+	MainSolver::MainSolver(std::ifstream& grid_f_in,
+		std::ifstream& elements_f_in,
+		std::string log_f,
+		std::ifstream& boundary1,
+		std::ifstream& boundary2,
+		std::ifstream& boundary3)
+	{
+		initialize(grid_f_in,
+			elements_f_in,
+			log_f,
+			boundary1,
+			boundary2,
+			boundary3);
+	}
+
+	MainSolver::~MainSolver() {}
 
 	void MainSolver::initialize(ifstream& grid_f_in,
 								ifstream& elements_f_in,

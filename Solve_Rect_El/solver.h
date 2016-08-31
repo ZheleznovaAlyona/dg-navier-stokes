@@ -10,19 +10,18 @@ namespace solver
 {
 	class Solver
 	{
+	public:
+		solverparameters::SolverParameters s_parameters;
 
-		public:
-			solverparameters::SolverParameters s_parameters;
+		Solver();
+		Solver(std::string& s_parameters_f);
+		~Solver();
 
-			Solver();
-			Solver(std::string& s_parameters_f);
-			~Solver();
-
-			virtual myvector::MyVector solve(myvector::MyVector U_begin,
-											 double &normL2u,
-											 double &normL2p,
-											 slae::SLAE& slae_in,
-											 logger::Logger& my_logger) = 0;
+		virtual myvector::MyVector solve(myvector::MyVector U_begin,
+											double &normL2u,
+											double &normL2p,
+											slae::SLAE& slae_in,
+											logger::Logger& my_logger) = 0;
 	};
 
 	class BCG : virtual public Solver
