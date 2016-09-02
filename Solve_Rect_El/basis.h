@@ -6,12 +6,11 @@ namespace basis
 {
 	class Basis
 	{
-		int n_func_p; //число базисных функций p
-		int n_func_u; //число базисных функций u
 
 	protected:
-		int get_n_func_u();
-		int get_n_func_p();
+
+		int n_func_p; //число базисных функций p
+		int n_func_u; //число базисных функций u
 
 		std::function<double(double, double)> psi[4]; //указатели на функции вычисления базисных функций p в точке
 		std::function<double(double, double)> dpsiksi[4]; //указатели на функции вычисления d/dksi базисных функций p в точке

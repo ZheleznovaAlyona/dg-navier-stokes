@@ -5,16 +5,6 @@ using namespace partition;
 
 namespace basis
 {
-	int Basis::get_n_func_u()
-	{
-		return n_func_u;
-	}
-
-	int Basis::get_n_func_p()
-	{
-		return n_func_p;
-	}
-
 	void Basis::initialize()
 	{
 		n_func_p = 4;
