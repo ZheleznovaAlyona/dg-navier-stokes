@@ -29,10 +29,6 @@ namespace boundary_conditions
 
 		void calculate_boundaries1_horizontal(int number, myvector::MyVector& b, Side side);
 		void calculate_boundaries1_vertical(int number, myvector::MyVector& b, Side side);
-		void calculate_boundaries1_left(int number, myvector::MyVector& b);
-		void calculate_boundaries1_right(int number, myvector::MyVector& b);
-		void calculate_boundaries1_low(int number, myvector::MyVector& b);
-		void calculate_boundaries1_up(int number, myvector::MyVector& b);
 		void calculate_boundaries1(int number, myvector::MyVector& b);
 
 	protected:
