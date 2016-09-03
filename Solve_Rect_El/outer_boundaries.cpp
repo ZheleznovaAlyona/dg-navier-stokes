@@ -1,5 +1,6 @@
 #include "boundaries.h"
 #include "element.h"
+#include "myfunctions.h"
 
 using namespace std;
 using namespace element;
@@ -23,7 +24,7 @@ namespace boundaries
 
 		int last_node = nodes.size() - 1;
 		int left_low_corner_node = element.nodes[0];
-		int right_up_corner_node = element.nodes[8];
+		int right_up_corner_node = element.nodes[3];
 
 		if(nodes[left_low_corner_node].x == nodes[0].x)
 		{
@@ -57,7 +58,17 @@ namespace boundaries
 
 	void OuterBoundaries::calculate_ES_out_left(int element_number, Matrix& A)
 	{
-		double S_out[4][4];
+		vector <vector<double>> S_out, E_out;
+
+		S_out.resize(n_func_u);
+		E_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			initialize_vector(S_out[i], n_func_u);
+			initialize_vector(E_out[i], n_func_u);
+		}
+
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -71,12 +82,10 @@ namespace boundaries
 		double n_vec[2] = {-1, 0};
 		double n_vec2[2] = {1, 0};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				E_out[i][j] = 0;
-				S_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -101,10 +110,10 @@ namespace boundaries
 			}
 		}
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
@@ -113,7 +122,17 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_ES_out_right(int element_number, Matrix& A)
 	{
-		double S_out[4][4];
+		vector <vector<double>> S_out, E_out;
+
+		S_out.resize(n_func_u);
+		E_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			initialize_vector(S_out[i], n_func_u);
+			initialize_vector(E_out[i], n_func_u);
+		}
+
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -127,12 +146,10 @@ namespace boundaries
 		double n_vec[2] = {1, 0};
 		double n_vec2[2] = {1, 0};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				E_out[i][j] = 0;
-				S_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -157,10 +174,10 @@ namespace boundaries
 			}
 		}
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
@@ -169,7 +186,17 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_ES_out_low(int element_number, Matrix& A)
 	{
-		double S_out[4][4];
+		vector <vector<double>> S_out, E_out;
+
+		S_out.resize(n_func_u);
+		E_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			initialize_vector(S_out[i], n_func_u);
+			initialize_vector(E_out[i], n_func_u);
+		}
+
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -183,12 +210,10 @@ namespace boundaries
 		double n_vec[2] = {0, -1};
 		double n_vec2[2] = {0, 1};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				E_out[i][j] = 0;
-				S_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -213,10 +238,10 @@ namespace boundaries
 			}
 		}
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
@@ -225,7 +250,17 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_ES_out_up(int element_number, Matrix& A)
 	{
-		double S_out[4][4];
+		vector <vector<double>> S_out, E_out;
+
+		S_out.resize(n_func_u);
+		E_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			initialize_vector(S_out[i], n_func_u);
+			initialize_vector(E_out[i], n_func_u);
+		}
+
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -239,12 +274,10 @@ namespace boundaries
 		double n_vec[2] = {0, 1};
 		double n_vec2[2] = {0, 1};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				E_out[i][j] = 0;
-				S_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -269,10 +302,10 @@ namespace boundaries
 			}
 		}
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
@@ -282,6 +315,13 @@ namespace boundaries
 
 	void OuterBoundaries::calculate_P_1_out_left(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_1_out;
+
+		P_1_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(P_1_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double rho = calculate_rho(element.number_of_area);
 		double hy = get_hy(element_number);
@@ -290,11 +330,10 @@ namespace boundaries
 
 		double n_vec[2] = {-1, 0};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				P_1_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -308,10 +347,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
@@ -320,6 +359,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_1_out_right(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_1_out;
+
+		P_1_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(P_1_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double rho = calculate_rho(element.number_of_area);
 		double hy = get_hy(element_number);
@@ -328,11 +374,10 @@ namespace boundaries
 
 		double n_vec[2] = {1, 0};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				P_1_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -346,10 +391,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
@@ -358,6 +403,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_1_out_low(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_1_out;
+
+		P_1_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(P_1_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double rho = calculate_rho(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -366,11 +418,10 @@ namespace boundaries
 
 		double n_vec[2] = {0, -1};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				P_1_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -384,10 +435,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
@@ -396,6 +447,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_1_out_up(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_1_out;
+
+		P_1_out.resize(n_func_u);
+
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(P_1_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double rho = calculate_rho(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -404,11 +462,10 @@ namespace boundaries
 
 		double n_vec[2] = {0, 1};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				P_1_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -422,10 +479,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
 			int id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
@@ -435,6 +492,13 @@ namespace boundaries
 
 	void OuterBoundaries::calculate_P_2_out_left(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_2_out;
+
+		P_2_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(P_2_out[i], n_func_u);
+
 		Element element = elements[element_number];
 		double hy = get_hy(element_number);
 
@@ -442,11 +506,10 @@ namespace boundaries
 
 		double n_vec[2] = {-1, 0};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				P_2_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -460,10 +523,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
@@ -472,6 +535,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_2_out_right(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_2_out;
+
+		P_2_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(P_2_out[i], n_func_u);
+
 		Element element = elements[element_number];
 		double hy = get_hy(element_number);
 
@@ -479,11 +549,10 @@ namespace boundaries
 
 		double n_vec[2] = {1, 0};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				P_2_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -497,10 +566,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
@@ -509,6 +578,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_2_out_low(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_2_out;
+
+		P_2_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(P_2_out[i], n_func_u);
+
 		Element element = elements[element_number];
 		double hx = get_hx(element_number);
 
@@ -516,11 +592,10 @@ namespace boundaries
 
 		double n_vec[2] = {0, -1};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				P_2_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -534,10 +609,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
@@ -546,6 +621,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_2_out_up(int element_number, Matrix& A)
 	{
+		vector <vector<double>> P_2_out;
+
+		P_2_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(P_2_out[i], n_func_u);
+
 		Element element = elements[element_number];
 		double hx = get_hx(element_number);
 
@@ -553,11 +635,10 @@ namespace boundaries
 
 		double n_vec[2] = {0, 1};
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
-				P_2_out[i][j] = 0;
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -571,10 +652,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.edges[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
@@ -584,6 +665,13 @@ namespace boundaries
 
 	void OuterBoundaries::calculate_SP_out_left(int element_number, Matrix& A)
 	{
+		vector <vector<double>> SP_out;
+
+		SP_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(SP_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double hy = get_hy(element_number);
 
@@ -592,12 +680,10 @@ namespace boundaries
 		double jacobian = 0.5 * hy;
 		double st = jacobian * mu2;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				SP_out[i][j] = 0;
-
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -610,10 +696,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, SP_out[i][j]); 
@@ -622,6 +708,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_SP_out_right(int element_number, Matrix& A)
 	{
+		vector <vector<double>> SP_out;
+
+		SP_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(SP_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double hy = get_hy(element_number);
 
@@ -630,12 +723,10 @@ namespace boundaries
 		double jacobian = 0.5 * hy;
 		double st = jacobian * mu2;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				SP_out[i][j] = 0;
-
 				for(int k = 0; k < 3; k++)
 				{
 					double p_etta = gauss_points_1[k];
@@ -648,10 +739,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, SP_out[i][j]); 
@@ -660,6 +751,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_SP_out_low(int element_number, Matrix& A)
 	{
+		vector <vector<double>> SP_out;
+
+		SP_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(SP_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double hx = get_hx(element_number);
 
@@ -668,12 +766,10 @@ namespace boundaries
 		double jacobian = 0.5 * hx;
 		double st = jacobian * mu2;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				SP_out[i][j] = 0;
-
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -686,10 +782,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, SP_out[i][j]); 
@@ -698,6 +794,13 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_SP_out_up(int element_number, Matrix& A)
 	{
+		vector <vector<double>> SP_out;
+
+		SP_out.resize(n_func_p);
+
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(SP_out[i], n_func_p);
+
 		Element element = elements[element_number];
 		double hx = get_hx(element_number);
 
@@ -706,12 +809,10 @@ namespace boundaries
 		double jacobian = 0.5 * hx;
 		double st = jacobian * mu2;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
-				SP_out[i][j] = 0;
-
 				for(int k = 0; k < 3; k++)
 				{
 					double p_ksi = gauss_points_1[k];
@@ -724,10 +825,10 @@ namespace boundaries
 
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
 			int id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{				
 				int id_j = element.nodes[j] + n_edges;
 				A.add_element(id_i, id_j, SP_out[i][j]); 

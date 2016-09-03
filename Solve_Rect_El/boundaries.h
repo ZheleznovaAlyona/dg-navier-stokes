@@ -52,7 +52,6 @@ namespace boundaries
 	{
 
 		double sigma, mu2; //коэффициенты стабилизации	
-		double E_out[4][4], P_1_out[4][4], P_2_out[4][4], SP_out[4][4]; //локальные матрицы
 
 		void calculate_ES_out_left(int element_number, matrix::Matrix& A);
 		void calculate_ES_out_right(int element_number, matrix::Matrix& A);
