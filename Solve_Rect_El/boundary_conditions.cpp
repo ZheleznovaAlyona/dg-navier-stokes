@@ -1,6 +1,7 @@
 #include "boundary_conditions.h"
 #include "element.h"
 #include "partition.h"
+#include "myfunctions.h"
 
 using namespace std;
 using namespace element;
@@ -57,16 +58,17 @@ namespace boundary_conditions
 		double lambda = calculate_lambda(element.number_of_area);
 		double n_vec[2] = {-1, 0};
 
-		double Ug_vector[4];
-		double Pg_vector[4];
+		vector<double> Ug_vector;
+		initialize_vector(Ug_vector, n_func_u);
+		vector<double> Pg_vector;
+		initialize_vector(Pg_vector, n_func_p);
+
 		double g_x, g_y;
 		double jacobian = hy / 2;
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0;  i < 4; i++)
+		for(int i = 0;  i < n_func_u; i++)
 		{
-			Ug_vector[i] = 0;
-			Pg_vector[i] = 0;
 			for(int j = 0; j < 3; j++)
 			{
 				double  p_etta = gauss_points_1[j];
@@ -80,13 +82,25 @@ namespace boundary_conditions
 					g_y * n_vec[1] * dphiyetta[i](-1, p_etta) / hy) +
 					gauss_weights_1[j] * mu1 * (g_x * phix[i](-1, p_etta) +
 					g_y * phiy[i](-1, p_etta));
+
+			}
+			Ug_vector[i] *= jacobian;
+			b[element.edges[i]] += Ug_vector[i];
+		}
+
+		for (int i = 0; i < n_func_p; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				double  p_etta = gauss_points_1[j];
+				double p_y = p_etta * hy + y0;
+				g_x = gx(boundaries1[number].formula_number, x0, p_y);
+				g_y = gy(boundaries1[number].formula_number, x0, p_y);
 				Pg_vector[i] -= gauss_weights_1[j] * psi[i](-1, p_etta) *
 					(g_x * n_vec[0] + g_y * n_vec[1]);
 
 			}
-			Ug_vector[i] *= jacobian;
 			Pg_vector[i] *= jacobian;
-			b[element.edges[i]] += Ug_vector[i];
 			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
@@ -103,16 +117,17 @@ namespace boundary_conditions
 		double lambda = calculate_lambda(element.number_of_area);
 		double n_vec[2] = {1, 0};
 
-		double Ug_vector[4];
-		double Pg_vector[4];
+		vector<double> Ug_vector;
+		initialize_vector(Ug_vector, n_func_u);
+		vector<double> Pg_vector;
+		initialize_vector(Pg_vector, n_func_p);
+
 		double g_x, g_y;
 		double jacobian = hy / 2;
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0;  i < 4; i++)
+		for(int i = 0;  i < n_func_u; i++)
 		{
-			Ug_vector[i] = 0;
-			Pg_vector[i] = 0;
 			for(int j = 0; j < 3; j++)
 			{
 				double  p_etta = gauss_points_1[j];
@@ -125,13 +140,24 @@ namespace boundary_conditions
 					g_y * n_vec[0] * dphiyksi[i](1, p_etta) / hx +
 					g_y * n_vec[1] * dphiyetta[i](1, p_etta) / hy) +
 					gauss_weights_1[j] * mu1 * (g_x * phix[i](1, p_etta) +
-					g_y * phiy[i](1, p_etta));
-				Pg_vector[i] -= gauss_weights_1[j] * psi[i](1, p_etta) *
-					(g_x * n_vec[0] + g_y * n_vec[1]);			
+					g_y * phiy[i](1, p_etta));	
 			}
 			Ug_vector[i] *= jacobian;
-			Pg_vector[i] *= jacobian;
 			b[element.edges[i]] += Ug_vector[i];
+		}
+
+		for (int i = 0; i < n_func_p; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				double  p_etta = gauss_points_1[j];
+				double p_y = p_etta * hy + y0;
+				g_x = gx(boundaries1[number].formula_number, x0 + hx, p_y);
+				g_y = gy(boundaries1[number].formula_number, x0 + hx, p_y);
+				Pg_vector[i] -= gauss_weights_1[j] * psi[i](1, p_etta) *
+					(g_x * n_vec[0] + g_y * n_vec[1]);
+			}
+			Pg_vector[i] *= jacobian;
 			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
@@ -148,16 +174,17 @@ namespace boundary_conditions
 		double lambda = calculate_lambda(element.number_of_area);
 		double n_vec[2] = {0, -1};
 
-		double Ug_vector[4];
-		double Pg_vector[4];
+		vector<double> Ug_vector;
+		initialize_vector(Ug_vector, n_func_u);
+		vector<double> Pg_vector;
+		initialize_vector(Pg_vector, n_func_p);
+
 		double g_x, g_y;
 		double jacobian = hx / 2;
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0;  i < 4; i++)
+		for(int i = 0;  i < n_func_u; i++)
 		{
-			Ug_vector[i] = 0;
-			Pg_vector[i] = 0;
 			for(int j = 0; j < 3; j++)
 			{
 				double  p_ksi = gauss_points_1[j];
@@ -170,13 +197,24 @@ namespace boundary_conditions
 					g_y * n_vec[0] * dphiyksi[i](p_ksi, -1) / hx +
 					g_y * n_vec[1] * dphiyetta[i](p_ksi, -1) / hy) +
 					gauss_weights_1[j] * mu1 * (g_x * phix[i](p_ksi, -1) +
-					g_y * phiy[i](p_ksi, -1));
-				Pg_vector[i] -= gauss_weights_1[j] * psi[i](p_ksi, -1) *
-					(g_x * n_vec[0] + g_y * n_vec[1]);			
+					g_y * phiy[i](p_ksi, -1));		
 			}
 			Ug_vector[i] *= jacobian;
-			Pg_vector[i] *= jacobian;
 			b[element.edges[i]] += Ug_vector[i];
+		}
+
+		for (int i = 0; i < n_func_p; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				double  p_ksi = gauss_points_1[j];
+				double p_x = p_ksi * hx + x0;
+				g_x = gx(boundaries1[number].formula_number, p_x, y0);
+				g_y = gy(boundaries1[number].formula_number, p_x, y0);
+				Pg_vector[i] -= gauss_weights_1[j] * psi[i](p_ksi, -1) *
+					(g_x * n_vec[0] + g_y * n_vec[1]);
+			}
+			Pg_vector[i] *= jacobian;
 			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
@@ -193,16 +231,17 @@ namespace boundary_conditions
 		double lambda = calculate_lambda(element.number_of_area);
 		double n_vec[2] = {0, 1};
 
-		double Ug_vector[4];
-		double Pg_vector[4];
+		vector<double> Ug_vector;
+		initialize_vector(Ug_vector, n_func_u);
+		vector<double> Pg_vector;
+		initialize_vector(Pg_vector, n_func_p);
+
 		double g_x, g_y;
 		double jacobian = hx / 2;
 		int n_edges = elements.size() * 4;
 
-		for(int i = 0;  i < 4; i++)
+		for(int i = 0;  i < n_func_u; i++)
 		{
-			Ug_vector[i] = 0;
-			Pg_vector[i] = 0;
 			for(int j = 0; j < 3; j++)
 			{
 				double  p_ksi = gauss_points_1[j];
@@ -215,13 +254,24 @@ namespace boundary_conditions
 					g_y * n_vec[0] * dphiyksi[i](p_ksi, 1) / hx +
 					g_y * n_vec[1] * dphiyetta[i](p_ksi, 1) / hy) +
 					gauss_weights_1[j] * mu1 * (g_x * phix[i](p_ksi, 1) +
-					g_y * phiy[i](p_ksi, 1));
-				Pg_vector[i] -= gauss_weights_1[j] * psi[i](p_ksi, 1) *
-					(g_x * n_vec[0] + g_y * n_vec[1]);			
+					g_y * phiy[i](p_ksi, 1));		
 			}
 			Ug_vector[i] *= jacobian;
-			Pg_vector[i] *= jacobian;
 			b[element.edges[i]] += Ug_vector[i];
+		}
+
+		for (int i = 0; i < n_func_p; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				double  p_ksi = gauss_points_1[j];
+				double p_x = p_ksi * hx + x0;
+				g_x = gx(boundaries1[number].formula_number, p_x, y0 + hy);
+				g_y = gy(boundaries1[number].formula_number, p_x, y0 + hy);
+				Pg_vector[i] -= gauss_weights_1[j] * psi[i](p_ksi, 1) *
+					(g_x * n_vec[0] + g_y * n_vec[1]);
+			}
+			Pg_vector[i] *= jacobian;
 			b[element.nodes[i] + n_edges] += Pg_vector[i];
 		}
 	}
