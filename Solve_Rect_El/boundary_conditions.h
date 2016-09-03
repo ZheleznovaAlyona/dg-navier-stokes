@@ -9,6 +9,8 @@
 
 namespace boundary_conditions
 {
+	enum Side {left_edge, right_edge, low_edge, up_edge};
+
 	class BoundaryCondition
 	{
 	public:
@@ -25,6 +27,8 @@ namespace boundary_conditions
 	{
 		double mu1;
 
+		void calculate_boundaries1_horizontal(int number, myvector::MyVector& b, Side side);
+		void calculate_boundaries1_vertical(int number, myvector::MyVector& b, Side side);
 		void calculate_boundaries1_left(int number, myvector::MyVector& b);
 		void calculate_boundaries1_right(int number, myvector::MyVector& b);
 		void calculate_boundaries1_low(int number, myvector::MyVector& b);
