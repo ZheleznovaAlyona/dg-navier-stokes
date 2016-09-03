@@ -17,8 +17,8 @@ namespace mainsolver
 		logger::Logger logger; //логгер для вывода информации о процессе решения СЛАУ
 
 							   //локальные матрицы
-		double G[4][4], P1[4][4], P2[4][4], C[4][4];
-		double F[4]; //локальный вектор правой части
+		//double G[4][4], P1[4][4], P2[4][4], C[4][4];
+		//double F[4]; //локальный вектор правой части
 
 		myvector::MyVector Ux_numerical; //численное решение Ux
 		myvector::MyVector Uy_numerical; //численное решение Uy

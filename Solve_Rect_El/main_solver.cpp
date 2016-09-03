@@ -8,6 +8,7 @@ using namespace std;
 #include "partition.h"
 #include "testing_parameters.h"
 #include "parameters.h"
+#include "myfunctions.h"
 
 using namespace boundary_conditions;
 using namespace element;
@@ -141,7 +142,7 @@ namespace mainsolver
 
 		static auto& part = static_cast<Partition>(*this);
 
-		my_slae.A.create_portret(part, logger);
+		my_slae.A.create_portret(part, logger, n_func_u, n_func_p);
 
 		logger.send_current_information_to_screen_si(k_it);
 
@@ -218,7 +219,7 @@ namespace mainsolver
 		MyVector sol_0;
 		sol_0.initialize(my_slae.n);
 
-		my_slae.A.create_portret(static_cast<Partition>(*this), logger);
+		my_slae.A.create_portret(static_cast<Partition>(*this), logger, n_func_u, n_func_p);
 
 		build_slae(sol_0);
 
@@ -244,50 +245,21 @@ namespace mainsolver
 	void MainSolver::calculate_locals(int element_number, MyVector q_calc)
 	{
 		Element element = Partition::elements[element_number];
-		int id_i, id_j;
-		int n_edges = Partition::elements.size() * 4;
 	
 		calculate_G(element_number);
 		calculate_C(element_number, q_calc);
 		calculate_P1(element_number);
 		calculate_P2(element_number);
 		calculate_F(element_number);
-
-		for(int i = 0; i < 4; i++)
-		{
-			id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
-			{				
-				id_j = element.edges[j];
-				my_slae.A.add_element(id_i, id_j, G[i][j] + C[i][j]); 
-			}
-			my_slae.b[id_i] += F[i];
-		}
-
-		for(int i = 0; i < 4; i++)
-		{
-			id_i = element.edges[i];
-			for(int j = 0; j < 4; j++)
-			{				
-				id_j = element.nodes[j] + n_edges;
-				my_slae.A.add_element(id_i, id_j, P1[i][j]); 
-			}
-		}
-
-		for(int i = 0; i < 4; i++)
-		{
-			id_i = element.nodes[i] + n_edges;
-			for(int j = 0; j < 4; j++)
-			{				
-				id_j = element.edges[j];
-				my_slae.A.add_element(id_i, id_j, P2[i][j]); 
-			}
-		}
 	}
 
 	void MainSolver::calculate_G(int element_number)
 	{
 		double hx, hy, hx2, hy2, g1, g2;
+		vector <vector<double>> G;
+		G.resize(n_func_u);
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(G[i], n_func_u);
 		Element element = Partition::elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 
@@ -298,9 +270,9 @@ namespace mainsolver
 
 		double jacobian = hx * hy / 4.0;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = i; j < 4; j++)
+			for(int j = i; j < n_func_u; j++)
 			{
 				g1 = 0;
 				g2 = 0;
@@ -322,11 +294,26 @@ namespace mainsolver
 		for(int i = 1; i < 4; i++)
 			for(int j = 0; j < i; j++)
 				G[i][j] = G[j][i];
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			int id_i = element.edges[i];
+			for (int j = 0; j < n_func_u; j++)
+			{
+				int id_j = element.edges[j];
+				my_slae.A.add_element(id_i, id_j, G[i][j]);
+			}
+		}
 	}
 	void MainSolver::calculate_C(int element_number, MyVector q_calc)
 	{
 		double hx, hy, c1, c2;
 		Element element = elements[element_number];
+
+		vector <vector<double>> C;
+		C.resize(n_func_u);
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(C[i], n_func_u);
 
 		hx = get_hx(element_number);
 		hy = get_hy(element_number);
@@ -336,9 +323,9 @@ namespace mainsolver
 		double x0 = nodes[element.nodes[0]].x;
 		double y0 = nodes[element.nodes[0]].y;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
 				C[i][j] = 0;
 				for(int k = 0; k < 9; k++)
@@ -365,10 +352,27 @@ namespace mainsolver
 				C[i][j] *= jacobian;
 			}
 		}
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			int id_i = element.edges[i];
+			for (int j = 0; j < n_func_u; j++)
+			{
+				int id_j = element.edges[j];
+				my_slae.A.add_element(id_i, id_j, C[i][j]);
+			}
+		}
 	}
 	void MainSolver::calculate_P1(int element_number)
 	{
+		int n_edges = Partition::elements.size() * 4;
 		Element element = elements[element_number];
+
+		vector <vector<double>> P1;
+		P1.resize(n_func_u);
+		for (int i = 0; i < n_func_u; i++)
+			initialize_vector(P1[i], n_func_p);
+
 		double hx = get_hx(element_number);
 		double hy = get_hy(element_number);
 
@@ -377,9 +381,9 @@ namespace mainsolver
 		double rho = calculate_rho(element.number_of_area);
 		rho = - 1 / rho;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_u; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_p; j++)
 			{
 				P1[i][j] = 0;
 				for(int k = 0; k < 9; k++)
@@ -392,18 +396,34 @@ namespace mainsolver
 				P1[i][j] *= jacobian * rho;
 			}
 		}
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			int id_i = element.edges[i];
+			for (int j = 0; j < n_func_p; j++)
+			{
+				int id_j = element.nodes[j] + n_edges;
+				my_slae.A.add_element(id_i, id_j, P1[i][j]);
+			}
+		}
 	}
 	void MainSolver::calculate_P2(int element_number)
 	{
+		int n_edges = Partition::elements.size() * 4;
 		Element element = elements[element_number];
+		vector <vector<double>> P2;
+		P2.resize(n_func_p);
+		for (int i = 0; i < n_func_p; i++)
+			initialize_vector(P2[i], n_func_u);
+
 		double hx = get_hx(element_number);
 		double hy = get_hy(element_number);
 
 		double jacobian = hx * hy / 4.0;
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < n_func_p; i++)
 		{
-			for(int j = 0; j < 4; j++)
+			for(int j = 0; j < n_func_u; j++)
 			{
 				P2[i][j] = 0;
 				for(int k = 0; k < 9; k++)
@@ -416,13 +436,25 @@ namespace mainsolver
 				P2[i][j] *= jacobian;
 			}
 		}
-	}
 
+		for (int i = 0; i < n_func_p; i++)
+		{
+			int id_i = element.nodes[i] + n_edges;
+			for (int j = 0; j < n_func_u; j++)
+			{
+				int id_j = element.edges[j];
+				my_slae.A.add_element(id_i, id_j, P2[i][j]);
+			}
+		}
+	}
 	void MainSolver::calculate_F(int element_number)
 	{
 		double f_x, f_y;
 		Element element = elements[element_number];
 		int number_of_area = element.number_of_area;
+
+		vector<double> F;
+		initialize_vector(F, n_func_u);
 
 		double x0 = nodes[element.nodes[0]].x;
 		double y0 = nodes[element.nodes[0]].y;
@@ -432,7 +464,7 @@ namespace mainsolver
 
 		double jacobian = hx * hy / 4.0;
 
-		for(int i = 0;  i < 4; i++)
+		for(int i = 0;  i < n_func_u; i++)
 		{
 			F[i] = 0;
 			for(int j = 0; j < 9; j++)
@@ -445,6 +477,12 @@ namespace mainsolver
 						+ f_y * phiy[i](p_ksi, p_etta));
 			}
 			 F[i] *= jacobian;
+		}
+
+		for (int i = 0; i < n_func_u; i++)
+		{
+			int id_i = element.edges[i];
+			my_slae.b[id_i] += F[i];
 		}
 	}
 

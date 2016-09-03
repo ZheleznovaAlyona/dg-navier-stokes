@@ -354,7 +354,7 @@ namespace matrix
 		}
 	}
 
-	void Matrix::create_portret(Partition& p, Logger& log)
+	void Matrix::create_portret(Partition& p, Logger& log, int dof_num_u, int dof_num_p)
 	{
 		log.send_message_create_portret();
 		vector <int> unzero_elements_list;
@@ -393,8 +393,8 @@ namespace matrix
 			//1
 			unzero_elements_lists_size = p.create_unzero_elements_list(i, 
 																	 unzero_elements_list, 
-																	 4, 
-																	 4, 
+																	 dof_num_u, 
+																	 dof_num_u, 
 																	 p.elements[i].edges, 
 																	 p.elements[i].edges, 
 																	 true);
@@ -414,8 +414,8 @@ namespace matrix
 			//1
 			unzero_elements_lists_size = p.create_unzero_elements_list(i, 
 																	 unzero_elements_list, 
-																	 4, 
-																	 4, 
+																	 dof_num_p, 
+																	 dof_num_p, 
 																	 p.elements[i].nodes, 
 																	 p.elements[i].nodes, 
 																	 false);
@@ -435,8 +435,8 @@ namespace matrix
 			//1
 			unzero_elements_lists_size = p.create_unzero_elements_list(i,
 																	 unzero_elements_list, 
-																	 4, 
-																	 4, 
+																	 dof_num_p, 
+																	 dof_num_u, 
 																	 p.elements[i].nodes, 
 																	 p.elements[i].edges, 
 																	 true);
