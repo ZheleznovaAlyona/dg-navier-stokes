@@ -488,24 +488,30 @@ namespace mainsolver
 
 #pragma endregion
 
+#pragma region расчёт решений и производных
 
 double MainSolver::get_solution_in_point_ux(double x, double y, int element_number, MyVector qi)
 {
-	int indexes[4];
-	double u_in_point, qi_local[4];
+	vector <int> indexes;
+	indexes.resize(n_func_u);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_u);
+
+	double u_in_point;
 
 	//собираем глобальные номера с элемента
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		indexes[j] = elements[element_number].edges[j];
 
 	//собираем локальный набор весов
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
 	static auto& part = static_cast<Partition>(*this);
 	u_in_point = 0;
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		u_in_point += qi_local[j] * phix_i(j, x, y, element_number, part);
 
 	return u_in_point;
@@ -513,21 +519,26 @@ double MainSolver::get_solution_in_point_ux(double x, double y, int element_numb
 
 double MainSolver::get_solution_in_point_uy(double x, double y, int element_number, MyVector qi)
 {
-	int indexes[4];
-	double u_in_point, qi_local[4];
+	vector <int> indexes;
+	indexes.resize(n_func_u);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_u);
+
+	double u_in_point;
 
 	//собираем глобальные номера с элемента
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		indexes[j] = elements[element_number].edges[j];
 
 	//собираем локальный набор весов
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
 	static auto& part = static_cast<Partition>(*this);
 	u_in_point = 0;
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		u_in_point += qi_local[j] * phiy_i(j, x, y, element_number, part);
 
 	return u_in_point;
@@ -535,21 +546,26 @@ double MainSolver::get_solution_in_point_uy(double x, double y, int element_numb
 
 double MainSolver::get_solution_in_point_uxdx(double x, double y, int element_number, MyVector qi)
 {
-	int indexes[4];
-	double du_in_point, qi_local[4];
+	vector <int> indexes;
+	indexes.resize(n_func_u);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_u);
+
+	double du_in_point;
 
 	//собираем глобальные номера с элемента
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		indexes[j] = elements[element_number].edges[j];
 
 	//собираем локальный набор весов
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
 	static auto& part = static_cast<Partition>(*this);
 	du_in_point = 0;
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		du_in_point += qi_local[j] * phixdx_i(j, x, y, element_number, part);
 
 	return du_in_point;
@@ -557,21 +573,26 @@ double MainSolver::get_solution_in_point_uxdx(double x, double y, int element_nu
 
 double MainSolver::get_solution_in_point_uydy(double x, double y, int element_number, MyVector qi)
 {
-	int indexes[4];
-	double du_in_point, qi_local[4];
+	vector <int> indexes;
+	indexes.resize(n_func_u);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_u);
+
+	double du_in_point;
 
 	//собираем глобальные номера с элемента
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		indexes[j] = elements[element_number].edges[j];
 
 	//собираем локальный набор весов
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
 	static auto& part = static_cast<Partition>(*this);
 	du_in_point = 0;
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_u; j++)
 		du_in_point += qi_local[j] * phiydy_i(j, x, y, element_number, part);
 	
 	return du_in_point;
@@ -579,21 +600,28 @@ double MainSolver::get_solution_in_point_uydy(double x, double y, int element_nu
 
 double MainSolver::get_solution_in_point_p(double x, double y, int element_number, MyVector qi)
 {
-	int indexes[4], n_edges = elements.size() * 4;
-	double p_in_point, qi_local[4];
+	int n_edges = elements.size() * 4;
+
+	vector <int> indexes;
+	indexes.resize(n_func_p);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_p);
+
+	double p_in_point;
 
 	//собираем глобальные номера с элемента
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_p; j++)
 		indexes[j] = elements[element_number].nodes[j] + n_edges;
 
 	//собираем локальный набор весов
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_p; j++)
 		qi_local[j] = qi[indexes[j]];
 
 	//вычисляем в решение в точке
 	static auto& part = static_cast<Partition>(*this);
 	p_in_point = 0;
-	for(int j = 0; j < 4; j++)
+	for(int j = 0; j < n_func_p; j++)
 		p_in_point += qi_local[j] * psi_i(j, x, y, element_number, part);
 
 	return p_in_point;
@@ -620,24 +648,30 @@ double MainSolver::get_solution_in_point2_p(double x, double y, MyVector qi)
 void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution)
 {
 	logger.send_message_Ux();
-	int indexes[4], indexes_nodes[4];
+	int indexes_nodes[4];
 	int size = elements.size();
-	double u_local[4], qi_local[4];
+	double u_local[4];
 	double x, y;
+
+	vector <int> indexes;
+	indexes.resize(n_func_u);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_u);
 
 	static auto& part = static_cast<Partition>(*this);
 
 	for(int i = 0; i < size; i++)
 	{
 		//собираем глобальные номера с элемента
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < n_func_u; j++)
 			indexes[j] = elements[i].edges[j];
 
 		for(int j = 0; j < 4; j++)
 			indexes_nodes[j] = elements[i].nodes[j];
 
 		//собираем локальный набор весов
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < n_func_u; j++)
 			qi_local[j] = qi[indexes[j]];
 
 		//вычисляем в узлах элемента решение
@@ -646,7 +680,7 @@ void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution
 			u_local[j] = 0;
 			x = nodes[indexes_nodes[j]].x;
 			y = nodes[indexes_nodes[j]].y;
-			for(int k = 0; k < 4; k++)
+			for(int k = 0; k < n_func_u; k++)
 				u_local[j] += qi_local[k] * phix_i(k, x, y, i, part);
 		}
 
@@ -659,21 +693,27 @@ void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution
 void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution)
 {
 	logger.send_message_Uy();
-	int indexes[4], indexes_nodes[4];
+	int indexes_nodes[4];
 	int size = elements.size();
-	double u_local[4], qi_local[4];
+	double u_local[4];
 	double x, y;
+
+	vector <int> indexes;
+	indexes.resize(n_func_u);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_u);
 
 	static auto& part = static_cast<Partition>(*this);
 
 	for(int i = 0; i < size; i++)
 	{
 		//собираем глобальные номера с элемента
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < n_func_u; j++)
 			indexes[j] = elements[i].edges[j];
 
 		//собираем локальный набор весов
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < n_func_u; j++)
 			qi_local[j] = qi[indexes[j]];
 
 		for(int j = 0; j < 4; j++)
@@ -685,7 +725,7 @@ void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution
 			u_local[j] = 0;
 			x = nodes[indexes_nodes[j]].x;
 			y = nodes[indexes_nodes[j]].y;
-			for(int k = 0; k < 4; k++)
+			for(int k = 0; k < n_func_u; k++)
 				u_local[j] += qi_local[k] * phiy_i(k, x, y, i, part);
 		}
 
@@ -698,40 +738,49 @@ void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution
 void MainSolver::get_vector_solution_in_nodes_p(MyVector qi, MyVector &solution)
 {
 	logger.send_message_P();
-	int indexes[4], n_edges = elements.size() * 4;
+	int indexes_nodes[4], n_edges = elements.size() * 4;
 	int size = elements.size();
-	double p_local[4], qi_local[4];
+	double p_local[4];
 	double x, y;
+
+	vector <int> indexes;
+	indexes.resize(n_func_p);
+
+	vector <double> qi_local;
+	qi_local.resize(n_func_p);
 
 	static auto& part = static_cast<Partition>(*this);
 
 	for(int i = 0; i < size; i++)
 	{
 		//собираем глобальные номера с элемента
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < n_func_p; j++)
 			indexes[j] = elements[i].nodes[j];
 
 		//собираем локальный набор весов
-		for(int j = 0; j < 4; j++)
+		for(int j = 0; j < n_func_p; j++)
 			qi_local[j] = qi[indexes[j]+ n_edges];
+
+		for (int j = 0; j < 4; j++)
+			indexes_nodes[j] = elements[i].nodes[j];
 
 		//вычисляем в узлах элемента решение
 		for(int j = 0; j < 4; j++)
 		{
 			p_local[j] = 0;
-			x = nodes[indexes[j]].x;
-			y = nodes[indexes[j]].y;
-			for(int k = 0; k < 4; k++)
+			x = nodes[indexes_nodes[j]].x;
+			y = nodes[indexes_nodes[j]].y;
+			for(int k = 0; k < n_func_p; k++)
 				p_local[j] += qi_local[k] * psi_i(k, x, y, i, part);
 		}
 
 		//кладём в результирующий вектор
 		for(int j = 0; j < 4; j++)
-			solution[indexes[j]] = p_local[j];
+			solution[indexes_nodes[j]] = p_local[j];
 	}
 }
 
-
+#pragma endregion
 
 void MainSolver::solve()
 {
