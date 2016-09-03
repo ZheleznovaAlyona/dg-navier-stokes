@@ -56,8 +56,9 @@ namespace mainsolver
 		boundary3 >> boundaries3;
 
 		Partition::input(grid_f_in, elements_f_in);
-
-		int slae_size = nodes.size() + elements.size() * 4; //узлы и рёбра
+		Basis::initialize();
+		Gauss_integration::initialize();
+		int slae_size = (n_func_p + n_func_u) * elements.size(); //узлы и рёбра
 
 		InternalBoundaries::initialize_penalty_parameters();
 		OuterBoundaries::initialize_penalty_parameters();
@@ -72,9 +73,6 @@ namespace mainsolver
 		Uy_numerical.initialize(nodes.size());
 		P_numerical.initialize(nodes.size());
 		q_prev.initialize(slae_size);
-
-		Basis::initialize();
-		Gauss_integration::initialize();
 	}
 
 	void MainSolver::reinitialize()
