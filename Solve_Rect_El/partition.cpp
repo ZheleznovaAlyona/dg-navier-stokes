@@ -29,15 +29,16 @@ namespace partition
 		int count_uu = 0;
 		for(unsigned int i = 0; i < elements.size(); i++)
 		{
+			int local_count = 0;
 			//с собой
-			count_uu += 4;
+			local_count += elements[i].ndof_u;
 			//с соседями
 			for(int j = 0; j < 4; j++)
 				if(elements[i].neighbors[j] != -1)
-					count_uu += 4;
+					local_count += elements[elements[i].neighbors[j]].ndof_u;
+			count_uu += local_count * elements[i].ndof_u - elements[i].ndof_u;
 		}
-		count_uu *= 4;
-		count_uu -= elements.size() * 4;
+
 		//так как нужно для одного треугольника ввиду симметричности портрета,
 		//то необходимо полученное количество поделить на 2
 		count_uu /= 2;
@@ -45,15 +46,16 @@ namespace partition
 		int count_pp = 0;
 		for(unsigned int i = 0; i < elements.size(); i++)
 		{
+			int local_count = 0;
 			//с собой
-			count_pp += 4;
+			local_count += elements[i].ndof_p;
 			//с соседями
 			for(int j = 0; j < 4; j++)
 				if(elements[i].neighbors[j] != -1)
-					count_pp += 4;
+					local_count += elements[elements[i].neighbors[j]].ndof_p;
+			count_pp += local_count * elements[i].ndof_p - elements[i].ndof_p;
 		}
-		count_pp *= 4;
-		count_pp -= nodes.size();
+
 		//так как нужно для одного треугольника ввиду симметричности портрета,
 		//то необходимо полученное количество поделить на 2
 		count_pp /= 2;
@@ -61,14 +63,15 @@ namespace partition
 		int count_up = 0;
 		for(unsigned int i = 0; i < elements.size(); i++)
 		{
+			int local_count = 0;
 			//с собой
-			count_up += 4;
+			local_count += elements[i].ndof_p;
 			//с соседями
 			for(int j = 0; j < 4; j++)
 				if(elements[i].neighbors[j] != -1)
-					count_up += 4;
+					local_count += elements[elements[i].neighbors[j]].ndof_p;
+			count_up += local_count * elements[i].ndof_u;
 		}
-		count_up *= 4;
 
 		return count_uu + count_pp + count_up;
 	}
@@ -96,11 +99,11 @@ namespace partition
 		{
 			neighbor = elements[element_number].neighbors[j];
 			if(neighbor != -1)
-			for(int i = 0; i < dof_num_j; i++)
-			{
-				if(dof_j_edge) list.push_back(elements[neighbor].edges[i]);
-				else list.push_back(elements[neighbor].nodes[i]);
-			}			
+				for(int i = 0; i < dof_num_j; i++)
+				{
+					if(dof_j_edge) list.push_back(elements[neighbor].dof_u[i]);
+					else list.push_back(elements[neighbor].dof_p[i]);
+				}			
 		}
 
 		return list.size();

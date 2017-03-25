@@ -319,32 +319,32 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
-			id_i = element.edges[i];
+			id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				id_j = element.edges[j];
+				id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, ES[i][j]); 
 			}
 
 			for(int j = n_func_u; j < n_func_u * 2; j++)
 			{				
-				id_j = neighbor_element.edges[j - n_func_u];
+				id_j = neighbor_element.dof_u[j - n_func_u];
 				A.add_element(id_i, id_j, ES[i][j]); 
 			}
 		}
 
 		for(int i = n_func_u; i < n_func_u * 2; i++)
 		{
-			id_i = neighbor_element.edges[i - n_func_u];
+			id_i = neighbor_element.dof_u[i - n_func_u];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				id_j = element.edges[j];
+				id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, ES[i][j]); 
 			}
 
 			for(int j = n_func_u; j < n_func_u * 2; j++)
 			{				
-				id_j = neighbor_element.edges[j - n_func_u];
+				id_j = neighbor_element.dof_u[j - n_func_u];
 				A.add_element(id_i, id_j, ES[i][j]); 
 			}
 		}
@@ -485,20 +485,19 @@ namespace boundaries
 		int id_i, id_j;
 		Element element = elements[element_number];
 		Element neighbor_element = elements[neighbor_element_number];
-		int n_edges = elements.size() * 4;
 
 		for(int i = 0; i < n_func_u; i++)
 		{
-			id_i = element.edges[i];
+			id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				id_j = element.nodes[j] + n_edges;
+				id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, P_1[i][j]); 
 			}
 
 			for(int j = n_func_p; j < n_func_p * 2; j++)
 			{				
-				id_j = neighbor_element.nodes[j - n_func_p] + n_edges;
+				id_j = neighbor_element.dof_p[j - n_func_p];
 				A.add_element(id_i, id_j, P_1[i][j]); 
 			}
 		}
@@ -508,13 +507,13 @@ namespace boundaries
 			id_i = neighbor_element.edges[i - n_func_u];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				id_j = element.nodes[j] + n_edges;
+				id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, P_1[i][j]); 
 			}
 
 			for(int j = n_func_p; j < n_func_p * 2; j++)
 			{				
-				id_j = neighbor_element.nodes[j - n_func_p] + n_edges;
+				id_j = neighbor_element.dof_p[j - n_func_p];
 				A.add_element(id_i, id_j, P_1[i][j]); 
 			}
 		}
@@ -653,36 +652,35 @@ namespace boundaries
 		int id_i, id_j;
 		Element element = elements[element_number];
 		Element neighbor_element = elements[neighbor_element_number];
-		int n_edges = elements.size() * 4;
 
 		for(int i = 0; i < n_func_p; i++)
 		{
-			id_i = element.nodes[i] + n_edges;
+			id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				id_j = element.edges[j];
+				id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, P_2[i][j]); 
 			}
 
 			for(int j = n_func_u; j < n_func_u * 2; j++)
 			{				
-				id_j = neighbor_element.edges[j - n_func_u];
+				id_j = neighbor_element.dof_u[j - n_func_u];
 				A.add_element(id_i, id_j, P_2[i][j]); 
 			}
 		}
 
 		for(int i = n_func_p; i < n_func_p * 2; i++)
 		{
-			id_i = neighbor_element.nodes[i - n_func_p] + n_edges;
+			id_i = neighbor_element.dof_p[i - n_func_p];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				id_j = element.edges[j];
+				id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, P_2[i][j]); 
 			}
 
 			for(int j = n_func_u; j < n_func_u * 2; j++)
 			{				
-				id_j = neighbor_element.edges[j - n_func_u];
+				id_j = neighbor_element.dof_u[j - n_func_u];
 				A.add_element(id_i, id_j, P_2[i][j]); 
 			}
 		}
@@ -809,36 +807,35 @@ namespace boundaries
 		int id_i, id_j;
 		Element element = elements[element_number];
 		Element neighbor_element = elements[neighbor_element_number];
-		int n_edges = elements.size() * 4;
 
 		for(int i = 0; i < n_func_p; i++)
 		{
-			id_i = element.nodes[i] + n_edges;
+			id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				id_j = element.nodes[j] + n_edges;
+				id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, SP[i][j]); 
 			}
 
 			for(int j = n_func_p; j < n_func_p * 2; j++)
 			{				
-				id_j = neighbor_element.nodes[j - n_func_p] + n_edges;
+				id_j = neighbor_element.dof_p[j - n_func_p];
 				A.add_element(id_i, id_j, SP[i][j]); 
 			}
 		}
 
 		for(int i = n_func_p; i < n_func_p * 2; i++)
 		{
-			id_i = neighbor_element.nodes[i - n_func_p] + n_edges;
+			id_i = neighbor_element.dof_p[i - n_func_p];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				id_j = element.nodes[j] + n_edges;
+				id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, SP[i][j]); 
 			}
 
 			for(int j = n_func_p; j < n_func_p * 2; j++)
 			{				
-				id_j = neighbor_element.nodes[j - n_func_p] + n_edges;
+				id_j = neighbor_element.dof_p[j - n_func_p];
 				A.add_element(id_i, id_j, SP[i][j]); 
 			}
 		}

@@ -17,7 +17,7 @@ namespace boundary_conditions
 
 		int elem;
 		int edges[4]; //левое,правое,нижнее, верхнее: 1 - есть, 0 - нет
-		int formula_number;
+		int formula_number[4];
 	};
 
 	class BoundaryConditionsSupport : virtual public partition::Partition,

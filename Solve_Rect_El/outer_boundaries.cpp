@@ -112,10 +112,10 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
 			}
 		}
@@ -176,10 +176,10 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
 			}
 		}
@@ -240,10 +240,10 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
 			}
 		}
@@ -304,10 +304,10 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
 			}
 		}
@@ -345,14 +345,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
 			}
 		}
@@ -389,14 +387,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
 			}
 		}
@@ -433,14 +429,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
 			}
 		}
@@ -477,14 +471,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_u; i++)
 		{
-			int id_i = element.edges[i];
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, P_1_out[i][j]); 
 			}
 		}
@@ -521,14 +513,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
 			}
 		}
@@ -564,14 +554,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
 			}
 		}
@@ -607,14 +595,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
 			}
 		}
@@ -650,14 +636,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_u; j++)
 			{				
-				int id_j = element.edges[j];
+				int id_j = element.dof_u[j];
 				A.add_element(id_i, id_j, P_2_out[i][j]); 
 			}
 		}
@@ -694,14 +678,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, SP_out[i][j]); 
 			}
 		}
@@ -737,14 +719,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, SP_out[i][j]); 
 			}
 		}
@@ -780,14 +760,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, SP_out[i][j]); 
 			}
 		}
@@ -823,14 +801,12 @@ namespace boundaries
 			}
 		}
 
-		int n_edges = elements.size() * 4;
-
 		for(int i = 0; i < n_func_p; i++)
 		{
-			int id_i = element.nodes[i] + n_edges;
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_p; j++)
 			{				
-				int id_j = element.nodes[j] + n_edges;
+				int id_j = element.dof_p[j];
 				A.add_element(id_i, id_j, SP_out[i][j]); 
 			}
 		}

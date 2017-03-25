@@ -4,23 +4,23 @@
 
 namespace basis
 {
+	const int n_func_p = 4; //число базисных функций p
+	const int n_func_u = 4; //число базисных функций u
+
 	class Basis
 	{
 
 	protected:
 
-		int n_func_p; //число базисных функций p
-		int n_func_u; //число базисных функций u
-
-		std::function<double(double, double)> psi[4]; //указатели на функции вычисления базисных функций p в точке
-		std::function<double(double, double)> dpsiksi[4]; //указатели на функции вычисления d/dksi базисных функций p в точке
-		std::function<double(double, double)> dpsietta[4]; //указатели на функции вычисления d/detta базисных функций p в точке
-		std::function<double(double, double)> phix[4]; //указатели на функции вычисления базисных функций ux в точке
-		std::function<double(double, double)> phiy[4]; //указатели на функции вычисления базисных функций uy в точке
-		std::function<double(double, double)> dphixksi[4]; //указатели на функции вычисления d/dksi базисных функций ux в точке
-		std::function<double(double, double)> dphixetta[4]; //указатели на функции вычисления d/detta базисных функций ux в точке
-		std::function<double(double, double)> dphiyksi[4]; //указатели на функции вычисления d/dksi базисных функций uy в точке
-		std::function<double(double, double)> dphiyetta[4]; //указатели на функции вычисления d/detta базисных функций uy в точке
+		std::function<double(double, double)> psi[n_func_p]; //указатели на функции вычисления базисных функций p в точке
+		std::function<double(double, double)> dpsiksi[n_func_p]; //указатели на функции вычисления d/dksi базисных функций p в точке
+		std::function<double(double, double)> dpsietta[n_func_p]; //указатели на функции вычисления d/detta базисных функций p в точке
+		std::function<double(double, double)> phix[n_func_u]; //указатели на функции вычисления базисных функций ux в точке
+		std::function<double(double, double)> phiy[n_func_u]; //указатели на функции вычисления базисных функций uy в точке
+		std::function<double(double, double)> dphixksi[n_func_u]; //указатели на функции вычисления d/dksi базисных функций ux в точке
+		std::function<double(double, double)> dphixetta[n_func_u]; //указатели на функции вычисления d/detta базисных функций ux в точке
+		std::function<double(double, double)> dphiyksi[n_func_u]; //указатели на функции вычисления d/dksi базисных функций uy в точке
+		std::function<double(double, double)> dphiyetta[n_func_u]; //указатели на функции вычисления d/detta базисных функций uy в точке
 
 		void initialize();
 

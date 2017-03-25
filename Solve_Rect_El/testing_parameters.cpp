@@ -44,6 +44,7 @@ namespace testingparameters
 		_map["BiCGStab"] = 1;
 		_map["GMRES"] = 2;
 		_map["BCGandGMRES"] = 3;
+		_map["BCG"] = 4;
 
 		if (_map.find(solver_name) == _map.end())
 			solver = 2;
