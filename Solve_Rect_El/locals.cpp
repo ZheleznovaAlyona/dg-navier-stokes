@@ -113,11 +113,10 @@ namespace mainsolver
 		{
 			for (int j = 0; j < element.ndof_u; j++)
 			{
-				C[i][j] = 0;
 				for (int k = 0; k < 9; k++)
 				{
 					double p_ksi = gauss_points[0][k],
-						p_etta = gauss_points[1][k];
+						   p_etta = gauss_points[1][k];
 					double p_x = p_ksi * hx + x0, p_y = p_etta * hy + y0;
 					u_x = get_solution_in_point_ux(p_x, p_y, element_number, q_calc);
 					u_y = get_solution_in_point_uy(p_x, p_y, element_number, q_calc);
@@ -126,13 +125,13 @@ namespace mainsolver
 					//c2 = u_y * (dphiyksi[j](p_ksi, p_etta) / hx * phix[i](p_ksi, p_etta) +
 					//		    dphiyetta[j](p_ksi, p_etta) / hy * phiy[i](p_ksi, p_etta));
 					c1 = u_x * (dphixksi[j](p_ksi, p_etta) / hx * phix[i](p_ksi, p_etta) +
-						dphiyksi[j](p_ksi, p_etta) / hx * phiy[i](p_ksi, p_etta) -
-						dphixksi[i](p_ksi, p_etta) / hx * phix[j](p_ksi, p_etta) -
-						dphiyksi[i](p_ksi, p_etta) / hx * phiy[j](p_ksi, p_etta));
+						        dphiyksi[j](p_ksi, p_etta) / hx * phiy[i](p_ksi, p_etta) -
+						        dphixksi[i](p_ksi, p_etta) / hx * phix[j](p_ksi, p_etta) -
+						        dphiyksi[i](p_ksi, p_etta) / hx * phiy[j](p_ksi, p_etta));
 					c2 = u_y * (dphixetta[j](p_ksi, p_etta) / hy * phix[i](p_ksi, p_etta) +
-						dphiyetta[j](p_ksi, p_etta) / hy * phiy[i](p_ksi, p_etta) -
-						dphixetta[i](p_ksi, p_etta) / hy * phix[j](p_ksi, p_etta) -
-						dphiyetta[i](p_ksi, p_etta) / hy * phiy[j](p_ksi, p_etta));
+								dphiyetta[j](p_ksi, p_etta) / hy * phiy[i](p_ksi, p_etta) -
+								dphixetta[i](p_ksi, p_etta) / hy * phix[j](p_ksi, p_etta) -
+								dphiyetta[i](p_ksi, p_etta) / hy * phiy[j](p_ksi, p_etta));
 					C[i][j] += gauss_weights[k] * 0.5 * (c1 + c2);
 				}
 				C[i][j] *= jacobian;
@@ -170,13 +169,12 @@ namespace mainsolver
 		{
 			for (int j = 0; j < element.ndof_p; j++)
 			{
-				P1[i][j] = 0;
 				for (int k = 0; k < 9; k++)
 				{
 					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 					P1[i][j] += gauss_weights[k] * psi[j](p_ksi, p_etta) *
-						(dphixksi[i](p_ksi, p_etta) / hx +
-							dphiyetta[i](p_ksi, p_etta) / hy);
+								(dphixksi[i](p_ksi, p_etta) / hx +
+								 dphiyetta[i](p_ksi, p_etta) / hy);
 				}
 				P1[i][j] *= jacobian * rho;
 			}
@@ -209,13 +207,12 @@ namespace mainsolver
 		{
 			for (int j = 0; j < element.ndof_u; j++)
 			{
-				P2[i][j] = 0;
 				for (int k = 0; k < 9; k++)
 				{
 					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 					P2[i][j] += gauss_weights[k] * psi[i](p_ksi, p_etta) *
-						(dphixksi[j](p_ksi, p_etta) / hx +
-							dphiyetta[j](p_ksi, p_etta) / hy);
+								(dphixksi[j](p_ksi, p_etta) / hx +
+								 dphiyetta[j](p_ksi, p_etta) / hy);
 				}
 				P2[i][j] *= jacobian;
 			}
@@ -250,15 +247,14 @@ namespace mainsolver
 
 		for (int i = 0; i < element.ndof_u; i++)
 		{
-			F[i] = 0;
-			for (int j = 0; j < 9; j++)
+			for (int k = 0; k < 9; k++)
 			{
-				double p_ksi = gauss_points[0][j], p_etta = gauss_points[1][j];
+				double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 				double p_x = p_ksi * hx + x0, p_y = p_etta * hy + y0;
 				f_x = calculate_fx(number_of_area, p_x, p_y);
 				f_y = calculate_fy(number_of_area, p_x, p_y);
-				F[i] += gauss_weights[j] * (f_x * phix[i](p_ksi, p_etta)
-					+ f_y * phiy[i](p_ksi, p_etta));
+				F[i] += gauss_weights[k] * (f_x * phix[i](p_ksi, p_etta)
+										  + f_y * phiy[i](p_ksi, p_etta));
 			}
 			F[i] *= jacobian;
 		}

@@ -7,6 +7,9 @@
 
 namespace boundaries
 {
+	enum EdgeSide { left, right, low, up };
+	enum EdgeOrient { vertical, horizontal };
+
 	//численные потоки по внутренним границам
 	class InternalBoundaries : virtual public partition::Partition,
 							   virtual public parameters::Parameters,
@@ -21,17 +24,10 @@ namespace boundaries
 
 		double sigma, mu2; //коэффициенты стабилизации
 
-		void calculate_ES_horizontal(int element_number1, int element_number2, matrix::Matrix& A);
-		void calculate_ES_vertical(int element_number1, int element_number2, matrix::Matrix& A);
-
-		void calculate_P_1_horizontal(int element_number1, int element_number2, matrix::Matrix& A);
-		void calculate_P_1_vertical(int element_number1, int element_number2, matrix::Matrix& A);
-
-		void calculate_P_2_horizontal(int element_number1, int element_number2, matrix::Matrix& A);
-		void calculate_P_2_vertical(int element_number1, int element_number2, matrix::Matrix& A);
-
-		void calculate_SP_horizontal(int element_number1, int element_number2, matrix::Matrix& A);
-		void calculate_SP_vertical(int element_number1, int element_number2, matrix::Matrix& A);
+		void calculate_ES(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
+		void calculate_P_1(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
+		void calculate_P_2(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
+		void calculate_SP(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
 
 		void add_ES_to_global(int element_number, int neighbor_element_number, matrix::Matrix& A, std::vector <std::vector<double>>& ES);
 		void add_P_1_to_global(int element_number, int neighbor_element_number, matrix::Matrix& A, std::vector <std::vector<double>>& P_1);
