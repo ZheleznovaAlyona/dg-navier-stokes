@@ -15,8 +15,7 @@ namespace boundaries
 {
 	void InternalBoundaries::initialize_penalty_parameters()
 	{
-		sigma = 1;
-		mu2 = 1;
+		gamma = 1;
 	}
 
 	void InternalBoundaries::calculate_internal_boundaries(int element_number, Matrix& A)
@@ -115,8 +114,8 @@ namespace boundaries
 
 		int kK = 1, kN = 1;
 		int k = max(kK, kN);
-		double sigma_ = sigma * k * k / h;
-		double st = jacobian * sigma;
+		double c = gamma * k * k / h;
+		double st = jacobian * c * lambda;
 
 		for(int i = 0; i < n_func_u; i++)
 		{
@@ -273,7 +272,7 @@ namespace boundaries
 		double rho = calculate_rho(element.number_of_area);
 		double rho_2 = calculate_rho(element_2.number_of_area);
 		
-		double h, a1, a2, p_ksi, p_etta, signKsi, signEtta;
+		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
 		if (orient == horizontal)
@@ -397,7 +396,7 @@ namespace boundaries
 		Element element = elements[element_number1];
 		Element element_2 = elements[element_number2];
 
-		double h, a1, a2, p_ksi, p_etta, signKsi, signEtta;
+		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
 		if (orient == horizontal)
@@ -517,6 +516,9 @@ namespace boundaries
 			initialize_vector(SP[i + n_func_p], n_func_p * 2);
 		}
 
+		Element element1 = elements[element_number1];
+		double lambda = calculate_lambda(element1.number_of_area);
+
 		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
@@ -538,7 +540,7 @@ namespace boundaries
 		}
 
 		double jacobian = 0.5 * h; //якобиан
-		double st = jacobian * mu2;
+		double st = jacobian * 1.0 / lambda * gamma;
 
 		for(int i = 0; i < n_func_p; i++)
 		{

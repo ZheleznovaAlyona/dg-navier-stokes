@@ -22,7 +22,7 @@ namespace boundaries
 		//P_2 //давление по i
 		//SP для давления
 
-		double sigma, mu2; //коэффициенты стабилизации
+		double gamma; //коэффициенты стабилизации
 
 		void calculate_ES(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
 		void calculate_P_1(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
@@ -47,27 +47,12 @@ namespace boundaries
 							virtual public basis::Basis
 	{
 
-		double sigma, mu2; //коэффициенты стабилизации	
+		double gamma; //коэффициенты стабилизации	
 
-		void calculate_ES_out_left(int element_number, matrix::Matrix& A);
-		void calculate_ES_out_right(int element_number, matrix::Matrix& A);
-		void calculate_ES_out_low(int element_number, matrix::Matrix& A);
-		void calculate_ES_out_up(int element_number, matrix::Matrix& A);
-
-		void calculate_P_1_out_left(int element_number, matrix::Matrix& A);
-		void calculate_P_1_out_right(int element_number, matrix::Matrix& A);
-		void calculate_P_1_out_low(int element_number, matrix::Matrix& A);
-		void calculate_P_1_out_up(int element_number, matrix::Matrix& A);
-
-		void calculate_P_2_out_left(int element_number, matrix::Matrix& A);
-		void calculate_P_2_out_right(int element_number, matrix::Matrix& A);
-		void calculate_P_2_out_low(int element_number, matrix::Matrix& A);
-		void calculate_P_2_out_up(int element_number, matrix::Matrix& A);
-
-		void calculate_SP_out_left(int element_number, matrix::Matrix& A);
-		void calculate_SP_out_right(int element_number, matrix::Matrix& A);
-		void calculate_SP_out_low(int element_number, matrix::Matrix& A);
-		void calculate_SP_out_up(int element_number, matrix::Matrix& A);
+		void calculate_ES_out(int element_number, matrix::Matrix& A, EdgeSide edgeSide);
+		void calculate_P_1_out(int element_number, matrix::Matrix& A, EdgeSide edgeSide);
+		void calculate_P_2_out(int element_number, matrix::Matrix& A, EdgeSide edgeSide);
+		void calculate_SP_out(int element_number, matrix::Matrix& A, EdgeSide edgeSide);
 
 	protected:
 
