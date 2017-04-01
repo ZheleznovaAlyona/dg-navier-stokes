@@ -28,18 +28,20 @@ namespace mainsolver
 	MainSolver::MainSolver() {}
 
 	MainSolver::MainSolver(std::ifstream& grid_f_in,
-		std::ifstream& elements_f_in,
-		std::string log_f,
-		std::ifstream& boundary1,
-		std::ifstream& boundary2,
-		std::ifstream& boundary3)
+						   std::ifstream& elements_f_in,
+						   std::string log_f,
+						   std::ifstream& boundary1,
+						   std::ifstream& boundary2,
+						   std::ifstream& boundary3,
+						   std::string fileInPenaltyParameters)
 	{
 		initialize(grid_f_in,
 			elements_f_in,
 			log_f,
 			boundary1,
 			boundary2,
-			boundary3);
+			boundary3,
+			fileInPenaltyParameters);
 	}
 
 	MainSolver::~MainSolver() {}
@@ -49,7 +51,8 @@ namespace mainsolver
 								string log_f,
 								ifstream& boundary1,
 								ifstream& boundary2,
-								ifstream& boundary3)
+								ifstream& boundary3,
+								std::string fileInPenaltyParameters)
 	{
 		boundary1 >> boundaries1;
 		boundary2 >> boundaries2;
@@ -60,9 +63,9 @@ namespace mainsolver
 		Gauss_integration::initialize();
 		int slae_size = (basis::n_func_p + basis::n_func_u) * elements.size();
 
-		InternalBoundaries::initialize_penalty_parameters();
-		OuterBoundaries::initialize_penalty_parameters();
-		BoundaryConditionsSupport::initialize_penalty_parameters();
+		InternalBoundaries::initialize_penalty_parameters(fileInPenaltyParameters);
+		OuterBoundaries::initialize_penalty_parameters(fileInPenaltyParameters);
+		BoundaryConditionsSupport::initialize_penalty_parameters(fileInPenaltyParameters);
 
 		logger.open(log_f);
 

@@ -7,6 +7,7 @@
 #include "integration.h"
 #include "basis.h"
 #include "EdgeLocation.h"
+#include <string>
 
 namespace boundary_conditions
 {
@@ -37,7 +38,7 @@ namespace boundary_conditions
 		std::vector <BoundaryCondition> boundaries2; //געמנûו -//-
 		std::vector <BoundaryCondition> boundaries3; //ענועüט -//-
 
-		void initialize_penalty_parameters();
+		void initialize_penalty_parameters(std::string fileName);
 		void calculate_all_boundaries1(myvector::MyVector& b);
 	};
 

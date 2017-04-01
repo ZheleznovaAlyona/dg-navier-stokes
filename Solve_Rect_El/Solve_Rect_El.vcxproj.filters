@@ -188,5 +188,8 @@
     <None Include="l3.dt">
       <Filter>Файлы ресурсов</Filter>
     </None>
+    <None Include="PenaltyParameters.json">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>

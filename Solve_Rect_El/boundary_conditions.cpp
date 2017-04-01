@@ -4,6 +4,9 @@
 #include "myfunctions.h"
 #include "point.h"
 
+#include "rapidjson/document.h"
+#include <fstream>
+
 using namespace std;
 using namespace element;
 using namespace partition;
@@ -11,6 +14,8 @@ using namespace parameters;
 using namespace myvector;
 using namespace basis;
 using namespace point;
+
+using namespace rapidjson;
 
 namespace boundary_conditions
 {
@@ -39,9 +44,26 @@ namespace boundary_conditions
 		return is;
 	}
 
-	void BoundaryConditionsSupport::initialize_penalty_parameters()
+	void BoundaryConditionsSupport::initialize_penalty_parameters(std::string fileName)
 	{
-		gamma = 1;
+		ifstream fileIn(fileName);
+		string json;
+		string parameterName;
+
+		while (!fileIn.eof())
+		{
+			string line;
+			fileIn >> line;
+			json += line;
+		}
+
+		fileIn.close();
+
+		Document docIn;
+		docIn.Parse(json.c_str());
+
+		auto& jPenaltyParameters = docIn["penaltyParameters"];
+		gamma = jPenaltyParameters["gamma"].GetDouble();
 	}
 
 	void BoundaryConditionsSupport::calculate_all_boundaries1(MyVector& b)

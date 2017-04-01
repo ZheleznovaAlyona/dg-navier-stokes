@@ -27,7 +27,8 @@ namespace mainsolver
 			std::string log_f,
 			std::ifstream& boundary1,
 			std::ifstream& boundary2,
-			std::ifstream& boundary3);
+			std::ifstream& boundary3,
+			std::string fileInPenaltyParameters);
 
 		void reinitialize();
 
@@ -74,7 +75,8 @@ namespace mainsolver
 				   std::string log_f,
 				   std::ifstream& boundary1,
 				   std::ifstream& boundary2,
-				   std::ifstream& boundary3);
+				   std::ifstream& boundary3,
+				   std::string fileInPenaltyParameters);
 					 
 		~MainSolver();
 

@@ -3,6 +3,9 @@
 #include "myfunctions.h"
 #include "point.h"
 
+#include "rapidjson/document.h"
+#include <fstream>
+
 using namespace std;
 using namespace element;
 using namespace partition;
@@ -11,12 +14,31 @@ using namespace basis;
 using namespace matrix;
 using namespace point;
 
+using namespace rapidjson;
+
 namespace boundaries
 {
 
-	void OuterBoundaries::initialize_penalty_parameters()
+	void OuterBoundaries::initialize_penalty_parameters(std::string fileName)
 	{
-		gamma = 1;
+		ifstream fileIn(fileName);
+		string json;
+		string parameterName;
+
+		while (!fileIn.eof())
+		{
+			string line;
+			fileIn >> line;
+			json += line;
+		}
+
+		fileIn.close();
+
+		Document docIn;
+		docIn.Parse(json.c_str());
+
+		auto& jPenaltyParameters = docIn["penaltyParameters"];
+		gamma = jPenaltyParameters["gamma"].GetDouble();
 	}
 
 	void OuterBoundaries::calculate_outer_boundaries(int element_number, matrix::Matrix& A)

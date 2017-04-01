@@ -5,6 +5,7 @@
 #include "basis.h"
 #include "matrix.h"
 #include "EdgeLocation.h"
+#include <string>
 
 namespace boundaries
 {
@@ -37,7 +38,7 @@ namespace boundaries
 
 	protected:
 
-		void initialize_penalty_parameters();
+		void initialize_penalty_parameters(std::string fileName);
 		void calculate_internal_boundaries(int element_number, matrix::Matrix& A);
 	};
 
@@ -57,7 +58,7 @@ namespace boundaries
 
 	protected:
 
-		void initialize_penalty_parameters();
+		void initialize_penalty_parameters(std::string fileName);
 		void calculate_outer_boundaries(int element_number, matrix::Matrix& A);
 	};
 
