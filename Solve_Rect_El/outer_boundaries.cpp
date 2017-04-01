@@ -163,10 +163,10 @@ namespace boundaries
 								  (phix[j](p_ksi, p_etta) * nEl.x * dphixksi[i](p_ksi, p_etta) / hx +
 								   phix[j](p_ksi, p_etta) * nEl.y * dphixetta[i](p_ksi, p_etta) / hy +
 								   phiy[j](p_ksi, p_etta) * nEl.x * dphiyksi[i](p_ksi, p_etta) / hx +
-								   phiy[j](p_ksi, p_etta) * nEl.y * dphiyetta[i](p_ksi, p_etta) / hy -
-								   phix[i](p_ksi, p_etta) * nEl.x * dphixksi[j](p_ksi, p_etta) / hx -
-								   phix[i](p_ksi, p_etta) * nEl.y * dphixetta[j](p_ksi, p_etta) / hy -
-								   phiy[i](p_ksi, p_etta) * nEl.x * dphiyksi[j](p_ksi, p_etta) / hx -
+								   phiy[j](p_ksi, p_etta) * nEl.y * dphiyetta[i](p_ksi, p_etta) / hy +
+								   phix[i](p_ksi, p_etta) * nEl.x * dphixksi[j](p_ksi, p_etta) / hx +
+								   phix[i](p_ksi, p_etta) * nEl.y * dphixetta[j](p_ksi, p_etta) / hy +
+								   phiy[i](p_ksi, p_etta) * nEl.x * dphiyksi[j](p_ksi, p_etta) / hx +
 								   phiy[i](p_ksi, p_etta) * nEl.y * dphiyetta[j](p_ksi, p_etta) / hy);
 
 					S_out[i][j] += gauss_weights_1[k] * 
@@ -186,7 +186,7 @@ namespace boundaries
 			for(int j = 0; j < n_func_u; j++)
 			{				
 				int id_j = element.dof_u[j];
-				A.add_element(id_i, id_j, E_out[i][j] + S_out[i][j]); 
+				A.add_element(id_i, id_j, -E_out[i][j] + S_out[i][j]); 
 			}
 		}
 	}

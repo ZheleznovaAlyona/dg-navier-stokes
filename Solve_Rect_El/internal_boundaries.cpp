@@ -154,28 +154,28 @@ namespace boundaries
 							   (phix[j](p_ksi, p_etta) * nN.x * dphixksi[i](p_ksi, p_etta) / hx +
 								phix[j](p_ksi, p_etta) * nN.y * dphixetta[i](p_ksi, p_etta) / hy +
 								phiy[j](p_ksi, p_etta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hx +
-								phiy[j](p_ksi, p_etta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hy -
-								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi, p_etta) / hx -
-								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi, p_etta) / hy -
-								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi, p_etta) / hx -
+								phiy[j](p_ksi, p_etta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hy +
+								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi, p_etta) / hx +
+								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi, p_etta) / hy +
+								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi, p_etta) / hx +
 								phiy[i](p_ksi, p_etta) * nN.y * dphiyetta[j](p_ksi, p_etta) / hy);
 					AK[i][j] += gauss_weights_1[k] * 
 							   (phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
 								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
 								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 -
-								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 -
-								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2 -
-								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 -
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
+								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
+								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
+								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
 								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2);
 					BN[i][j] += gauss_weights_1[k] *
-							   (phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi, p_etta) / hx +
-								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi, p_etta) / hy +
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hx +
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hy -
-								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 -
-								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2 -
-								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 -
+							   (-phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi, p_etta) / hx -
+								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi, p_etta) / hy -
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hx -
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hy +
+								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
+								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
+								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
 								phiy[i](p_ksi, p_etta) * nN.y * dphiyetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2);
 					BK[i][j] += gauss_weights_1[k] *
 							   (phix[j](p_ksi, p_etta) * nN.x * dphixksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
@@ -210,7 +210,7 @@ namespace boundaries
 				} 
 				AN[i][j] *= a1;
 				AK[i][j] *= -a2;
-				BN[i][j] *= -a1;
+				BN[i][j] *= a1;
 				BK[i][j] *= a2;
 				SNN[i][j] *= st * lambda;
 				SNK[i][j] *= -st * lambda;
@@ -222,10 +222,10 @@ namespace boundaries
 		for(int i = 0; i < n_func_u; i++)
 			for(int j = 0; j < n_func_u; j++)
 			{
-				ES[i][j] = AN[i][j] + SNN[i][j];
-				ES[i + n_func_u][j + n_func_u] = AK[i][j] + SKK[i][j];
-				ES[i][j + n_func_u] = BN[i][j] + SNK[i][j];
-				ES[i + n_func_u][j] = BK[i][j] + SKN[i][j];
+				ES[i][j] = -AN[i][j] + SNN[i][j];
+				ES[i + n_func_u][j + n_func_u] = -AK[i][j] + SKK[i][j];
+				ES[i][j + n_func_u] = -BN[i][j] + SNK[i][j];
+				ES[i + n_func_u][j] = -BK[i][j] + SKN[i][j];
 			}
 
 		add_ES_to_global(element_number1, element_number2, A, ES);
