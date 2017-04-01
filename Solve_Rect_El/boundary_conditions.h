@@ -6,10 +6,11 @@
 #include "myvector.h"
 #include "integration.h"
 #include "basis.h"
+#include "EdgeLocation.h"
 
 namespace boundary_conditions
 {
-	enum Side {left_edge, right_edge, low_edge, up_edge};
+	//enum Side {left_edge, right_edge, low_edge, up_edge};
 
 	class BoundaryCondition
 	{
@@ -25,10 +26,9 @@ namespace boundary_conditions
 									  virtual public integration::Gauss_integration,
 									  virtual public basis::Basis
 	{
-		double mu1;
+		double gamma;
 
-		void calculate_boundaries1_horizontal(int number, myvector::MyVector& b, Side side);
-		void calculate_boundaries1_vertical(int number, myvector::MyVector& b, Side side);
+		void calculate_boundaries1_for_side(int number, myvector::MyVector& b, EdgeSide edgeSide);
 		void calculate_boundaries1(int number, myvector::MyVector& b);
 
 	protected:

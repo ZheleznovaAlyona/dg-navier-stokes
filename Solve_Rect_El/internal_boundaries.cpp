@@ -34,11 +34,11 @@ namespace boundaries
 				//левый/правый сосед->вертикальная граница
 				if(k == 0 || k == 1)
 				{
-					orient = vertical;
+					orient = VERTICAL;
 				}
 				else
 				{
-					orient = horizontal;
+					orient = HORIZONTAL;
 				}
 
 				calculate_ES(element_number, neighbor_element, A, orient);
@@ -89,7 +89,7 @@ namespace boundaries
 		double a1, a2, jacobian, h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
-		if(orient == horizontal)
+		if(orient == HORIZONTAL)
 		{ 
 			a1 = 0.25 * hx * lambda; //якобиан*0.5*lambda
 			a2 = 0.25 * hx_2 * lambda_2;
@@ -123,7 +123,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (orient == horizontal) 
+					if (orient == HORIZONTAL)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
@@ -275,7 +275,7 @@ namespace boundaries
 		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
-		if (orient == horizontal)
+		if (orient == HORIZONTAL)
 		{
 			h = get_hx(element_number1);
 			nN.x = 0; nN.y = 1;
@@ -301,7 +301,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (orient == horizontal)
+					if (orient == HORIZONTAL)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
@@ -399,7 +399,7 @@ namespace boundaries
 		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
-		if (orient == horizontal)
+		if (orient == HORIZONTAL)
 		{
 			h = get_hx(element_number1);
 			nN.x = 0; nN.y = 1;
@@ -425,7 +425,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (orient == horizontal)
+					if (orient == HORIZONTAL)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
@@ -522,7 +522,7 @@ namespace boundaries
 		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
-		if (orient == horizontal)
+		if (orient == HORIZONTAL)
 		{
 			h = get_hx(element_number1);
 			nN.x = 0; nN.y = 1;
@@ -548,7 +548,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (orient == horizontal)
+					if (orient == HORIZONTAL)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];

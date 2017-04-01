@@ -31,7 +31,7 @@ namespace boundaries
 
 		if(nodes[left_low_corner_node].x == nodes[0].x)
 		{
-			edgeSide = left;
+			edgeSide = LEFT;
 			calculate_ES_out(element_number, A, edgeSide);
 			calculate_P_1_out(element_number, A, edgeSide);
 			calculate_P_2_out(element_number, A, edgeSide);
@@ -39,7 +39,7 @@ namespace boundaries
 		}//вертикальная левая граница
 		if(nodes[right_up_corner_node].x == nodes[last_node].x)
 		{
-			edgeSide = right;
+			edgeSide = RIGHT;
 			calculate_ES_out(element_number, A, edgeSide);
 			calculate_P_1_out(element_number, A, edgeSide);
 			calculate_P_2_out(element_number, A, edgeSide);
@@ -47,7 +47,7 @@ namespace boundaries
 		}//вертикальная правая граница
 		if(nodes[left_low_corner_node].y == nodes[0].y) 
 		{
-			edgeSide = low;
+			edgeSide = LOW;
 			calculate_ES_out(element_number, A, edgeSide);
 			calculate_P_1_out(element_number, A, edgeSide);
 			calculate_P_2_out(element_number, A, edgeSide);
@@ -55,7 +55,7 @@ namespace boundaries
 		}//горизонтальная нижняя граница
 		if(nodes[right_up_corner_node].y == nodes[last_node].y)	
 		{
-			edgeSide = up;
+			edgeSide = UP;
 			calculate_ES_out(element_number, A, edgeSide);
 			calculate_P_1_out(element_number, A, edgeSide);
 			calculate_P_2_out(element_number, A, edgeSide);
@@ -84,10 +84,10 @@ namespace boundaries
 		double h, p_ksi, p_etta;
 		Point nEl, nEl2;
 
-		if (edgeSide == left || edgeSide == right)
+		if (edgeSide == LEFT || edgeSide == RIGHT)
 		{			
 			h = hy;
-			if (edgeSide == left)
+			if (edgeSide == LEFT)
 			{
 				nEl.x = -1; 
 				p_ksi = -1;
@@ -104,7 +104,7 @@ namespace boundaries
 		else
 		{			
 			h = hx;
-			if (edgeSide == low)
+			if (edgeSide == LOW)
 			{
 				nEl.y = -1;
 				p_etta = -1;
@@ -132,7 +132,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (edgeSide == low || edgeSide == up)
+					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
@@ -183,11 +183,11 @@ namespace boundaries
 		double a, jacobian, h, p_ksi, p_etta;
 		Point nEl;
 
-		if (edgeSide == left || edgeSide == right)
+		if (edgeSide == LEFT || edgeSide == RIGHT)
 		{
 			h = get_hy(element_number);
 
-			if (edgeSide == left)
+			if (edgeSide == LEFT)
 			{
 				nEl.x = -1;
 				p_ksi = -1;
@@ -203,7 +203,7 @@ namespace boundaries
 		{
 			h = get_hx(element_number);
 
-			if (edgeSide == low)
+			if (edgeSide == LOW)
 			{
 				nEl.y = -1;
 				p_etta = -1;
@@ -225,7 +225,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (edgeSide == low || edgeSide == up)
+					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
@@ -262,11 +262,11 @@ namespace boundaries
 		double a, jacobian, h, p_ksi, p_etta;
 		Point nEl;
 
-		if (edgeSide == left || edgeSide == right)
+		if (edgeSide == LEFT || edgeSide == RIGHT)
 		{
 			h = get_hy(element_number);
 
-			if (edgeSide == left)
+			if (edgeSide == LEFT)
 			{
 				nEl.x = -1;
 				p_ksi = -1;
@@ -282,7 +282,7 @@ namespace boundaries
 		{
 			h = get_hx(element_number);
 
-			if (edgeSide == low)
+			if (edgeSide == LOW)
 			{
 				nEl.y = -1;
 				p_etta = -1;
@@ -305,7 +305,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (edgeSide == low || edgeSide == up)
+					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
@@ -343,11 +343,11 @@ namespace boundaries
 		double h, p_ksi, p_etta;
 		Point nEl;
 
-		if (edgeSide == left || edgeSide == right)
+		if (edgeSide == LEFT || edgeSide == RIGHT)
 		{
 			h = get_hy(element_number);
 
-			if (edgeSide == left)
+			if (edgeSide == LEFT)
 			{
 				nEl.x = -1;
 				p_ksi = -1;
@@ -363,7 +363,7 @@ namespace boundaries
 		{
 			h = get_hx(element_number);
 
-			if (edgeSide == low)
+			if (edgeSide == LOW)
 			{
 				nEl.y = -1;
 				p_etta = -1;
@@ -386,7 +386,7 @@ namespace boundaries
 			{
 				for(int k = 0; k < 3; k++)
 				{
-					if (edgeSide == low || edgeSide == up)
+					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];

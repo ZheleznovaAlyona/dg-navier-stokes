@@ -116,6 +116,7 @@
     <ClInclude Include="basis.h" />
     <ClInclude Include="boundary_conditions.h" />
     <ClInclude Include="densematrix.h" />
+    <ClInclude Include="EdgeLocation.h" />
     <ClInclude Include="element.h" />
     <ClInclude Include="integration.h" />
     <ClInclude Include="boundaries.h" />
