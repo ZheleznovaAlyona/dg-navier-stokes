@@ -8,11 +8,7 @@ namespace myvector
 {
 	MyVector::MyVector(){};
 
-	MyVector::MyVector(int size)
-	{
-		ar.resize(size);
-		memset(&ar[0], 0, size * sizeof(double)); //обнуляем
-	}
+	MyVector::MyVector(int size) : ar(size, 0) {}
 
 	MyVector::~MyVector(){};
 

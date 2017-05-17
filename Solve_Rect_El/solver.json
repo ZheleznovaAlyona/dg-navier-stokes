@@ -2,7 +2,7 @@
 	"solver": 
 	{
 		"epsilon": 1E-12,
-		"gmres_m": 30,
+		"gmres_m": 20,
 		"max_number_of_iterations": 10000,
 		"max_number_of_iterations_non_linear": 100
 	}

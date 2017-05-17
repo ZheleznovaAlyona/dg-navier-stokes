@@ -32,39 +32,39 @@ namespace mainsolver
 
 		void reinitialize();
 
-		void build_slae(myvector::MyVector q_calc);
+		void build_slae(myvector::MyVector& q_calc);
 
-		double find_relaxation_parameter(myvector::MyVector q_current,
-			myvector::MyVector q_previous,
-			double &residual_previous);
+		double find_relaxation_parameter(myvector::MyVector& q_current,
+										 myvector::MyVector& q_previous,
+										 double &residual_previous);
 		void simple_iterations(solver::Solver& s);
 		void linear(std::ofstream& solution_f_out,
-			std::ofstream& info_f_out,
-			solver::Solver& s);
-		double get_solution_in_point_ux(double x, double y, int element_number, myvector::MyVector qi);
-		double get_solution_in_point_uy(double x, double y, int element_number, myvector::MyVector qi);
-		double get_solution_in_point_uxdx(double x, double y, int element_number, myvector::MyVector qi);
-		double get_solution_in_point_uydy(double x, double y, int element_number, myvector::MyVector qi);
-		double get_solution_in_point_p(double x, double y, int element_number, myvector::MyVector qi);
+					std::ofstream& info_f_out,
+					solver::Solver& s);
+		double get_solution_in_point_ux(double x, double y, int element_number, myvector::MyVector& qi);
+		double get_solution_in_point_uy(double x, double y, int element_number, myvector::MyVector& qi);
+		double get_solution_in_point_uxdx(double x, double y, int element_number, myvector::MyVector& qi);
+		double get_solution_in_point_uydy(double x, double y, int element_number, myvector::MyVector& qi);
+		double get_solution_in_point_p(double x, double y, int element_number, myvector::MyVector& qi);
 
-		double get_solution_in_point2_ux(double x, double y, myvector::MyVector qi);
-		double get_solution_in_point2_uy(double x, double y, myvector::MyVector qi);
-		double get_solution_in_point2_p(double x, double y, myvector::MyVector qi);
+		double get_solution_in_point2_ux(double x, double y, myvector::MyVector& qi);
+		double get_solution_in_point2_uy(double x, double y, myvector::MyVector& qi);
+		double get_solution_in_point2_p(double x, double y, myvector::MyVector& qi);
 
-		void get_vector_solution_in_nodes_ux(myvector::MyVector qi, myvector::MyVector &solution);
-		void get_vector_solution_in_nodes_uy(myvector::MyVector qi, myvector::MyVector &solution);
-		void get_vector_solution_in_nodes_p(myvector::MyVector qi, myvector::MyVector &solution);
+		void get_vector_solution_in_nodes_ux(myvector::MyVector& qi, myvector::MyVector &solution);
+		void get_vector_solution_in_nodes_uy(myvector::MyVector& qi, myvector::MyVector &solution);
+		void get_vector_solution_in_nodes_p(myvector::MyVector& qi, myvector::MyVector &solution);
 
 		//локальные матрицы и векторы
-		void calculate_locals(int element_number, myvector::MyVector q_calc);
+		void calculate_locals(int element_number, myvector::MyVector& q_calc);
 		void calculate_G(int element_number);
-		void calculate_C(int element_number, myvector::MyVector q_calc);
+		void calculate_C(int element_number, myvector::MyVector& q_calc);
 		void calculate_P1(int element_number);
 		void calculate_P2(int element_number);
 		void calculate_F(int element_number);
 
-		double diff_normL2_p(myvector::MyVector q_solution);//погрешность решения в норме L2
-		double diff_normL2_u(myvector::MyVector q_solution);//погрешность решения в норме L2
+		double diff_normL2_p(myvector::MyVector& q_solution);//погрешность решения в норме L2
+		double diff_normL2_u(myvector::MyVector& q_solution);//погрешность решения в норме L2
 
 	public:
    

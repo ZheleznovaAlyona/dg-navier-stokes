@@ -19,11 +19,11 @@ void initialize_vector(vector <double> &v, int size)
 
 void initialize_vector(vector <int> &v, int size)
 {
-	v.resize(size);
+	v.resize(size, 0);
 	memset(&v[0], 0, size * sizeof(int)); //обнуляем
 }
 
-double scal(MyVector v1, MyVector v2)
+double scal(MyVector& v1, MyVector& v2)
 {
 	double sum = 0;
 	if(v1.ar.size() == v2.ar.size())

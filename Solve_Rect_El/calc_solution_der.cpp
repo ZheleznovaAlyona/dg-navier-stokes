@@ -24,7 +24,7 @@ using namespace testingparameters;
 
 namespace mainsolver
 {
-	double MainSolver::get_solution_in_point_ux(double x, double y, int element_number, MyVector qi)
+	double MainSolver::get_solution_in_point_ux(double x, double y, int element_number, MyVector& qi)
 	{
 		vector <int> indexes;
 		indexes.resize(elements[element_number].ndof_u);
@@ -51,7 +51,7 @@ namespace mainsolver
 		return u_in_point;
 	}
 
-	double MainSolver::get_solution_in_point_uy(double x, double y, int element_number, MyVector qi)
+	double MainSolver::get_solution_in_point_uy(double x, double y, int element_number, MyVector& qi)
 	{
 		vector <int> indexes;
 		indexes.resize(elements[element_number].ndof_u);
@@ -78,7 +78,7 @@ namespace mainsolver
 		return u_in_point;
 	}
 
-	double MainSolver::get_solution_in_point_uxdx(double x, double y, int element_number, MyVector qi)
+	double MainSolver::get_solution_in_point_uxdx(double x, double y, int element_number, MyVector& qi)
 	{
 		vector <int> indexes;
 		indexes.resize(elements[element_number].ndof_u);
@@ -105,7 +105,7 @@ namespace mainsolver
 		return du_in_point;
 	}
 
-	double MainSolver::get_solution_in_point_uydy(double x, double y, int element_number, MyVector qi)
+	double MainSolver::get_solution_in_point_uydy(double x, double y, int element_number, MyVector& qi)
 	{
 		vector <int> indexes;
 		indexes.resize(elements[element_number].ndof_u);
@@ -132,7 +132,7 @@ namespace mainsolver
 		return du_in_point;
 	}
 
-	double MainSolver::get_solution_in_point_p(double x, double y, int element_number, MyVector qi)
+	double MainSolver::get_solution_in_point_p(double x, double y, int element_number, MyVector& qi)
 	{
 		vector <int> indexes;
 		indexes.resize(elements[element_number].ndof_p);
@@ -159,25 +159,25 @@ namespace mainsolver
 		return p_in_point;
 	}
 
-	double MainSolver::get_solution_in_point2_ux(double x, double y, MyVector qi)
+	double MainSolver::get_solution_in_point2_ux(double x, double y, MyVector& qi)
 	{
 		int element_number = search_element(x, y);
 		return get_solution_in_point_ux(x, y, element_number, qi);
 	}
 
-	double MainSolver::get_solution_in_point2_uy(double x, double y, MyVector qi)
+	double MainSolver::get_solution_in_point2_uy(double x, double y, MyVector& qi)
 	{
 		int element_number = search_element(x, y);
 		return get_solution_in_point_uy(x, y, element_number, qi);
 	}
 
-	double MainSolver::get_solution_in_point2_p(double x, double y, MyVector qi)
+	double MainSolver::get_solution_in_point2_p(double x, double y, MyVector& qi)
 	{
 		int element_number = search_element(x, y);
 		return get_solution_in_point_p(x, y, element_number, qi);
 	}
 
-	void MainSolver::get_vector_solution_in_nodes_ux(MyVector qi, MyVector &solution)
+	void MainSolver::get_vector_solution_in_nodes_ux(MyVector& qi, MyVector &solution)
 	{
 		logger.send_message_Ux();
 		int indexes_nodes[4];
@@ -222,7 +222,7 @@ namespace mainsolver
 		}
 	}
 
-	void MainSolver::get_vector_solution_in_nodes_uy(MyVector qi, MyVector &solution)
+	void MainSolver::get_vector_solution_in_nodes_uy(MyVector& qi, MyVector &solution)
 	{
 		logger.send_message_Uy();
 		int indexes_nodes[4];
@@ -267,7 +267,7 @@ namespace mainsolver
 		}
 	}
 
-	void MainSolver::get_vector_solution_in_nodes_p(MyVector qi, MyVector &solution)
+	void MainSolver::get_vector_solution_in_nodes_p(MyVector& qi, MyVector &solution)
 	{
 		logger.send_message_P();
 		int indexes_nodes[4];

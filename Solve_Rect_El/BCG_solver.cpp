@@ -9,7 +9,7 @@ using namespace std;
 
 namespace solver
 {
-	MyVector BCG::solve(MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
+	MyVector BCG::solve(MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
 	{
 		MyVector r(slae_in.n), r_(slae_in.n), p(slae_in.n), p_(slae_in.n), f(slae_in.n);
 		MyVector v1(slae_in.n), v2(slae_in.n), v3(slae_in.n), x(slae_in.n);

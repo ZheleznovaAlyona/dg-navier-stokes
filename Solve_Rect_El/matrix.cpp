@@ -60,23 +60,25 @@ namespace matrix
 
 	MyVector Matrix::operator*(MyVector& a) 
 	{
-		int i, j, k, kol;
-		int iend;
 		MyVector new_vector(a.ar.size());
 
 		assert(a.ar.size() == n);
-		for(i = 0; i < n; i++)
-		{
-			kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
-									//ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i + 1];
-			k = ig[i]; // адрес первого занятого элемента строки (столбца) 
 
+		for (int i = 0; i < n; i++)
+		{
 			new_vector[i] = di[i] * a[i];//от главной диагонали
+		}
+
+		for(int i = 0; i < n; i++)
+		{
+			int kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
+									//ненулевого элемента до диагонального элемента (не включая его)
+			int iend = ig[i + 1];
+			int k = ig[i]; // адрес первого занятого элемента строки (столбца) 
 
 			for(; k < iend; k++)//проходим по всем элементам i строки (столбца)
 			{
-				j = jg[k];
+				int j = jg[k];
 				new_vector[i] += ggl[k] * a[j];//от нижнего треугольника
 				new_vector[j] += ggu[k] * a[i];//от верхнего треугольника
 			}
@@ -87,23 +89,21 @@ namespace matrix
 
 	MyVector Matrix::operator/(MyVector& a)
 	{
-		int i, j, k, kol;
-		int iend;
 		MyVector new_vector(a.ar.size());
 
 		assert(a.ar.size() == n);
-		for(i = 0; i < n; i++)
+		for(int i = 0; i < n; i++)
 		{
-			kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
+			int kol = ig[i + 1] - ig[i];//количество ненулевых элементов строки (столбца) от первого
 									//ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i + 1];
-			k = ig[i]; // адрес первого занятого элемента строки (столбца) 
+			int iend = ig[i + 1];
+			int k = ig[i]; // адрес первого занятого элемента строки (столбца) 
 
 			new_vector[i] = di[i] * a[i];//от главной диагонали
 
 			for(; k < iend; k++)//проходим по всем элементам i строки (столбца)
 			{
-				j = jg[k];
+				int j = jg[k];
 				new_vector[i] += ggu[k] * a[j];//от нижнего треугольника
 				new_vector[j] += ggl[k] * a[i];//от верхнего треугольника
 			}
@@ -116,23 +116,21 @@ namespace matrix
 
 	MyVector Matrix::Uv(MyVector& v)
 	{
-		int i, j, k, kol;
-		int iend;
 		MyVector new_vector(v.ar.size());
 
 		assert(v.ar.size() == n);
-		for(i = 0; i < n; i++)
+		for(int i = 0; i < n; i++)
 		{
-			kol = ig[i+1] - ig[i];//количество ненулевых элементов столбца от первого
+			int kol = ig[i+1] - ig[i];//количество ненулевых элементов столбца от первого
 									//ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i+1];
-			k = ig[i]; // адрес первого занятого элемента столбца
+			int iend = ig[i+1];
+			int k = ig[i]; // адрес первого занятого элемента столбца
 
 			new_vector[i] = v[i];//от главной диагонали (у U на диагонали 1)
 
 			for(; k < iend; k++)//проходим по всем элементам i столбца
 			{
-				j = jg[k];
+				int j = jg[k];
 				new_vector[j] += ggu[k] * v[i];//от верхнего треугольника
 			}
 		}

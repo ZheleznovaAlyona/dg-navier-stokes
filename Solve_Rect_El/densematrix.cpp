@@ -18,7 +18,7 @@ namespace densematrix
 		return ar[j];
 	}
 
-	MyVector DenseMatrix::operator*(MyVector a) 
+	MyVector DenseMatrix::operator*(MyVector& a) 
 	{
 		MyVector new_vector(n_lines);
 

@@ -17,7 +17,7 @@ namespace solver
 		Solver(std::string& s_parameters_f);
 		~Solver();
 
-		virtual myvector::MyVector solve(myvector::MyVector U_begin,
+		virtual myvector::MyVector solve(myvector::MyVector& U_begin,
 											double &normL2u,
 											double &normL2p,
 											slae::SLAE& slae_in,
@@ -27,25 +27,25 @@ namespace solver
 	class BCG : virtual public Solver
 	{
 	public:
-		myvector::MyVector solve(myvector::MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger);
+		myvector::MyVector solve(myvector::MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger);
 	};
 
 	class BiCGStab : public Solver
 	{
 	public:
-		myvector::MyVector solve(myvector::MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger) final;
+		myvector::MyVector solve(myvector::MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger) final;
 	};
 
 	class GMRES : virtual public Solver
 	{
 	public:
-		myvector::MyVector solve(myvector::MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger);
-		void solve_min_sqr_problem(myvector::MyVector d, densematrix::DenseMatrix H, myvector::MyVector &result);
+		myvector::MyVector solve(myvector::MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger);
+		void solve_min_sqr_problem(myvector::MyVector& d, densematrix::DenseMatrix& H, myvector::MyVector &result);
 	};
 
 	class BCGandGMRESSolver : public GMRES, public BCG
 	{
-		myvector::MyVector solve(myvector::MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger);
+		myvector::MyVector solve(myvector::MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, logger::Logger& my_logger);
 	};
 
 }

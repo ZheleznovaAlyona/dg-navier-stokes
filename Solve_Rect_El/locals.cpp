@@ -28,7 +28,7 @@ using namespace integration;
 namespace mainsolver
 {
 
-	void MainSolver::calculate_locals(int element_number, MyVector q_calc)
+	void MainSolver::calculate_locals(int element_number, MyVector& q_calc)
 	{
 		Element element = Partition::elements[element_number];
 
@@ -92,7 +92,7 @@ namespace mainsolver
 			}
 		}
 	}
-	void MainSolver::calculate_C(int element_number, MyVector q_calc)
+	void MainSolver::calculate_C(int element_number, MyVector& q_calc)
 	{
 		double hx, hy, c1, c2;
 		Element element = elements[element_number];

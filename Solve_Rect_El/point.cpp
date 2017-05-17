@@ -16,7 +16,7 @@ namespace point
 	Point::~Point()
 	{}
 
-	bool Point::operator==(Point point)
+	bool Point::operator==(Point& point)
 	{
 		if (point.x == x && point.y == y)
 			return true;
@@ -29,7 +29,7 @@ namespace point
 		return Point(a * x, a * y);
 	}
 
-	Point Point::operator+(Point pt)
+	Point Point::operator+(Point& pt)
 	{
 		return Point(x + pt.x, y + pt.y);
 	}
@@ -56,7 +56,7 @@ namespace point
 		return is;
 	}
 
-	double pt_scal(Point p1, Point p2)
+	double pt_scal(Point& p1, Point& p2)
 	{
 		return p1.x * p2.x + p1.y * p2.y;
 	}

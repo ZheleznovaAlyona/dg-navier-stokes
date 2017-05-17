@@ -6,7 +6,7 @@ using namespace logger;
 
 namespace solver
 {
-	MyVector BCGandGMRESSolver::solve(MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
+	MyVector BCGandGMRESSolver::solve(MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
 	{
 		MyVector q(slae_in.n);
 			

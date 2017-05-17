@@ -9,7 +9,7 @@ using namespace std;
 
 namespace solver
 {
-	MyVector BiCGStab::solve(MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
+	MyVector BiCGStab::solve(MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
 	{
 		double  rkr0, ak, gk, bk;
 		MyVector r(slae_in.n), f(slae_in.n), x(slae_in.n), r0(slae_in.n), z(slae_in.n), p(slae_in.n), v(slae_in.n), v1(slae_in.n), rr2(slae_in.n);

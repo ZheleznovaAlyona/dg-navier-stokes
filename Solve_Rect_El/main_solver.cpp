@@ -87,7 +87,7 @@ namespace mainsolver
 		my_slae.reinitialize();
 	}
 
-	void MainSolver::build_slae(MyVector q_calc)
+	void MainSolver::build_slae(MyVector& q_calc)
 	{
 		logger.send_message_build_slae();
 		int size = Partition::elements.size();
@@ -108,9 +108,9 @@ namespace mainsolver
 		BoundaryConditionsSupport::calculate_all_boundaries1(my_slae.b);
 	}
 
-	double MainSolver::find_relaxation_parameter(MyVector q_current, 
-												MyVector q_previous, 
-												double &residual_previous)
+	double MainSolver::find_relaxation_parameter(MyVector& q_current,
+												 MyVector& q_previous,
+												 double &residual_previous)
 	{
 		MyVector qNonL(my_slae.n);
 		double w = 1, residual;
@@ -322,7 +322,7 @@ void MainSolver::solve(std::ofstream & solution_f_out, std::ofstream & info_f_ou
 	linear(solution_f_out, info_f_out, *s);
 }
 
-double MainSolver::diff_normL2_p(MyVector q_solution)
+double MainSolver::diff_normL2_p(MyVector& q_solution)
 {
 	double diff_local, diff;
 	int size = elements.size();
@@ -357,7 +357,7 @@ double MainSolver::diff_normL2_p(MyVector q_solution)
 	return sqrt(diff / size);
 }
 
-double MainSolver::diff_normL2_u(MyVector q_solution)
+double MainSolver::diff_normL2_u(MyVector& q_solution)
 {
 	double diff_local, diff;
 	int size = elements.size();

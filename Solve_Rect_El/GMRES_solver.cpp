@@ -10,7 +10,7 @@ using namespace std;
 
 namespace solver
 {
-	MyVector GMRES::solve(MyVector U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
+	MyVector GMRES::solve(MyVector& U_begin, double &normL2u, double &normL2p, slae::SLAE& slae_in, Logger& my_logger)
 	{
 		MyVector r(slae_in.n), x(slae_in.n), d(s_parameters.gmres_m + 1), z(s_parameters.gmres_m), w(slae_in.n), tmp(slae_in.n), f(slae_in.n), rr2(slae_in.n);
 		DenseMatrix V(slae_in.n, s_parameters.gmres_m), H(s_parameters.gmres_m + 1, s_parameters.gmres_m);
@@ -71,7 +71,7 @@ namespace solver
 		return x;
 	}
 
-	void GMRES::solve_min_sqr_problem(MyVector d, DenseMatrix H, MyVector &result)
+	void GMRES::solve_min_sqr_problem(MyVector& d, DenseMatrix& H, MyVector &result)
 	{
 		int m2 = H.n_columns;
 		DenseMatrix H_previous(m2 + 1, m2), H2(s_parameters.gmres_m, s_parameters.gmres_m);

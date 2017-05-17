@@ -89,25 +89,6 @@ namespace boundaries
 
 	void OuterBoundaries::calculate_ES_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		//vector <vector<double>> S_out, E_out;
-
-		//S_out.resize(n_func_u);
-		//E_out.resize(n_func_u);
-
-		//for (int i = 0; i < n_func_u; i++)
-		//{
-		//	initialize_vector(S_out[i], n_func_u);
-		//	initialize_vector(E_out[i], n_func_u);
-		//}
-
-		double S_out[n_func_u][n_func_u], E_out[n_func_u][n_func_u];
-
-		for (int i = 0; i < n_func_u; i++)
-		{
-			memset(&S_out[i][0], 0, sizeof(double) * n_func_u);
-			memset(&E_out[i][0], 0, sizeof(double) * n_func_u);
-		}
-
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 		double hx = get_hx(element_number);
@@ -160,8 +141,11 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_u; j++)
 			{
+				int id_j = element.dof_u[j];
+				double e_outij = 0, s_outij = 0;
 				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
@@ -169,7 +153,7 @@ namespace boundaries
 					else
 						p_etta = gauss_points_1[k];
 
-					E_out[i][j] += gauss_weights_1[k] * 
+					e_outij += gauss_weights_1[k] *
 								  (phix[j](p_ksi, p_etta) * nEl.x * dphixksi[i](p_ksi, p_etta) / hx +
 								   phix[j](p_ksi, p_etta) * nEl.y * dphixetta[i](p_ksi, p_etta) / hy +
 								   phiy[j](p_ksi, p_etta) * nEl.x * dphiyksi[i](p_ksi, p_etta) / hx +
@@ -179,41 +163,20 @@ namespace boundaries
 								   phiy[i](p_ksi, p_etta) * nEl.x * dphiyksi[j](p_ksi, p_etta) / hx +
 								   phiy[i](p_ksi, p_etta) * nEl.y * dphiyetta[j](p_ksi, p_etta) / hy);
 
-					S_out[i][j] += gauss_weights_1[k] * 
+					s_outij += gauss_weights_1[k] *
 								  (phix[j](p_ksi, p_etta) * phix[i](p_ksi, p_etta) * nEl2.x +
 								   phix[j](p_ksi, p_etta) * phix[i](p_ksi, p_etta) * nEl2.y +
 								   phiy[j](p_ksi, p_etta) * phiy[i](p_ksi, p_etta) * nEl2.x +
 								   phiy[j](p_ksi, p_etta) * phiy[i](p_ksi, p_etta) * nEl2.y);
 				} 
-				E_out[i][j] *= a;
-				S_out[i][j] *= st;
-			}
-		}
-
-		for(int i = 0; i < n_func_u; i++)
-		{
-			int id_i = element.dof_u[i];
-			for(int j = 0; j < n_func_u; j++)
-			{				
-				int id_j = element.dof_u[j];
-				A.add_element(id_i, id_j, -E_out[i][j] + S_out[i][j]); 
+				e_outij *= a;
+				s_outij *= st;
+				A.add_element(id_i, id_j, -e_outij + s_outij);
 			}
 		}
 	}
 	void OuterBoundaries::calculate_P_1_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		//vector <vector<double>> P_1_out;
-
-		//P_1_out.resize(n_func_u);
-
-		//for (int i = 0; i < n_func_u; i++)
-		//	initialize_vector(P_1_out[i], n_func_p);
-
-		double P_1_out[n_func_u][n_func_p];
-
-		for (int i = 0; i < n_func_u; i++)
-			memset(&P_1_out[i][0], 0, sizeof(double) * n_func_p);
-
 		Element element = elements[element_number];
 		double rho = calculate_rho(element.number_of_area);
 
@@ -258,8 +221,11 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_u; i++)
 		{
+			int id_i = element.dof_u[i];
 			for(int j = 0; j < n_func_p; j++)
 			{
+				int id_j = element.dof_p[j];
+				double p_1_outij = 0;
 				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
@@ -267,38 +233,17 @@ namespace boundaries
 					else
 						p_etta = gauss_points_1[k];
 
-					P_1_out[i][j] += gauss_weights_1[k]  * psi[j](p_ksi, p_etta) *
+					p_1_outij += gauss_weights_1[k]  * psi[j](p_ksi, p_etta) *
 									(phix[i](p_ksi, p_etta) * nEl.x + phiy[i](p_ksi, p_etta) * nEl.y);
 
 				} 
-				P_1_out[i][j] *= a;
-			}
-		}
-
-		for(int i = 0; i < n_func_u; i++)
-		{
-			int id_i = element.dof_u[i];
-			for(int j = 0; j < n_func_p; j++)
-			{				
-				int id_j = element.dof_p[j];
-				A.add_element(id_i, id_j, P_1_out[i][j]); 
+				p_1_outij *= a;
+				A.add_element(id_i, id_j, p_1_outij);
 			}
 		}
 	}
 	void OuterBoundaries::calculate_P_2_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		//vector <vector<double>> P_2_out;
-
-		//P_2_out.resize(n_func_p);
-
-		//for (int i = 0; i < n_func_p; i++)
-		//	initialize_vector(P_2_out[i], n_func_u);
-
-		double P_2_out[n_func_p][n_func_u];
-
-		for (int i = 0; i < n_func_p; i++)
-			memset(&P_2_out[i][0], 0, sizeof(double) * n_func_u);
-
 		Element element = elements[element_number];
 
 		double a, jacobian, h, p_ksi, p_etta;
@@ -343,8 +288,11 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_p; i++)
 		{
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_u; j++)
 			{
+				int id_j = element.dof_u[j];
+				double p_2_outij = 0;
 				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
@@ -352,38 +300,17 @@ namespace boundaries
 					else
 						p_etta = gauss_points_1[k];
 
-					P_2_out[i][j] += gauss_weights_1[k]  * psi[i](p_ksi, p_etta) *
+					p_2_outij += gauss_weights_1[k]  * psi[i](p_ksi, p_etta) *
 									(phix[j](p_ksi, p_etta) * nEl.x + phiy[j](p_ksi, p_etta) * nEl.y);
 
 				} 
-				P_2_out[i][j] *= a;
-			}
-		}
-
-		for(int i = 0; i < n_func_p; i++)
-		{
-			int id_i = element.dof_p[i];
-			for(int j = 0; j < n_func_u; j++)
-			{				
-				int id_j = element.dof_u[j];
-				A.add_element(id_i, id_j, P_2_out[i][j]); 
+				p_2_outij *= a;
+				A.add_element(id_i, id_j, p_2_outij);
 			}
 		}
 	}
 	void OuterBoundaries::calculate_SP_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		//vector <vector<double>> SP_out;
-
-		//SP_out.resize(n_func_p);
-
-		//for (int i = 0; i < n_func_p; i++)
-		//	initialize_vector(SP_out[i], n_func_p);
-
-		double SP_out[n_func_p][n_func_p];
-
-		for (int i = 0; i < n_func_p; i++)
-			memset(&SP_out[i][0], 0, sizeof(double) * n_func_p);
-
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);
 
@@ -429,28 +356,22 @@ namespace boundaries
 
 		for(int i = 0; i < n_func_p; i++)
 		{
+			int id_i = element.dof_p[i];
 			for(int j = 0; j < n_func_p; j++)
 			{
+				int id_j = element.dof_p[j];
+				double sp_outij = 0;
 				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
-					SP_out[i][j] += gauss_weights_1[k] * psi[i](p_ksi, p_etta) * psi[j](p_ksi, p_etta);
+					sp_outij += gauss_weights_1[k] * psi[i](p_ksi, p_etta) * psi[j](p_ksi, p_etta);
 
 				} 
-				SP_out[i][j] *= st;
-			}
-		}
-
-		for(int i = 0; i < n_func_p; i++)
-		{
-			int id_i = element.dof_p[i];
-			for(int j = 0; j < n_func_p; j++)
-			{				
-				int id_j = element.dof_p[j];
-				A.add_element(id_i, id_j, SP_out[i][j]); 
+				sp_outij *= st;
+				A.add_element(id_i, id_j, sp_outij);
 			}
 		}
 	}

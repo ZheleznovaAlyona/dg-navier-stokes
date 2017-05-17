@@ -16,7 +16,7 @@ namespace densematrix
 
 		myvector::MyVector& operator[](int j);
 		//умножение на вектор
-		myvector::MyVector operator*(myvector::MyVector a);
+		myvector::MyVector operator*(myvector::MyVector& a);
 
 		~DenseMatrix();
 
