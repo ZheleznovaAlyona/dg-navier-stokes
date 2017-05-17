@@ -353,7 +353,7 @@ double MainSolver::diff_normL2_p(MyVector q_solution)
 		diff += diff_local;
 	}
 
-	return sqrt(diff / nodes.size());
+	return sqrt(diff / size);
 }
 
 double MainSolver::diff_normL2_u(MyVector q_solution)
@@ -391,8 +391,8 @@ double MainSolver::diff_normL2_u(MyVector q_solution)
 			uydy_an = calculate_uydy_analytic(elements[i].number_of_area, p_x, p_y);
 
 			function = (ux - ux_an) * (ux - ux_an) + (uy - uy_an) * (uy - uy_an);
-			function += (uxdx - uxdx_an + uydy - uydy_an) * 
-						(uxdx - uxdx_an + uydy - uydy_an);
+			//function += (uxdx - uxdx_an + uydy - uydy_an) * 
+						//(uxdx - uxdx_an + uydy - uydy_an);
 
 			diff_local += gauss_weights[k] * function;
 		}
@@ -401,7 +401,7 @@ double MainSolver::diff_normL2_u(MyVector q_solution)
 		diff += diff_local;
 	}
 
-	return sqrt(diff / nodes.size());
+	return sqrt(diff / size);
 }
 
 }

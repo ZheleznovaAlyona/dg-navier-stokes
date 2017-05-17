@@ -32,7 +32,7 @@ namespace mainsolver
 		Element element = Partition::elements[element_number];
 
 		calculate_G(element_number);
-		calculate_C(element_number, q_calc);
+		//calculate_C(element_number, q_calc);
 		calculate_P1(element_number);
 		calculate_P2(element_number);
 		calculate_F(element_number);

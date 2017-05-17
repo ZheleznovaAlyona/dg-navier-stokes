@@ -13,7 +13,11 @@ void main()
 	Testing_parameters::initialize("testing_parameters.json");
 
 	MainSolver problem_solver(grid_in, elements_in, "log.txt", l1_in, l2_in, l3_in, "PenaltyParameters.json");	
-	problem_solver.solve();
+	//problem_solver.solve();
+	ofstream solution_out("solution.txt"), info_out("info.txt");
+	problem_solver.solve(solution_out, info_out);
+	solution_out.close();
+	info_out.close();
 
 	l1_in.close();
 	l2_in.close();

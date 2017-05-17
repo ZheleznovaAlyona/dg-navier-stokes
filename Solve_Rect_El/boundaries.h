@@ -24,7 +24,7 @@ namespace boundaries
 		//P_2 //давление по i
 		//SP для давления
 
-		double gamma; //коэффициенты стабилизации
+		double gamma, sigma; //коэффициенты стабилизации
 
 		void calculate_ES(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
 		void calculate_P_1(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient);
@@ -49,7 +49,7 @@ namespace boundaries
 							virtual public basis::Basis
 	{
 
-		double gamma; //коэффициенты стабилизации	
+		double gamma, sigma; //коэффициенты стабилизации	
 
 		void calculate_ES_out(int element_number, matrix::Matrix& A, EdgeSide edgeSide);
 		void calculate_P_1_out(int element_number, matrix::Matrix& A, EdgeSide edgeSide);

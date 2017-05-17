@@ -2,7 +2,7 @@
 	"testp": 
 	{
 		"useLU": false,
-		"test": 3,
+		"test": 1,
 		"solver": "GMRES"
 	}
 }

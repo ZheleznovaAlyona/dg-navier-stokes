@@ -11,8 +11,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(formula_number)
 			{
-				case 0: return y;
-				case 1:	return y;
+				case 0: return x;
+				case 1:	return x;
 				default: return 1.0;
 			}
 
@@ -32,8 +32,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(formula_number)
 			{
-				case 0: return x;
-				case 1:	return x;
+				case 0: return -y;
+				case 1:	return -y;
 				default: return 1.0;
 			}
 
@@ -53,8 +53,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return 1.0 / calculate_rho(area_number);
-				case 1:	return 1.0 / calculate_rho(area_number);
+				case 0: return 1.0 / calculate_rho(area_number) * 0;
+				case 1:	return 1.0 / calculate_rho(area_number) * 0;
 				default: return 1.0;
 			}
 
@@ -80,8 +80,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return 1.0 / calculate_rho(area_number);
-				case 1:	return 1.0 / calculate_rho(area_number);
+				case 0: return 1.0 / calculate_rho(area_number) * 0;
+				case 1:	return 1.0 / calculate_rho(area_number) * 0;
 				default: return 1.0;
 			}
 
@@ -107,8 +107,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return y;
-				case 1:	return y;
+				case 0: return x;
+				case 1:	return x;
 				default: return 1.0;
 			}
 
@@ -128,8 +128,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return x;
-				case 1:	return x;
+				case 0: return -y;
+				case 1:	return -y;
 				default: return 1.0;
 			}
 
@@ -149,8 +149,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return 0;
-				case 1:	return 0;
+				case 0: return 1;
+				case 1:	return 1;
 				default: return 1.0;
 			}
 
@@ -170,8 +170,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return 0;
-				case 1:	return 0;
+				case 0: return -1;
+				case 1:	return -1;
 				default: return 1.0;
 			}
 		if(Testing_parameters::test == 3)
@@ -190,8 +190,8 @@ namespace parameters
 		if(Testing_parameters::test == 1)
 			switch(area_number)
 			{
-				case 0: return x + y - 1;
-				case 1:	return x + y - 1;
+				case 0: return 0;
+				case 1:	return 0;
 				default: return 1.0;
 			}
 		if(Testing_parameters::test == 3)

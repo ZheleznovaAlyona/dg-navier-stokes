@@ -39,6 +39,7 @@ namespace boundaries
 
 		auto& jPenaltyParameters = docIn["penaltyParameters"];
 		gamma = jPenaltyParameters["gamma"].GetDouble();
+		sigma = jPenaltyParameters["sigma"].GetDouble();
 	}
 
 	void OuterBoundaries::calculate_outer_boundaries(int element_number, matrix::Matrix& A)
@@ -399,7 +400,7 @@ namespace boundaries
 		}
 
 		double jacobian = 0.5 * h;
-		double st = jacobian * 1.0 / lambda * gamma;
+		double st = jacobian * 1.0 / lambda * sigma;
 
 
 		for(int i = 0; i < n_func_p; i++)

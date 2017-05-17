@@ -38,6 +38,7 @@ namespace boundaries
 
 		auto& jPenaltyParameters = docIn["penaltyParameters"];
 		gamma = jPenaltyParameters["gamma"].GetDouble();
+		sigma = jPenaltyParameters["sigma"].GetDouble();
 	}
 
 	void InternalBoundaries::calculate_internal_boundaries(int element_number, Matrix& A)
@@ -380,7 +381,7 @@ namespace boundaries
 
 		for(int i = n_func_u; i <  n_func_u * 2; i++)
 		{
-			id_i = neighbor_element.edges[i - n_func_u];
+			id_i = neighbor_element.dof_u[i - n_func_u];
 			for(int j = 0; j < n_func_p; j++)
 			{				
 				id_j = element.dof_p[j];
@@ -438,8 +439,7 @@ namespace boundaries
 			p_ksi = 1;
 		}
 
-		double a1 = 0.25 * h; //якобиан*0.5
-		double a2 = 0.25 * h;
+		double a = 0.25 * h; //якобиан*0.5
 
 		for(int i = 0; i < n_func_p; i++)
 		{
@@ -461,10 +461,10 @@ namespace boundaries
 							   (phix[j](p_ksi, p_etta) * nN.x + phiy[j](p_ksi, p_etta) * nN.y);
 
 				} 
-				AN[i][j] *= -a1;
-				AK[i][j] *= a2;
-				BN[i][j] *= -a1;
-				BK[i][j] *= a2;
+				AN[i][j] *= -a;
+				AK[i][j] *= a;
+				BN[i][j] *= -a;
+				BK[i][j] *= a;
 			}
 		}
 
@@ -562,7 +562,7 @@ namespace boundaries
 		}
 
 		double jacobian = 0.5 * h; //якобиан
-		double st = jacobian * 1.0 / lambda * gamma;
+		double st = jacobian * 1.0 / lambda * sigma;
 
 		for(int i = 0; i < n_func_p; i++)
 		{

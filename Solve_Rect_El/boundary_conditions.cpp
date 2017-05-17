@@ -132,7 +132,6 @@ namespace boundary_conditions
 		double jacobian = h * 0.5;
 		double Ugi, Pgi;
 		double g_x, g_y;
-		int n_func_u_all = elements.size() * n_func_u;
 		int k = 1;
 		double c = gamma * k * k / h;
 		double mu = lambda * c;
@@ -155,7 +154,7 @@ namespace boundary_conditions
 
 				g_x = gx(formula, p_x, p_y);
 				g_y = gy(formula, p_x, p_y);
-				Ugi += gauss_weights_1[j] *
+				Ugi += -gauss_weights_1[j] *
 					  (g_x * nEl.x * dphixksi[i](p_ksi, p_etta) / hx +
 					   g_x * nEl.y * dphixetta[i](p_ksi, p_etta) / hy +
 					   g_y * nEl.x * dphiyksi[i](p_ksi, p_etta) / hx +
@@ -188,7 +187,7 @@ namespace boundary_conditions
 					  (g_x * nEl.x + g_y * nEl.y);
 			}
 			Pgi *= jacobian;
-			b[element.dof_p[i] + n_func_u_all] += Pgi;
+			b[element.dof_p[i]] += Pgi;
 		}
 	}
 
