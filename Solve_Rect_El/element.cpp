@@ -1,5 +1,6 @@
 #include "element.h"
 #include "basis.h"
+#include <iostream>
 
 using namespace std;
 using namespace basis;
@@ -48,7 +49,10 @@ namespace element
 
 			element_tmp.dof_u[0] = element_tmp.ndof_u * i;
 			for (int j = 1; j < element_tmp.ndof_u; j++)
+			{
 				element_tmp.dof_u[j] = element_tmp.dof_u[0] + j;
+			}
+			
 
 			element_tmp.dof_p[0] = tmp * n_func_u + element_tmp.ndof_p * i;
 			for (int j = 1; j < element_tmp.ndof_p; j++)

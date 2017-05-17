@@ -35,19 +35,19 @@ namespace matrix
 		void reinitialize();
 
 		//умножение на вектор
-		myvector::MyVector operator*(myvector::MyVector a);
-		myvector::MyVector operator/(myvector::MyVector a);
+		myvector::MyVector operator*(myvector::MyVector& a);
+		myvector::MyVector operator/(myvector::MyVector& a);
 
 		~Matrix();
 
-		myvector::MyVector Uv(myvector::MyVector v);
+		myvector::MyVector Uv(myvector::MyVector& v);
 
 		void LU();
-		void LYF(myvector::MyVector b);
-		void LYFt(myvector::MyVector b);
-		void UXY(myvector::MyVector b);
-		void UXYt(myvector::MyVector b);
-		myvector::MyVector Uv_(myvector::MyVector v);
+		void LYF(myvector::MyVector& b);
+		void LYFt(myvector::MyVector& b);
+		void UXY(myvector::MyVector& b);
+		void UXYt(myvector::MyVector& b);
+		myvector::MyVector Uv_(myvector::MyVector& v);
 
 		void add_element(int i, int j, double element);
 		void put_element(int i, int j, double element);

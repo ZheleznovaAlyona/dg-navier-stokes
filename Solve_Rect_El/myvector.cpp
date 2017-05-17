@@ -22,18 +22,18 @@ namespace myvector
 	}
 
 
-	MyVector MyVector::operator+(MyVector a) 
+	MyVector MyVector::operator+(MyVector& a) 
 	{
-		MyVector new_vector = MyVector(ar.size());
+		MyVector new_vector(ar.size());
 		assert(a.ar.size() == ar.size());
 		for(unsigned int i = 0; i < ar.size(); i++)
 			new_vector.ar[i] = ar[i] + a[i];
 		return new_vector;
 	}
 
-	MyVector MyVector::operator-(MyVector a) 
+	MyVector MyVector::operator-(MyVector& a) 
 	{
-		MyVector new_vector = MyVector(ar.size());
+		MyVector new_vector(ar.size());
 		assert(a.ar.size() == ar.size());
 		for(unsigned int i = 0; i < ar.size(); i++)
 			new_vector.ar[i] = ar[i] - a[i];
@@ -42,7 +42,7 @@ namespace myvector
 
 	MyVector MyVector::operator*(double a) 
 	{
-		MyVector new_vector = MyVector(ar.size());
+		MyVector new_vector(ar.size());
 		for(unsigned int i = 0; i < ar.size(); i++)
 			new_vector.ar[i] = ar[i] * a;
 		return new_vector;
@@ -50,7 +50,7 @@ namespace myvector
 
 	MyVector MyVector::operator/(double a) 
 	{
-		MyVector new_vector = MyVector(ar.size());
+		MyVector new_vector(ar.size());
 		for(unsigned int i = 0; i < ar.size(); i++)
 			new_vector.ar[i] = ar[i] / a;
 		return new_vector;

@@ -4,7 +4,7 @@
 
 namespace element
 {
-	const int n_func_u_elem = 4;
+	const int n_func_u_elem = 12;
 	const int n_func_p_elem = 4;
 
 	class Element

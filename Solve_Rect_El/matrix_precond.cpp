@@ -62,7 +62,7 @@ namespace matrix
 			LU_di[i] -= sumdg;
 		}
 	}
-	void Matrix::LYF(MyVector b)
+	void Matrix::LYF(MyVector& b)
 	{
 		int i, k;
 		int i0;//адрес начала строки
@@ -86,7 +86,7 @@ namespace matrix
 		else
 			yl = b;
 	}
-	void Matrix::LYFt(MyVector b)
+	void Matrix::LYFt(MyVector& b)
 	{
 		int i, k;
 		int i0;//адрес начала строки
@@ -109,7 +109,7 @@ namespace matrix
 		else
 			yl = b;
 	}
-	void Matrix::UXY(MyVector b)
+	void Matrix::UXY(MyVector& b)
 	{
 		int i, k;
 		int i0;
@@ -130,7 +130,7 @@ namespace matrix
 		else
 			yu = b;
 	}
-	void Matrix::UXYt(MyVector b)
+	void Matrix::UXYt(MyVector& b)
 	{
 		int i, k;
 		int i0;
@@ -152,7 +152,7 @@ namespace matrix
 			yu = b;
 	}
 
-	MyVector Matrix::Uv_(MyVector v)
+	MyVector Matrix::Uv_(MyVector& v)
 	{
 		int i, j, k, kol;
 		int iend;

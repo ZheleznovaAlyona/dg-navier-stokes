@@ -6,6 +6,8 @@
 #include "rapidjson/document.h"
 #include <fstream>
 
+#include <array>
+
 using namespace std;
 using namespace element;
 using namespace partition;
@@ -75,28 +77,36 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_ES(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		vector <vector<double>> AK, AN, BK, BN, SNN, SNK, SKN, SKK, ES;
-
-		AK.resize(n_func_u); 
-		AN.resize(n_func_u);
-		BK.resize(n_func_u);
-		BN.resize(n_func_u);
-		SNN.resize(n_func_u);
-		SNK.resize(n_func_u);
-		SKN.resize(n_func_u);
-		SKK.resize(n_func_u);
-		ES.resize(n_func_u * 2);
+		//static vector <vector<double>> AK(n_func_u); 
+		//static vector <vector<double>> AN(n_func_u);
+		//static vector <vector<double>> BK(n_func_u);
+		//static vector <vector<double>> BN(n_func_u);
+		//static vector <vector<double>> SNN(n_func_u);
+		//static vector <vector<double>> SNK(n_func_u);
+		//static vector <vector<double>> SKN(n_func_u);
+		//static vector <vector<double>> SKK(n_func_u);
+		//static vector <vector<double>> ES(n_func_u * 2);
+		
+		double AK[n_func_u][n_func_u];
+		double AN[n_func_u][n_func_u];
+		double BK[n_func_u][n_func_u];
+		double BN[n_func_u][n_func_u];
+		double SNN[n_func_u][n_func_u];
+		double SNK[n_func_u][n_func_u];
+		double SKN[n_func_u][n_func_u];
+		double SKK[n_func_u][n_func_u];
+		vector <vector<double>> ES(n_func_u * 2);
 
 		for (int i = 0; i < n_func_u; i++)
 		{
-			initialize_vector(AK[i], n_func_u);
-			initialize_vector(AN[i], n_func_u);
-			initialize_vector(BK[i], n_func_u);
-			initialize_vector(BN[i], n_func_u);
-			initialize_vector(SNN[i], n_func_u);
-			initialize_vector(SNK[i], n_func_u);
-			initialize_vector(SKN[i], n_func_u);
-			initialize_vector(SKK[i], n_func_u);
+			memset(&AK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&AN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&BK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&BN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&SNN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&SNK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&SKN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&SKK[i][0], 0, sizeof(double) * n_func_u);
 			initialize_vector(ES[i], n_func_u * 2);
 			initialize_vector(ES[i + n_func_u], n_func_u * 2);
 		}
@@ -273,23 +283,40 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_P_1(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		vector <vector<double>> AK, AN, BK, BN, P_1;
+		//vector <vector<double>> AK, AN, BK, BN, P_1;
 
-		AK.resize(n_func_u);
-		AN.resize(n_func_u);
-		BK.resize(n_func_u);
-		BN.resize(n_func_u);
-		P_1.resize(n_func_u * 2);
+		//AK.resize(n_func_u);
+		//AN.resize(n_func_u);
+		//BK.resize(n_func_u);
+		//BN.resize(n_func_u);
+		//P_1.resize(n_func_u * 2);
+
+		//for (int i = 0; i < n_func_u; i++)
+		//{
+		//	initialize_vector(AK[i], n_func_p);
+		//	initialize_vector(AN[i], n_func_p);
+		//	initialize_vector(BK[i], n_func_p);
+		//	initialize_vector(BN[i], n_func_p);
+		//	initialize_vector(P_1[i], n_func_p * 2);
+		//	initialize_vector(P_1[i + n_func_u], n_func_p * 2);
+		//}
+
+		double AK[n_func_u][n_func_p];
+		double AN[n_func_u][n_func_p];
+		double BK[n_func_u][n_func_p];
+		double BN[n_func_u][n_func_p];
+		vector <vector<double>> P_1(n_func_u * 2);
 
 		for (int i = 0; i < n_func_u; i++)
 		{
-			initialize_vector(AK[i], n_func_p);
-			initialize_vector(AN[i], n_func_p);
-			initialize_vector(BK[i], n_func_p);
-			initialize_vector(BN[i], n_func_p);
+			memset(&AK[i][0], 0, sizeof(double) * n_func_p);
+			memset(&AN[i][0], 0, sizeof(double) * n_func_p);
+			memset(&BK[i][0], 0, sizeof(double) * n_func_p);
+			memset(&BN[i][0], 0, sizeof(double) * n_func_p);
 			initialize_vector(P_1[i], n_func_p * 2);
 			initialize_vector(P_1[i + n_func_u], n_func_p * 2);
 		}
+
 
 		Element element = elements[element_number1];
 		Element element_2 = elements[element_number2];
@@ -399,23 +426,40 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_P_2(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		vector <vector<double>> AK, AN, BK, BN, P_2;
+		//vector <vector<double>> AK, AN, BK, BN, P_2;
 
-		AK.resize(n_func_p);
-		AN.resize(n_func_p);
-		BK.resize(n_func_p);
-		BN.resize(n_func_p);
-		P_2.resize(n_func_p * 2);
+		//AK.resize(n_func_p);
+		//AN.resize(n_func_p);
+		//BK.resize(n_func_p);
+		//BN.resize(n_func_p);
+		//P_2.resize(n_func_p * 2);
+
+		//for (int i = 0; i < n_func_p; i++)
+		//{
+		//	initialize_vector(AK[i], n_func_u);
+		//	initialize_vector(AN[i], n_func_u);
+		//	initialize_vector(BK[i], n_func_u);
+		//	initialize_vector(BN[i], n_func_u);
+		//	initialize_vector(P_2[i], n_func_u * 2);
+		//	initialize_vector(P_2[i + n_func_p], n_func_u * 2);
+		//}
+
+		double AK[n_func_p][n_func_u];
+		double AN[n_func_p][n_func_u];
+		double BK[n_func_p][n_func_u];
+		double BN[n_func_p][n_func_u];
+		vector <vector<double>> P_2(n_func_p * 2);
 
 		for (int i = 0; i < n_func_p; i++)
 		{
-			initialize_vector(AK[i], n_func_u);
-			initialize_vector(AN[i], n_func_u);
-			initialize_vector(BK[i], n_func_u);
-			initialize_vector(BN[i], n_func_u);
+			memset(&AK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&AN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&BK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&BN[i][0], 0, sizeof(double) * n_func_u);
 			initialize_vector(P_2[i], n_func_u * 2);
 			initialize_vector(P_2[i + n_func_p], n_func_u * 2);
 		}
+
 
 		Element element = elements[element_number1];
 		Element element_2 = elements[element_number2];
@@ -521,20 +565,33 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_SP(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		vector <vector<double>> SNN, SNK, SKN, SKK, SP;
+		//vector <vector<double>> SNN, SNK, SKN, SKK, SP;
 
-		SNN.resize(n_func_p);
-		SNK.resize(n_func_p);
-		SKN.resize(n_func_p);
-		SKK.resize(n_func_p);
-		SP.resize(n_func_p * 2);
+		//SNN.resize(n_func_p);
+		//SNK.resize(n_func_p);
+		//SKN.resize(n_func_p);
+		//SKK.resize(n_func_p);
+		//SP.resize(n_func_p * 2);
+
+		//for (int i = 0; i < n_func_p; i++)
+		//{
+		//	initialize_vector(SNN[i], n_func_p);
+		//	initialize_vector(SNK[i], n_func_p);
+		//	initialize_vector(SKN[i], n_func_p);
+		//	initialize_vector(SKK[i], n_func_p);
+		//	initialize_vector(SP[i], n_func_p * 2);
+		//	initialize_vector(SP[i + n_func_p], n_func_p * 2);
+		//}
+
+		double SNN[n_func_p][n_func_p], SNK[n_func_p][n_func_p], SKN[n_func_p][n_func_p], SKK[n_func_p][n_func_p];
+		vector <vector<double>> SP(n_func_p * 2);
 
 		for (int i = 0; i < n_func_p; i++)
 		{
-			initialize_vector(SNN[i], n_func_p);
-			initialize_vector(SNK[i], n_func_p);
-			initialize_vector(SKN[i], n_func_p);
-			initialize_vector(SKK[i], n_func_p);
+			memset(&SNN[i][0], 0, sizeof(double) * n_func_p);
+			memset(&SNK[i][0], 0, sizeof(double) * n_func_p);
+			memset(&SKN[i][0], 0, sizeof(double) * n_func_p);
+			memset(&SKK[i][0], 0, sizeof(double) * n_func_p);
 			initialize_vector(SP[i], n_func_p * 2);
 			initialize_vector(SP[i + n_func_p], n_func_p * 2);
 		}

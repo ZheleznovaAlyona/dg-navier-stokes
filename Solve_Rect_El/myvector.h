@@ -16,8 +16,8 @@ namespace myvector
 		~MyVector();
 
 		double& operator[](int j);	
-		MyVector operator+(MyVector a);
-		MyVector operator-(MyVector a);
+		MyVector operator+(MyVector& a);
+		MyVector operator-(MyVector& a);
 		MyVector operator*(double a);
 		MyVector operator/(double a);
 		void initialize(int size);

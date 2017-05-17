@@ -89,15 +89,23 @@ namespace boundaries
 
 	void OuterBoundaries::calculate_ES_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		vector <vector<double>> S_out, E_out;
+		//vector <vector<double>> S_out, E_out;
 
-		S_out.resize(n_func_u);
-		E_out.resize(n_func_u);
+		//S_out.resize(n_func_u);
+		//E_out.resize(n_func_u);
+
+		//for (int i = 0; i < n_func_u; i++)
+		//{
+		//	initialize_vector(S_out[i], n_func_u);
+		//	initialize_vector(E_out[i], n_func_u);
+		//}
+
+		double S_out[n_func_u][n_func_u], E_out[n_func_u][n_func_u];
 
 		for (int i = 0; i < n_func_u; i++)
 		{
-			initialize_vector(S_out[i], n_func_u);
-			initialize_vector(E_out[i], n_func_u);
+			memset(&S_out[i][0], 0, sizeof(double) * n_func_u);
+			memset(&E_out[i][0], 0, sizeof(double) * n_func_u);
 		}
 
 		Element element = elements[element_number];
@@ -194,12 +202,17 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_1_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		vector <vector<double>> P_1_out;
+		//vector <vector<double>> P_1_out;
 
-		P_1_out.resize(n_func_u);
+		//P_1_out.resize(n_func_u);
+
+		//for (int i = 0; i < n_func_u; i++)
+		//	initialize_vector(P_1_out[i], n_func_p);
+
+		double P_1_out[n_func_u][n_func_p];
 
 		for (int i = 0; i < n_func_u; i++)
-			initialize_vector(P_1_out[i], n_func_p);
+			memset(&P_1_out[i][0], 0, sizeof(double) * n_func_p);
 
 		Element element = elements[element_number];
 		double rho = calculate_rho(element.number_of_area);
@@ -274,12 +287,17 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_P_2_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		vector <vector<double>> P_2_out;
+		//vector <vector<double>> P_2_out;
 
-		P_2_out.resize(n_func_p);
+		//P_2_out.resize(n_func_p);
+
+		//for (int i = 0; i < n_func_p; i++)
+		//	initialize_vector(P_2_out[i], n_func_u);
+
+		double P_2_out[n_func_p][n_func_u];
 
 		for (int i = 0; i < n_func_p; i++)
-			initialize_vector(P_2_out[i], n_func_u);
+			memset(&P_2_out[i][0], 0, sizeof(double) * n_func_u);
 
 		Element element = elements[element_number];
 
@@ -354,12 +372,17 @@ namespace boundaries
 	}
 	void OuterBoundaries::calculate_SP_out(int element_number, Matrix& A, EdgeSide edgeSide)
 	{
-		vector <vector<double>> SP_out;
+		//vector <vector<double>> SP_out;
 
-		SP_out.resize(n_func_p);
+		//SP_out.resize(n_func_p);
+
+		//for (int i = 0; i < n_func_p; i++)
+		//	initialize_vector(SP_out[i], n_func_p);
+
+		double SP_out[n_func_p][n_func_p];
 
 		for (int i = 0; i < n_func_p; i++)
-			initialize_vector(SP_out[i], n_func_p);
+			memset(&SP_out[i][0], 0, sizeof(double) * n_func_p);
 
 		Element element = elements[element_number];
 		double lambda = calculate_lambda(element.number_of_area);

@@ -58,11 +58,11 @@ namespace matrix
 		}
 	};
 
-	MyVector Matrix::operator*(MyVector a) 
+	MyVector Matrix::operator*(MyVector& a) 
 	{
 		int i, j, k, kol;
 		int iend;
-		MyVector new_vector = MyVector(a.ar.size());
+		MyVector new_vector(a.ar.size());
 
 		assert(a.ar.size() == n);
 		for(i = 0; i < n; i++)
@@ -85,11 +85,11 @@ namespace matrix
 		return new_vector;
 	}
 
-	MyVector Matrix::operator/(MyVector a) 
+	MyVector Matrix::operator/(MyVector& a)
 	{
 		int i, j, k, kol;
 		int iend;
-		MyVector new_vector = MyVector(a.ar.size());
+		MyVector new_vector(a.ar.size());
 
 		assert(a.ar.size() == n);
 		for(i = 0; i < n; i++)
@@ -114,11 +114,11 @@ namespace matrix
 
 	Matrix::~Matrix(){};
 
-	MyVector Matrix::Uv(MyVector v)
+	MyVector Matrix::Uv(MyVector& v)
 	{
 		int i, j, k, kol;
 		int iend;
-		MyVector new_vector = MyVector(v.ar.size());
+		MyVector new_vector(v.ar.size());
 
 		assert(v.ar.size() == n);
 		for(i = 0; i < n; i++)

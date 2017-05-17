@@ -97,11 +97,6 @@ namespace mainsolver
 		double hx, hy, c1, c2;
 		Element element = elements[element_number];
 
-		vector <vector<double>> C;
-		C.resize(element.ndof_u);
-		for (int i = 0; i < element.ndof_u; i++)
-			initialize_vector(C[i], element.ndof_u);
-
 		hx = get_hx(element_number);
 		hy = get_hy(element_number);
 
@@ -112,8 +107,11 @@ namespace mainsolver
 
 		for (int i = 0; i < element.ndof_u; i++)
 		{
+			int id_i = element.dof_u[i];
 			for (int j = 0; j < element.ndof_u; j++)
 			{
+				int id_j = element.dof_u[j];
+				double cij = 0;
 				for (int k = 0; k < n_ip; k++)
 				{
 					double p_ksi = gauss_points[0][k],
@@ -133,30 +131,16 @@ namespace mainsolver
 								dphiyetta[j](p_ksi, p_etta) / hy * phiy[i](p_ksi, p_etta) -
 								dphixetta[i](p_ksi, p_etta) / hy * phix[j](p_ksi, p_etta) -
 								dphiyetta[i](p_ksi, p_etta) / hy * phiy[j](p_ksi, p_etta));
-					C[i][j] += gauss_weights[k] * 0.5 * (c1 + c2);
+					cij += gauss_weights[k] * 0.5 * (c1 + c2);
 				}
-				C[i][j] *= jacobian;
-			}
-		}
-
-		for (int i = 0; i < element.ndof_u; i++)
-		{
-			int id_i = element.dof_u[i];
-			for (int j = 0; j < element.ndof_u; j++)
-			{
-				int id_j = element.dof_u[j];
-				my_slae.A.add_element(id_i, id_j, C[i][j]);
+				cij *= jacobian;
+				my_slae.A.add_element(id_i, id_j, cij);
 			}
 		}
 	}
 	void MainSolver::calculate_P1(int element_number)
 	{
 		Element element = elements[element_number];
-
-		vector <vector<double>> P1;
-		P1.resize(element.ndof_u);
-		for (int i = 0; i < element.ndof_u; i++)
-			initialize_vector(P1[i], element.ndof_p);
 
 		double hx = get_hx(element_number);
 		double hy = get_hy(element_number);
@@ -168,36 +152,26 @@ namespace mainsolver
 
 		for (int i = 0; i < element.ndof_u; i++)
 		{
-			for (int j = 0; j < element.ndof_p; j++)
-			{
-				for (int k = 0; k < n_ip; k++)
-				{
-					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
-					P1[i][j] += gauss_weights[k] * psi[j](p_ksi, p_etta) *
-								(dphixksi[i](p_ksi, p_etta) / hx +
-								 dphiyetta[i](p_ksi, p_etta) / hy);
-				}
-				P1[i][j] *= jacobian * rho;
-			}
-		}
-
-		for (int i = 0; i < element.ndof_u; i++)
-		{
 			int id_i = element.dof_u[i];
 			for (int j = 0; j < element.ndof_p; j++)
 			{
 				int id_j = element.dof_p[j];
-				my_slae.A.add_element(id_i, id_j, P1[i][j]);
+				double p1ij = 0;
+				for (int k = 0; k < n_ip; k++)
+				{
+					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
+					p1ij += gauss_weights[k] * psi[j](p_ksi, p_etta) *
+								(dphixksi[i](p_ksi, p_etta) / hx +
+								 dphiyetta[i](p_ksi, p_etta) / hy);
+				}
+				p1ij *= jacobian * rho;
+				my_slae.A.add_element(id_i, id_j, p1ij);
 			}
 		}
 	}
 	void MainSolver::calculate_P2(int element_number)
 	{
 		Element element = elements[element_number];
-		vector <vector<double>> P2;
-		P2.resize(element.ndof_p);
-		for (int i = 0; i < element.ndof_p; i++)
-			initialize_vector(P2[i], element.ndof_u);
 
 		double hx = get_hx(element_number);
 		double hy = get_hy(element_number);
@@ -206,26 +180,20 @@ namespace mainsolver
 
 		for (int i = 0; i < element.ndof_p; i++)
 		{
-			for (int j = 0; j < element.ndof_u; j++)
-			{
-				for (int k = 0; k < n_ip; k++)
-				{
-					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
-					P2[i][j] += gauss_weights[k] * psi[i](p_ksi, p_etta) *
-								(dphixksi[j](p_ksi, p_etta) / hx +
-								 dphiyetta[j](p_ksi, p_etta) / hy);
-				}
-				P2[i][j] *= jacobian;
-			}
-		}
-
-		for (int i = 0; i < element.ndof_p; i++)
-		{
 			int id_i = element.dof_p[i];
 			for (int j = 0; j < element.ndof_u; j++)
 			{
 				int id_j = element.dof_u[j];
-				my_slae.A.add_element(id_i, id_j, P2[i][j]);
+				double p2ij = 0;
+				for (int k = 0; k < n_ip; k++)
+				{
+					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
+					p2ij += gauss_weights[k] * psi[i](p_ksi, p_etta) *
+								(dphixksi[j](p_ksi, p_etta) / hx +
+								 dphiyetta[j](p_ksi, p_etta) / hy);
+				}
+				p2ij *= jacobian;
+				my_slae.A.add_element(id_i, id_j, p2ij);
 			}
 		}
 	}
@@ -234,9 +202,6 @@ namespace mainsolver
 		double f_x, f_y;
 		Element element = elements[element_number];
 		int number_of_area = element.number_of_area;
-
-		vector<double> F;
-		initialize_vector(F, element.ndof_u);
 
 		double x0 = nodes[element.nodes[0]].x;
 		double y0 = nodes[element.nodes[0]].y;
@@ -248,22 +213,19 @@ namespace mainsolver
 
 		for (int i = 0; i < element.ndof_u; i++)
 		{
+			int id_i = element.dof_u[i];
+			double fi = 0;
 			for (int k = 0; k < n_ip; k++)
 			{
 				double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 				double p_x = p_ksi * hx + x0, p_y = p_etta * hy + y0;
 				f_x = calculate_fx(number_of_area, p_x, p_y);
 				f_y = calculate_fy(number_of_area, p_x, p_y);
-				F[i] += gauss_weights[k] * (f_x * phix[i](p_ksi, p_etta)
+				fi += gauss_weights[k] * (f_x * phix[i](p_ksi, p_etta)
 										  + f_y * phiy[i](p_ksi, p_etta));
 			}
-			F[i] *= jacobian;
-		}
-
-		for (int i = 0; i < element.ndof_u; i++)
-		{
-			int id_i = element.dof_u[i];
-			my_slae.b[id_i] += F[i];
+			fi *= jacobian;
+			my_slae.b[id_i] += fi;
 		}
 	}
 }
