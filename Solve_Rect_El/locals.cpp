@@ -23,6 +23,7 @@ using namespace solver;
 using namespace slae;
 using namespace testingparameters;
 using namespace point;
+using namespace integration;
 
 namespace mainsolver
 {
@@ -62,7 +63,7 @@ namespace mainsolver
 			{
 				g1 = 0;
 				g2 = 0;
-				for (int k = 0; k < 9; k++)
+				for (int k = 0; k < n_ip; k++)
 				{
 					double p_ksi = gauss_points[0][k],
 						   p_etta = gauss_points[1][k];
@@ -113,7 +114,7 @@ namespace mainsolver
 		{
 			for (int j = 0; j < element.ndof_u; j++)
 			{
-				for (int k = 0; k < 9; k++)
+				for (int k = 0; k < n_ip; k++)
 				{
 					double p_ksi = gauss_points[0][k],
 						   p_etta = gauss_points[1][k];
@@ -169,7 +170,7 @@ namespace mainsolver
 		{
 			for (int j = 0; j < element.ndof_p; j++)
 			{
-				for (int k = 0; k < 9; k++)
+				for (int k = 0; k < n_ip; k++)
 				{
 					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 					P1[i][j] += gauss_weights[k] * psi[j](p_ksi, p_etta) *
@@ -207,7 +208,7 @@ namespace mainsolver
 		{
 			for (int j = 0; j < element.ndof_u; j++)
 			{
-				for (int k = 0; k < 9; k++)
+				for (int k = 0; k < n_ip; k++)
 				{
 					double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 					P2[i][j] += gauss_weights[k] * psi[i](p_ksi, p_etta) *
@@ -247,7 +248,7 @@ namespace mainsolver
 
 		for (int i = 0; i < element.ndof_u; i++)
 		{
-			for (int k = 0; k < 9; k++)
+			for (int k = 0; k < n_ip; k++)
 			{
 				double p_ksi = gauss_points[0][k], p_etta = gauss_points[1][k];
 				double p_x = p_ksi * hx + x0, p_y = p_etta * hy + y0;

@@ -21,6 +21,7 @@ using namespace parameters;
 using namespace solver;
 using namespace slae;
 using namespace testingparameters;
+using namespace integration;
 
 
 namespace mainsolver
@@ -339,7 +340,7 @@ double MainSolver::diff_normL2_p(MyVector q_solution)
 		jacobian = hx * hy / 4.0;
 
 		diff_local = 0;
-		for(int k = 0; k < 9; k++)
+		for(int k = 0; k < n_ip; k++)
 		{
 			double p_x = hx * gauss_points[0][k] + x0;
 			double p_y = hy * gauss_points[1][k] + y0;
@@ -376,7 +377,7 @@ double MainSolver::diff_normL2_u(MyVector q_solution)
 		jacobian = hx * hy / 4.0;
 
 		diff_local = 0;
-		for(int k = 0; k < 9; k++)
+		for(int k = 0; k < n_ip; k++)
 		{
 			double p_x = hx * gauss_points[0][k] + x0;
 			double p_y = hy * gauss_points[1][k] + y0;

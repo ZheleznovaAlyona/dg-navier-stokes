@@ -11,8 +11,6 @@
 
 namespace boundary_conditions
 {
-	//enum Side {left_edge, right_edge, low_edge, up_edge};
-
 	class BoundaryCondition
 	{
 	public:

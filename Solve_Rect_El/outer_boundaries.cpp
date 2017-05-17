@@ -13,6 +13,7 @@ using namespace parameters;
 using namespace basis;
 using namespace matrix;
 using namespace point;
+using namespace integration;
 
 using namespace rapidjson;
 
@@ -153,7 +154,7 @@ namespace boundaries
 		{
 			for(int j = 0; j < n_func_u; j++)
 			{
-				for(int k = 0; k < 3; k++)
+				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
@@ -246,7 +247,7 @@ namespace boundaries
 		{
 			for(int j = 0; j < n_func_p; j++)
 			{
-				for(int k = 0; k < 3; k++)
+				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
@@ -326,7 +327,7 @@ namespace boundaries
 		{
 			for(int j = 0; j < n_func_u; j++)
 			{
-				for(int k = 0; k < 3; k++)
+				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];
@@ -407,7 +408,7 @@ namespace boundaries
 		{
 			for(int j = 0; j < n_func_p; j++)
 			{
-				for(int k = 0; k < 3; k++)
+				for(int k = 0; k < n_ip1D; k++)
 				{
 					if (edgeSide == LOW || edgeSide == UP)
 						p_ksi = gauss_points_1[k];

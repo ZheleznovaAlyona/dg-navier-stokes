@@ -9,9 +9,6 @@
 
 namespace boundaries
 {
-	//enum EdgeSide { left, right, low, up };
-	//enum EdgeOrient { vertical, horizontal };
-
 	//численные потоки по внутренним границам
 	class InternalBoundaries : virtual public partition::Partition,
 							   virtual public parameters::Parameters,

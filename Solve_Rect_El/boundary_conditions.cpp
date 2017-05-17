@@ -14,6 +14,7 @@ using namespace parameters;
 using namespace myvector;
 using namespace basis;
 using namespace point;
+using namespace integration;
 
 using namespace rapidjson;
 
@@ -139,7 +140,7 @@ namespace boundary_conditions
 		for (int i = 0; i < n_func_u; i++)
 		{
 			Ugi = 0;
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < n_ip1D; j++)
 			{
 				if (edgeSide == LOW || edgeSide == UP)
 				{
@@ -169,7 +170,7 @@ namespace boundary_conditions
 		for (int i = 0; i < n_func_p; i++)
 		{
 			Pgi = 0;
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < n_ip1D; j++)
 			{
 				if (edgeSide == LOW || edgeSide == UP)
 				{
