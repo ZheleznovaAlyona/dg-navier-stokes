@@ -156,26 +156,31 @@ namespace matrix
 	{
 		int i, j, k, kol;
 		int iend;
-		MyVector new_vector = MyVector(v.ar.size());
+		if (Testing_parameters::use_LU)
+		{ 
+			MyVector new_vector = MyVector(v.ar.size());
 
-		assert(v.ar.size() == n);
-		return v;
-		for (i = 0; i < n; i++)
-		{
-			kol = ig[i + 1] - ig[i];//количество ненулевых элементов столбца от первого
-									//ненулевого элемента до диагонального элемента (не включая его)
-			iend = ig[i + 1];
-			k = ig[i]; // адрес первого занятого элемента столбца
-
-			new_vector[i] = v[i];//от главной диагонали (у U на диагонали 1)
-
-			for (; k < iend; k++)//проходим по всем элементам i столбца
+			assert(v.ar.size() == n);
+			return v;
+			for (i = 0; i < n; i++)
 			{
-				j = jg[k];
-				new_vector[j] += LU_ggu[k] * v[i];//от верхнего треугольника
+				kol = ig[i + 1] - ig[i];//количество ненулевых элементов столбца от первого
+										//ненулевого элемента до диагонального элемента (не включая его)
+				iend = ig[i + 1];
+				k = ig[i]; // адрес первого занятого элемента столбца
+
+				new_vector[i] = v[i];//от главной диагонали (у U на диагонали 1)
+
+				for (; k < iend; k++)//проходим по всем элементам i столбца
+				{
+					j = jg[k];
+					new_vector[j] += LU_ggu[k] * v[i];//от верхнего треугольника
+				}
 			}
+
+			return new_vector;
 		}
 
-		return new_vector;
+		return v;
 	}
 }

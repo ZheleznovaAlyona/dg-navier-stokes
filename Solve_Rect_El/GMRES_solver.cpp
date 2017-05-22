@@ -24,7 +24,8 @@ namespace solver
 		slae_in.A.LYF(r); r = slae_in.A.yl;
 		norm_r = r.norm();
 		slae_in.A.LYF(f); norm_f = slae_in.A.yl.norm();
-		x = slae_in.A.Uv(U_begin);
+		//x = slae_in.A.Uv(U_begin);
+		x = slae_in.A.Uv_(U_begin);
 
 		for(int k_iter = 1; k_iter <= s_parameters.max_number_of_iterations && norm_r / norm_f > s_parameters.epsilon; k_iter++)
 		{
@@ -65,7 +66,7 @@ namespace solver
 			slae_in.A.LYF(tmp); r = slae_in.A.yl;
 			norm_r = r.norm();
 			my_logger.send_current_information(norm_r / norm_f, k_iter);
-			my_logger.send_current_information_to_screen(norm_r, k_iter);
+			my_logger.send_current_information_to_screen(norm_r / norm_f, k_iter);
 		}
 		slae_in.A.UXY(x); x = slae_in.A.yu;
 		return x;

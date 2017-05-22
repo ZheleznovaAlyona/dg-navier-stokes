@@ -2,7 +2,7 @@
 	"testp": 
 	{
 		"useLU": false,
-		"test": 1,
-		"solver": "GMRES"
+		"test": 3,
+		"solver": "BiCGStab"
 	}
 }

@@ -2,6 +2,6 @@
 	"penaltyParameters": 
 	{
     "gamma": 1.0,
-    "sigma": 1E-6
+    "sigma":1E-6
 	}
 }
