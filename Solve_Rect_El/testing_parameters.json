@@ -3,6 +3,6 @@
 	{
 		"useLU": false,
 		"test": 3,
-		"solver": "BiCGStab"
+		"solver": "BCG"
 	}
 }

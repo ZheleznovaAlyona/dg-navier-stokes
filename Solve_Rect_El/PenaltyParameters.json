@@ -1,7 +1,7 @@
 {
 	"penaltyParameters": 
 	{
-    "gamma": 1.0,
-    "sigma":1E-6
+    "gamma": 0.001,
+    "sigma":0.1
 	}
 }

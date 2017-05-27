@@ -18,6 +18,7 @@ namespace element
 		int ndof_p;
 		int number_of_area;
 		int neighbors[4]; //левый, правый, нижний, верхний
+		int order;
 
 		Element& operator=(Element element);
 	};

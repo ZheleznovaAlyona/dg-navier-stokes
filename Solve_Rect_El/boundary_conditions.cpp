@@ -133,7 +133,7 @@ namespace boundary_conditions
 		double jacobian = h * 0.5;
 		double Ugi, Pgi;
 		double g_x, g_y;
-		int k = 1;
+		int k = element.order;
 		double c = gamma * k * k / h;
 		double mu = lambda * c;
 

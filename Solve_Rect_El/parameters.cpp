@@ -15,7 +15,13 @@ namespace parameters
 				case 1:	return x;
 				default: return 1.0;
 			}
-
+		if (Testing_parameters::test == 2)
+			switch (formula_number)
+			{
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
+			}
 		if(Testing_parameters::test == 3)
 			switch(formula_number)
 			{
@@ -35,6 +41,13 @@ namespace parameters
 				case 0: return -y;
 				case 1:	return -y;
 				default: return 1.0;
+			}
+		if (Testing_parameters::test == 2)
+			switch (formula_number)
+			{
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
 			}
 
 		if(Testing_parameters::test == 3)
@@ -56,6 +69,13 @@ namespace parameters
 				case 0: return 1.0 / calculate_rho(area_number) * 0;
 				case 1:	return 1.0 / calculate_rho(area_number) * 0;
 				default: return 1.0;
+			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 0.0;
+			case 1:	return 0.0;
+			default: return 0.0;
 			}
 
 		if(Testing_parameters::test == 3)
@@ -84,7 +104,13 @@ namespace parameters
 				case 1:	return 1.0 / calculate_rho(area_number) * 0;
 				default: return 1.0;
 			}
-
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 0.0;
+			case 1:	return 0.0;
+			default: return 0.0;
+			}
 		if(Testing_parameters::test == 3)
 			switch(area_number)
 			{
@@ -111,6 +137,13 @@ namespace parameters
 				case 1:	return x;
 				default: return 1.0;
 			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
+			}
 
 		if(Testing_parameters::test == 3)
 			switch(area_number)
@@ -131,6 +164,13 @@ namespace parameters
 				case 0: return -y;
 				case 1:	return -y;
 				default: return 1.0;
+			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
 			}
 
 		if(Testing_parameters::test == 3)
@@ -153,6 +193,13 @@ namespace parameters
 				case 1:	return 1;
 				default: return 1.0;
 			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 0.0;
+			case 1:	return 0.0;
+			default: return 0.0;
+			}
 
 		if(Testing_parameters::test == 3)
 			switch(area_number)
@@ -174,6 +221,13 @@ namespace parameters
 				case 1:	return -1;
 				default: return 1.0;
 			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 0.0;
+			case 1:	return 0.0;
+			default: return 0.0;
+			}
 		if(Testing_parameters::test == 3)
 			switch(area_number)
 			{
@@ -193,6 +247,13 @@ namespace parameters
 				case 0: return 0;
 				case 1:	return 0;
 				default: return 1.0;
+			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 0;
+			case 1:	return 0;
+			default: return 1.0;
 			}
 		if(Testing_parameters::test == 3)
 			switch(area_number)
@@ -215,6 +276,14 @@ namespace parameters
 				default: return 1.0;
 			}
 
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
+			}
+
 		if(Testing_parameters::test == 3)
 			switch(area_number)
 			{
@@ -235,6 +304,14 @@ namespace parameters
 				case 1:	return 1.0;
 				default: return 1.0;
 			}
+		if (Testing_parameters::test == 2)
+			switch (area_number)
+			{
+			case 0: return 1.0;
+			case 1:	return 1.0;
+			default: return 1.0;
+			}
+
 		if(Testing_parameters::test == 3)
 			switch(area_number)
 			{

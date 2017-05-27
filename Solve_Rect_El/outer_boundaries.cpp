@@ -134,7 +134,7 @@ namespace boundaries
 
 		double jacobian = 0.5 * h;
 		double a = jacobian * lambda;
-		int k = 1;
+		int k = element.order;
 		double c = gamma * k * k / h;
 		double st = jacobian * lambda * c;
 

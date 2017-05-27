@@ -46,6 +46,7 @@ namespace element
 
 			element_tmp.ndof_u = n_func_u;
 			element_tmp.ndof_p = n_func_p;
+			element_tmp.order = polynom_order;
 
 			element_tmp.dof_u[0] = element_tmp.ndof_u * i;
 			for (int j = 1; j < element_tmp.ndof_u; j++)

@@ -7,6 +7,7 @@ namespace basis
 	const int n_func_p = 4; //число базисных функций p
 	//const int n_func_u = 4; //число базисных функций u
 	const int n_func_u = 12; //число базисных функций u
+	const int polynom_order = 2;
 
 	class Basis
 	{

@@ -76,21 +76,11 @@ namespace boundaries
 	}
 
 	void InternalBoundaries::calculate_ES(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
-	{
-		//static vector <vector<double>> AK(n_func_u); 
-		//static vector <vector<double>> AN(n_func_u);
-		//static vector <vector<double>> BK(n_func_u);
-		//static vector <vector<double>> BN(n_func_u);
-		//static vector <vector<double>> SNN(n_func_u);
-		//static vector <vector<double>> SNK(n_func_u);
-		//static vector <vector<double>> SKN(n_func_u);
-		//static vector <vector<double>> SKK(n_func_u);
-		//static vector <vector<double>> ES(n_func_u * 2);
-		
-		double AK[n_func_u][n_func_u];
-		double AN[n_func_u][n_func_u];
-		double BK[n_func_u][n_func_u];
-		double BN[n_func_u][n_func_u];
+	{		
+		double EKK[n_func_u][n_func_u];
+		double ENN[n_func_u][n_func_u];
+		double EKN[n_func_u][n_func_u];
+		double ENK[n_func_u][n_func_u];
 		double SNN[n_func_u][n_func_u];
 		double SNK[n_func_u][n_func_u];
 		double SKN[n_func_u][n_func_u];
@@ -99,10 +89,10 @@ namespace boundaries
 
 		for (int i = 0; i < n_func_u; i++)
 		{
-			memset(&AK[i][0], 0, sizeof(double) * n_func_u);
-			memset(&AN[i][0], 0, sizeof(double) * n_func_u);
-			memset(&BK[i][0], 0, sizeof(double) * n_func_u);
-			memset(&BN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&EKK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&ENN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&EKN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&ENK[i][0], 0, sizeof(double) * n_func_u);
 			memset(&SNN[i][0], 0, sizeof(double) * n_func_u);
 			memset(&SNK[i][0], 0, sizeof(double) * n_func_u);
 			memset(&SKN[i][0], 0, sizeof(double) * n_func_u);
@@ -113,22 +103,22 @@ namespace boundaries
 			
 		Element element = elements[element_number1];
 		Element element_2 = elements[element_number2];
-		double lambda = calculate_lambda(element.number_of_area);
-		double lambda_2 = calculate_lambda(element_2.number_of_area);
-		double hx = get_hx(element_number1);
-		double hy = get_hy(element_number1);
-		double hx_2 = get_hx(element_number2);
-		double hy_2 = get_hy(element_number2);
+		double lambdaN = calculate_lambda(element.number_of_area);
+		double lambdaK = calculate_lambda(element_2.number_of_area);
+		double lambda_s = min(lambdaN, lambdaK);
+		double hxN = get_hx(element_number1);
+		double hyN = get_hy(element_number1);
+		double hxK = get_hx(element_number2);
+		double hyK = get_hy(element_number2);
 
-		double a1, a2, jacobian, h, p_ksi, p_etta, signKsi, signEtta;
+		double a, jacobian, h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
 
 		if(orient == HORIZONTAL)
 		{ 
-			a1 = 0.25 * hx * lambda; //якобиан*0.5*lambda
-			a2 = 0.25 * hx_2 * lambda_2;
-			jacobian = 0.5 * hx;
-			h = min(hy, hy_2);
+			a = 0.25 * hxN; //якобиан*0.5
+			jacobian = 0.5 * hxN;
+			h = min(hyN, hyK);
 			nN.x = 0; nN.y = 1;
 			signKsi = 1;
 			signEtta = -1;
@@ -136,20 +126,19 @@ namespace boundaries
 		}
 		else
 		{
-			a1 = 0.25 * hy * lambda; //якобиан*0.5*lambda
-			a2 = 0.25 * hy_2 * lambda_2;
-			jacobian = 0.5 * hy;
-			h = min(hx, hx_2);
+			a = 0.25 * hyN; //якобиан*0.5
+			jacobian = 0.5 * hyN;
+			h = min(hxN, hxK);
 			nN.x = 1; nN.y = 0;
 			signKsi = -1;
 			signEtta = 1;
 			p_ksi = 1;
 		}
 
-		int kK = 1, kN = 1;
+		int kK = element.order, kN = element_2.order;
 		int k = max(kK, kN);
 		double c = gamma * k * k / h;
-		double st = jacobian * c * lambda;
+		double st = jacobian * c * lambda_s;
 
 		for(int i = 0; i < n_func_u; i++)
 		{
@@ -162,42 +151,42 @@ namespace boundaries
 					else
 						p_etta = gauss_points_1[k];
 
-					AN[i][j] += gauss_weights_1[k] * 
-							   (phix[j](p_ksi, p_etta) * nN.x * dphixksi[i](p_ksi, p_etta) / hx +
-								phix[j](p_ksi, p_etta) * nN.y * dphixetta[i](p_ksi, p_etta) / hy +
-								phiy[j](p_ksi, p_etta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hx +
-								phiy[j](p_ksi, p_etta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hy +
-								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi, p_etta) / hx +
-								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi, p_etta) / hy +
-								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi, p_etta) / hx +
-								phiy[i](p_ksi, p_etta) * nN.y * dphiyetta[j](p_ksi, p_etta) / hy);
-					AK[i][j] += gauss_weights_1[k] * 
-							   (phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
-								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
-								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2);
-					BN[i][j] += gauss_weights_1[k] *
-							   (-phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi, p_etta) / hx -
-								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi, p_etta) / hy -
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hx -
-								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hy +
-								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
-								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phiy[i](p_ksi, p_etta) * nN.y * dphiyetta[j](p_ksi * signKsi, p_etta * signEtta) / hy_2);
-					BK[i][j] += gauss_weights_1[k] *
-							   (phix[j](p_ksi, p_etta) * nN.x * dphixksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phix[j](p_ksi, p_etta) * nN.y * dphixetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 +
-								phiy[j](p_ksi, p_etta) * nN.x * dphiyksi[i](p_ksi * signKsi, p_etta * signEtta) / hx_2 +
-								phiy[j](p_ksi, p_etta) * nN.y * dphiyetta[i](p_ksi * signKsi, p_etta * signEtta) / hy_2 -
-								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[j](p_ksi, p_etta) / hx -
-								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[j](p_ksi, p_etta) / hy -
-								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[j](p_ksi, p_etta) / hx -
-								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[j](p_ksi, p_etta) / hy);
+					ENN[i][j] += gauss_weights_1[k] * 
+							   (phix[j](p_ksi, p_etta) * nN.x * dphixksi[i](p_ksi, p_etta) / hxN +
+								phix[j](p_ksi, p_etta) * nN.y * dphixetta[i](p_ksi, p_etta) / hyN +
+								phiy[j](p_ksi, p_etta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hxN +
+								phiy[j](p_ksi, p_etta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hyN +
+								phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi, p_etta) / hxN +
+								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi, p_etta) / hyN +
+								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi, p_etta) / hxN +
+								phiy[i](p_ksi, p_etta) * nN.y * dphiyetta[j](p_ksi, p_etta) / hyN);
+					EKK[i][j] += gauss_weights_1[k] * 
+							   (phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi * signKsi, p_etta * signEtta) / hyK +
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi * signKsi, p_etta * signEtta) / hyK +
+								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hyK +
+								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[j](p_ksi * signKsi, p_etta * signEtta) / hyK);
+					ENK[i][j] += gauss_weights_1[k] *
+							 (-(phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[i](p_ksi, p_etta) / hxN -
+								phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[i](p_ksi, p_etta) / hyN -
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[i](p_ksi, p_etta) / hxN -
+								phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[i](p_ksi, p_etta) / hyN) * lambdaN +
+							   (phix[i](p_ksi, p_etta) * nN.x * dphixksi[j](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phix[i](p_ksi, p_etta) * nN.y * dphixetta[j](p_ksi * signKsi, p_etta * signEtta) / hyK +
+								phiy[i](p_ksi, p_etta) * nN.x * dphiyksi[j](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phiy[i](p_ksi, p_etta) * nN.y * dphiyetta[j](p_ksi * signKsi, p_etta * signEtta) / hyK) * lambdaK);
+					EKN[i][j] += gauss_weights_1[k] *
+							  ((phix[j](p_ksi, p_etta) * nN.x * dphixksi[i](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phix[j](p_ksi, p_etta) * nN.y * dphixetta[i](p_ksi * signKsi, p_etta * signEtta) / hyK +
+								phiy[j](p_ksi, p_etta) * nN.x * dphiyksi[i](p_ksi * signKsi, p_etta * signEtta) / hxK +
+								phiy[j](p_ksi, p_etta) * nN.y * dphiyetta[i](p_ksi * signKsi, p_etta * signEtta) / hyK) * lambdaK -
+							   (phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphixksi[j](p_ksi, p_etta) / hxN -
+								phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphixetta[j](p_ksi, p_etta) / hyN -
+								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.x * dphiyksi[j](p_ksi, p_etta) / hxN -
+								phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y * dphiyetta[j](p_ksi, p_etta) / hyN) * lambdaN);
 					SNN[i][j] += gauss_weights_1[k] * 
 								(phix[j](p_ksi, p_etta) * phix[i](p_ksi, p_etta) * nN.x +
 								 phix[j](p_ksi, p_etta) * phix[i](p_ksi, p_etta) * nN.y +
@@ -220,24 +209,24 @@ namespace boundaries
 								 phiy[j](p_ksi, p_etta) * phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y);
 
 				} 
-				AN[i][j] *= a1;
-				AK[i][j] *= -a2;
-				BN[i][j] *= a1;
-				BK[i][j] *= a2;
-				SNN[i][j] *= st * lambda;
-				SNK[i][j] *= -st * lambda;
-				SKK[i][j] *= st * lambda_2;
-				SKN[i][j] *= -st * lambda_2;
+				ENN[i][j] *= a * lambdaN;
+				EKK[i][j] *= -a * lambdaK;
+				ENK[i][j] *= a;
+				EKN[i][j] *= a;
+				SNN[i][j] *= st;
+				SNK[i][j] *= -st;
+				SKK[i][j] *= st;
+				SKN[i][j] *= -st;
 			}
 		}
 
 		for(int i = 0; i < n_func_u; i++)
 			for(int j = 0; j < n_func_u; j++)
 			{
-				ES[i][j] = -AN[i][j] + SNN[i][j];
-				ES[i + n_func_u][j + n_func_u] = -AK[i][j] + SKK[i][j];
-				ES[i][j + n_func_u] = -BN[i][j] + SNK[i][j];
-				ES[i + n_func_u][j] = -BK[i][j] + SKN[i][j];
+				ES[i][j] = -ENN[i][j] + SNN[i][j];
+				ES[i + n_func_u][j + n_func_u] = -EKK[i][j] + SKK[i][j];
+				ES[i][j + n_func_u] = -ENK[i][j] + SNK[i][j];
+				ES[i + n_func_u][j] = -EKN[i][j] + SKN[i][j];
 			}
 
 		add_ES_to_global(element_number1, element_number2, A, ES);
@@ -283,36 +272,18 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_P_1(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		//vector <vector<double>> AK, AN, BK, BN, P_1;
-
-		//AK.resize(n_func_u);
-		//AN.resize(n_func_u);
-		//BK.resize(n_func_u);
-		//BN.resize(n_func_u);
-		//P_1.resize(n_func_u * 2);
-
-		//for (int i = 0; i < n_func_u; i++)
-		//{
-		//	initialize_vector(AK[i], n_func_p);
-		//	initialize_vector(AN[i], n_func_p);
-		//	initialize_vector(BK[i], n_func_p);
-		//	initialize_vector(BN[i], n_func_p);
-		//	initialize_vector(P_1[i], n_func_p * 2);
-		//	initialize_vector(P_1[i + n_func_u], n_func_p * 2);
-		//}
-
-		double AK[n_func_u][n_func_p];
-		double AN[n_func_u][n_func_p];
-		double BK[n_func_u][n_func_p];
-		double BN[n_func_u][n_func_p];
+		double PKK[n_func_u][n_func_p];
+		double PNN[n_func_u][n_func_p];
+		double PKN[n_func_u][n_func_p];
+		double PNK[n_func_u][n_func_p];
 		vector <vector<double>> P_1(n_func_u * 2);
 
 		for (int i = 0; i < n_func_u; i++)
 		{
-			memset(&AK[i][0], 0, sizeof(double) * n_func_p);
-			memset(&AN[i][0], 0, sizeof(double) * n_func_p);
-			memset(&BK[i][0], 0, sizeof(double) * n_func_p);
-			memset(&BN[i][0], 0, sizeof(double) * n_func_p);
+			memset(&PKK[i][0], 0, sizeof(double) * n_func_p);
+			memset(&PNN[i][0], 0, sizeof(double) * n_func_p);
+			memset(&PKN[i][0], 0, sizeof(double) * n_func_p);
+			memset(&PNK[i][0], 0, sizeof(double) * n_func_p);
 			initialize_vector(P_1[i], n_func_p * 2);
 			initialize_vector(P_1[i + n_func_u], n_func_p * 2);
 		}
@@ -357,30 +328,30 @@ namespace boundaries
 					else
 						p_etta = gauss_points_1[k];
 
-					AN[i][j] += gauss_weights_1[k] * psi[j](p_ksi, p_etta) *
+					PNN[i][j] += gauss_weights_1[k] * psi[j](p_ksi, p_etta) *
 							   (phix[i](p_ksi, p_etta) * nN.x + phiy[i](p_ksi, p_etta) * nN.y);
-					AK[i][j] += gauss_weights_1[k] * psi[j](p_ksi * signKsi, p_etta * signEtta) *
+					PKK[i][j] += gauss_weights_1[k] * psi[j](p_ksi * signKsi, p_etta * signEtta) *
 							   (phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x + phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y);
-					BN[i][j] += gauss_weights_1[k] * psi[j](p_ksi * signKsi, p_etta * signEtta) *
+					PNK[i][j] += gauss_weights_1[k] * psi[j](p_ksi * signKsi, p_etta * signEtta) *
 							   (phix[i](p_ksi, p_etta) * nN.x + phiy[i](p_ksi, p_etta) * nN.y);
-					BK[i][j] += gauss_weights_1[k] * psi[j](p_ksi, p_etta) *
+					PKN[i][j] += gauss_weights_1[k] * psi[j](p_ksi, p_etta) *
 							   (phix[i](p_ksi * signKsi, p_etta * signEtta) * nN.x + phiy[i](p_ksi * signKsi, p_etta * signEtta) * nN.y);
 
 				} 
-				AN[i][j] *= a1;
-				AK[i][j] *= -a2;
-				BN[i][j] *= a1;
-				BK[i][j] *= -a2;
+				PNN[i][j] *= a1;
+				PKK[i][j] *= -a2;
+				PNK[i][j] *= a2;
+				PKN[i][j] *= -a1;
 			}
 		}
 
 		for(int i = 0; i < n_func_u; i++)
 			for(int j = 0; j < n_func_p; j++)
 			{
-				P_1[i][j] = AN[i][j];
-				P_1[i + n_func_u][j + n_func_p] = AK[i][j];
-				P_1[i][j + n_func_p] = BN[i][j];
-				P_1[i + n_func_u][j] = BK[i][j];
+				P_1[i][j] = PNN[i][j];
+				P_1[i + n_func_u][j + n_func_p] = PKK[i][j];
+				P_1[i][j + n_func_p] = PNK[i][j];
+				P_1[i + n_func_u][j] = PKN[i][j];
 			}
 
 		add_P_1_to_global(element_number1, element_number2, A, P_1);
@@ -426,36 +397,18 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_P_2(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		//vector <vector<double>> AK, AN, BK, BN, P_2;
-
-		//AK.resize(n_func_p);
-		//AN.resize(n_func_p);
-		//BK.resize(n_func_p);
-		//BN.resize(n_func_p);
-		//P_2.resize(n_func_p * 2);
-
-		//for (int i = 0; i < n_func_p; i++)
-		//{
-		//	initialize_vector(AK[i], n_func_u);
-		//	initialize_vector(AN[i], n_func_u);
-		//	initialize_vector(BK[i], n_func_u);
-		//	initialize_vector(BN[i], n_func_u);
-		//	initialize_vector(P_2[i], n_func_u * 2);
-		//	initialize_vector(P_2[i + n_func_p], n_func_u * 2);
-		//}
-
-		double AK[n_func_p][n_func_u];
-		double AN[n_func_p][n_func_u];
-		double BK[n_func_p][n_func_u];
-		double BN[n_func_p][n_func_u];
+		double PKK[n_func_p][n_func_u];
+		double PNN[n_func_p][n_func_u];
+		double PKN[n_func_p][n_func_u];
+		double PNK[n_func_p][n_func_u];
 		vector <vector<double>> P_2(n_func_p * 2);
 
 		for (int i = 0; i < n_func_p; i++)
 		{
-			memset(&AK[i][0], 0, sizeof(double) * n_func_u);
-			memset(&AN[i][0], 0, sizeof(double) * n_func_u);
-			memset(&BK[i][0], 0, sizeof(double) * n_func_u);
-			memset(&BN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&PKK[i][0], 0, sizeof(double) * n_func_u);
+			memset(&PNN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&PKN[i][0], 0, sizeof(double) * n_func_u);
+			memset(&PNK[i][0], 0, sizeof(double) * n_func_u);
 			initialize_vector(P_2[i], n_func_u * 2);
 			initialize_vector(P_2[i + n_func_p], n_func_u * 2);
 		}
@@ -496,30 +449,30 @@ namespace boundaries
 						p_ksi = gauss_points_1[k];
 					else
 						p_etta = gauss_points_1[k];
-					AN[i][j] += gauss_weights_1[k] * psi[i](p_ksi, p_etta) *
+					PNN[i][j] += gauss_weights_1[k] * psi[i](p_ksi, p_etta) *
 							   (phix[j](p_ksi, p_etta) * nN.x + phiy[j](p_ksi, p_etta) * nN.y);
-					AK[i][j] += gauss_weights_1[k] * psi[i](p_ksi * signKsi, p_etta * signEtta) *
+					PKK[i][j] += gauss_weights_1[k] * psi[i](p_ksi * signKsi, p_etta * signEtta) *
 							   (phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x + phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y);
-					BN[i][j] += gauss_weights_1[k] * psi[i](p_ksi, p_etta) *
+					PNK[i][j] += gauss_weights_1[k] * psi[i](p_ksi, p_etta) *
 							   (phix[j](p_ksi * signKsi, p_etta * signEtta) * nN.x + phiy[j](p_ksi * signKsi, p_etta * signEtta) * nN.y);
-					BK[i][j] += gauss_weights_1[k] * psi[i](p_ksi * signKsi, p_etta * signEtta) *
+					PKN[i][j] += gauss_weights_1[k] * psi[i](p_ksi * signKsi, p_etta * signEtta) *
 							   (phix[j](p_ksi, p_etta) * nN.x + phiy[j](p_ksi, p_etta) * nN.y);
 
 				} 
-				AN[i][j] *= -a;
-				AK[i][j] *= a;
-				BN[i][j] *= -a;
-				BK[i][j] *= a;
+				PNN[i][j] *= a;
+				PKK[i][j] *= -a;
+				PNK[i][j] *= -a;
+				PKN[i][j] *= a;
 			}
 		}
 
 		for(int i = 0; i < n_func_p; i++)
 			for(int j = 0; j < n_func_u; j++)
 			{
-				P_2[i][j] = AN[i][j];
-				P_2[i + n_func_p][j + n_func_u] = AK[i][j];
-				P_2[i][j + n_func_u] = BN[i][j];
-				P_2[i + n_func_p][j] = BK[i][j];
+				P_2[i][j] = -PNN[i][j];
+				P_2[i + n_func_p][j + n_func_u] = -PKK[i][j];
+				P_2[i][j + n_func_u] = -PNK[i][j];
+				P_2[i + n_func_p][j] = -PKN[i][j];
 			}
 
 		add_P_2_to_global(element_number1, element_number2, A, P_2);
@@ -565,24 +518,6 @@ namespace boundaries
 
 	void InternalBoundaries::calculate_SP(int element_number1, int element_number2, matrix::Matrix& A, EdgeOrient orient)
 	{
-		//vector <vector<double>> SNN, SNK, SKN, SKK, SP;
-
-		//SNN.resize(n_func_p);
-		//SNK.resize(n_func_p);
-		//SKN.resize(n_func_p);
-		//SKK.resize(n_func_p);
-		//SP.resize(n_func_p * 2);
-
-		//for (int i = 0; i < n_func_p; i++)
-		//{
-		//	initialize_vector(SNN[i], n_func_p);
-		//	initialize_vector(SNK[i], n_func_p);
-		//	initialize_vector(SKN[i], n_func_p);
-		//	initialize_vector(SKK[i], n_func_p);
-		//	initialize_vector(SP[i], n_func_p * 2);
-		//	initialize_vector(SP[i + n_func_p], n_func_p * 2);
-		//}
-
 		double SNN[n_func_p][n_func_p], SNK[n_func_p][n_func_p], SKN[n_func_p][n_func_p], SKK[n_func_p][n_func_p];
 		vector <vector<double>> SP(n_func_p * 2);
 
@@ -597,7 +532,10 @@ namespace boundaries
 		}
 
 		Element element1 = elements[element_number1];
-		double lambda = calculate_lambda(element1.number_of_area);
+		Element element2 = elements[element_number2];
+		double lambdaN = calculate_lambda(element1.number_of_area);
+		double lambdaK = calculate_lambda(element2.number_of_area);
+		double lambda = min(lambdaN, lambdaK);
 
 		double h, p_ksi, p_etta, signKsi, signEtta;
 		Point nN;
